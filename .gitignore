@@ -1,12 +1,29 @@
-# Binaries for programs and plugins
-*.exe
-*.exe~
-*.dll
-*.so
-*.dylib
+venv
+.idea
+*.iml
+*.pyc
+nosetests.xml
+gotest.out
+tests.xml
+*_local.py
+build
+dist
+capper.egg-info
+logs/*
+supervisord.pid
+.ropeproject
+.zone
+.vagrant/*
+.vscode/*
+.dev
+.DS_Store
+cover.out
+coverage.xml
+!**/.gitkeep
+config_local.py
+bin/
+vendor/*
 
-# Test binary, build with `go test -c`
-*.test
+## App specific
+demo.*
 
-# Output of the go coverage tool, specifically when used with LiteIDE
-*.out
