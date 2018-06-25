@@ -3,6 +3,8 @@
 export PROJECT_ID=f9s-lab
 export CLUSTER_NAME=demo
 export CLUSTER_ZONE=us-west1-c
+export GKE_VERSION=1.10.4-gke.2
+export GCE_NODE_TYPE=n1-standard-4
 
 
 echo "Setting project..."
@@ -22,12 +24,13 @@ gcloud --quiet container clusters delete $CLUSTER_NAME
 echo "Creating new cluster..."
 gcloud container clusters create $CLUSTER_NAME \
   --zone=$CLUSTER_ZONE \
-  --cluster-version 1.10.2-gke.4 \
-  --machine-type n1-standard-4 \
-  --enable-autoscaling --min-nodes=1 --max-nodes=10 \
-  --scopes=cloud-platform,logging-write,monitoring-write,pubsub \
+  --cluster-version $GKE_VERSION \
+  --machine-type $GCE_NODE_TYPE \
   --num-nodes 3 \
-  --image-type ubuntu
+  --enable-autoscaling --min-nodes=1 --max-nodes=10 \
+  --enable-autoupgrade \
+  --enable-autorepair \
+  --scopes=cloud-platform,logging-write,monitoring-write,pubsub
 
 
 echo "Getting credentials to new cluster..."
