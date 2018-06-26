@@ -51,5 +51,3 @@ kubectl apply -f https://storage.googleapis.com/knative-releases/latest/release.
 
 echo "Waiting for Istio to start..."
 sleep 5 # //TODO: Chnage that to watch object
-
-echo "Staging samples..."
