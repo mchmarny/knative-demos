@@ -25,11 +25,5 @@ spec:
           container:
             image: gcr.io/knative-samples/primer:latest
             env:
-              - name: DEMO_LOCATION
-                value: next18
-            readinessProbe:
-              httpGet:
-                path: /
-                port: 8080
-              initialDelaySeconds: 3
-              periodSeconds: 3
+            - name: DEMO_LOCATION
+              value: "next18"

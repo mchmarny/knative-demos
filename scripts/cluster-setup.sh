@@ -29,8 +29,6 @@ gcloud container clusters create $CLUSTER_NAME \
   --machine-type $GCE_NODE_TYPE \
   --num-nodes 3 \
   --enable-autoscaling --min-nodes=1 --max-nodes=10 \
-  --enable-autoupgrade \
-  --enable-autorepair \
   --scopes=cloud-platform,logging-write,monitoring-write,pubsub
 
 
