@@ -13,6 +13,8 @@ Wait for the created ingress to obtain a public IP...
 kubectl get ing --watch
 ```
 
+> If you have pointed your DNS to the public IP of Knative you aer done, otherwise, continue reading...
+
 Capture the IP and host name in environment variables by running these commands:
 
 ```bash
