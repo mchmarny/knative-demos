@@ -22,7 +22,7 @@ kubectl get configurations -o yaml
 kubectl get revisions -o yaml
 ```
 
-# Route
+## Route
 
 * Traffic assignment to Revisions (fractional scaling or by name)
 * Built using Istio
