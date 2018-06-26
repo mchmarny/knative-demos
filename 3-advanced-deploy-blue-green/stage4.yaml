@@ -1,0 +1,12 @@
+apiVersion: serving.knative.dev/v1alpha1
+kind: Route
+metadata:
+  name: route-demo
+  namespace: default
+spec:
+  traffic:
+  - configurationName: route-demo-config-v1
+    percent: 0
+    name: v1
+  - configurationName: route-demo-config-v2
+    percent: 100
