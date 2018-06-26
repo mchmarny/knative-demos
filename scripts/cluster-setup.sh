@@ -1,7 +1,7 @@
 #!/bin/bash
 
-export PROJECT_ID=f9s-lab
-export CLUSTER_NAME=demo
+export PROJECT_ID=s9-demo
+export CLUSTER_NAME=knative
 export CLUSTER_ZONE=us-west1-c
 export GKE_VERSION=1.10.4-gke.2
 export GCE_NODE_TYPE=n1-standard-4
@@ -18,7 +18,8 @@ gcloud services enable \
 
 
 echo "Deleteing previous cluster..."
-gcloud --quiet container clusters delete $CLUSTER_NAME
+# add --quiet
+gcloud container clusters delete $CLUSTER_NAME
 
 
 echo "Creating new cluster..."
