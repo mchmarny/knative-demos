@@ -7,12 +7,12 @@
 Define a few environment variables
 
 ```shell
-IOTCORE_PROJECT="s9-demo"
-IOTCORE_REG="next18-demo"
-IOTCORE_DEVICE="next18-demo-client"
-IOTCORE_REGION="us-central1"
-IOTCORE_TOPIC_DATA="iot-demo"
-IOTCORE_TOPIC_DEVICE="iot-demo-device"
+export IOTCORE_PROJECT="s9-demo"
+export IOTCORE_REG="next18-demo"
+export IOTCORE_DEVICE="next18-demo-client"
+export IOTCORE_REGION="us-central1"
+export IOTCORE_TOPIC_DATA="iot-demo"
+export IOTCORE_TOPIC_DEVICE="iot-demo-device"
 ```
 
 ## Creating a device registry
