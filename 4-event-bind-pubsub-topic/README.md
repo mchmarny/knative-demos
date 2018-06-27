@@ -1,22 +1,28 @@
-# IoT Core Demo
+# Event Binding to IoT Core (PubSub)
 
 > Hard-coding a few example variables here for ease of demo
 
+## Setup
 
-## Create Subscription
-
-IoT Core creates topics. If you have not done so already, you can create
-GCP PubSub subscription for that topic using  `gcloud` by executing the
-following command:
+Define a few environment variables
 
 ```shell
-gcloud pubsub subscriptions create iot-demo-sub --topic=iot-demo
+IOTCORE_PROJECT="s9-demo"
+IOTCORE_REG="next18-demo"
+IOTCORE_DEVICE="next18-demo-client"
+IOTCORE_REGION="us-central1"
+IOTCORE_TOPIC_DATA="iot-demo"
+IOTCORE_TOPIC_DEVICE="iot-demo-device"
 ```
 
-To pull on the topic for latest messages
+## Creating a device registry
 
 ```shell
-gcloud alpha pubsub subscriptions pull iot-demo-sub --wait
+gcloud iot registries create $IOTCORE_REG \
+    --project=$IOTCORE_PROJECT \
+    --region=$IOTCORE_REGION \
+    --event-notification-config=$IOTCORE_TOPIC_DATA \
+    --state-pubsub-topic=$IOTCORE_TOPIC_DEVICE
 ```
 
 ## Create Device Certs
@@ -30,6 +36,32 @@ openssl rsa -in rsa_private.pem -pubout -out rsa_public.pem
 
 Once created, add the public key to the IoT Core registry.
 
+## Creating IoT Device Registration
+
+```shell
+gcloud iot devices create $IOTCORE_DEVICE \
+  --project=$IOTCORE_PROJECT \
+  --region=$IOTCORE_REGION \
+  --registry=$IOTCORE_REG \
+  --public-key path=./rsa_public.pem,type=rs256
+```
+
+## Create Subscription
+
+IoT Core creates topics. If you have not done so already, you can create
+GCP PubSub subscription for that topic using  `gcloud` by executing the
+following command:
+
+```shell
+gcloud pubsub subscriptions create iot-demo-sub-view --topic=iot-demo
+```
+
+To pull on the topic for latest messages
+
+```shell
+gcloud alpha pubsub subscriptions pull iot-demo-sub-view --wait
+```
+
 ## Generate Data
 
 To mimic IoT device sending data to the IoT gateway just run the provide
@@ -38,10 +70,10 @@ Node.js client with following parameters
 
 ```shell
 node device.js \
-    --projectId=s9-demo \
-    --cloudRegion=us-central1 \
-    --registryId=next18-demo \
-    --deviceId=next18-demo-client \
+    --projectId=$IOTCORE_PROJECT \
+    --cloudRegion=$IOTCORE_REGION \
+    --registryId=$IOTCORE_REG \
+    --deviceId=$IOTCORE_DEVICE \
     --privateKeyFile=./rsa_private.pem \
     --algorithm=RS256
 ```
