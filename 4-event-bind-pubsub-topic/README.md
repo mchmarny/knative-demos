@@ -1,5 +1,7 @@
 # IoT Core Demo
 
+> Hard-coding a few example variables here for ease of demo
+
 
 ## Create Subscription
 
@@ -43,3 +45,7 @@ node device.js \
     --privateKeyFile=./rsa_private.pem \
     --algorithm=RS256
 ```
+
+The above "device" will publish event per second to the IoT Core gateway.
+The gateway will automatically publish the received events to the configured
+PubSub topic (`iot-demo`).
