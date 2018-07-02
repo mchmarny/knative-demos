@@ -27,3 +27,9 @@ spec:
             env:
             - name: DEMO_LOCATION
               value: "next18"
+            readinessProbe:
+              httpGet:
+                path: /_ah/health
+                port: 8080
+              initialDelaySeconds: 3
+              periodSeconds: 3
