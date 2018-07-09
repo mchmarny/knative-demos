@@ -4,7 +4,7 @@ In this demo we will deploy a pre-built sample docker image of an app called `Pr
 
 
 ```bash
-kubectl apply -f kubectl get ing/app.yaml
+kubectl apply -f service-deploy/app.yaml
 ```
 
 Wait for the created ingress to obtain a public IP...
@@ -39,5 +39,5 @@ The higher the number, the longer it will run.
 
 
 ```bash
-kubectl delete -f 1-easy-deploy-using-service/app.yaml
+kubectl delete -f service-deploy/app.yaml
 ```
