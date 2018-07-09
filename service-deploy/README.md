@@ -4,7 +4,7 @@ In this demo we will deploy a pre-built sample docker image of an app called `Pr
 
 
 ```bash
-kubectl apply -f 1-easy-deploy-using-service/app.yaml
+kubectl apply -f kubectl get ing/app.yaml
 ```
 
 Wait for the created ingress to obtain a public IP...
