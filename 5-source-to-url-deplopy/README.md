@@ -1,1 +1,1 @@
-# Demo deploy using manifest on GitHub with private repo
+# Demo deploy using manifest on GitHub with repo
