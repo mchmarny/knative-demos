@@ -13,9 +13,11 @@ Wait for the created ingress to obtain a public IP...
 kubectl get ing --watch
 ```
 
-> If you have pointed your DNS to the public IP of Knative you aer done, otherwise, continue reading...
+Navigate to the `primer-ingress` URL.
 
-Capture the IP and host name in environment variables by running these commands:
+## Manual Config
+
+If you haven't pointed your DNS to the public IP of Knative you will need to capture the IP and host name in environment variables by running these commands:
 
 ```bash
 export SERVICE_IP=$(kubectl get ing primer-ingress \
@@ -24,8 +26,6 @@ export SERVICE_IP=$(kubectl get ing primer-ingress \
 export SERVICE_HOST=$(kubectl get ing primer-ingress \
   -o jsonpath="{.spec.rules[0]['host']}")
 ```
-
-> Alternatively, you can create an entry in your DNS server to point your sub-domain to the IP.
 
 Run the Primer app:
 
