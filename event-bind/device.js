@@ -36,7 +36,7 @@ var backoffTime = 1;
 // Whether an asynchronous publish chain is in progress.
 var publishChainInProgress = false;
 
-console.log('Google Cloud IoT Core MQTT example.');
+console.log('Knative IoT Example');
 var argv = require(`yargs`)
   .options({
     projectId: {
@@ -119,7 +119,7 @@ var argv = require(`yargs`)
 // Create a Cloud IoT Core JWT for the given project id, signed with the given
 // private key.
 // [START iot_mqtt_jwt]
-function createJwt (projectId, privateKeyFile, algorithm) {
+function createJwt(projectId, privateKeyFile, algorithm) {
   // Create a JWT to authenticate this device. The device will be disconnected
   // after the token expires, and will have to reconnect with a new token. The
   // audience field should always be set to the GCP project id.
@@ -136,7 +136,7 @@ function createJwt (projectId, privateKeyFile, algorithm) {
 // Publish numMessages messages asynchronously, starting from message
 // messagesSent.
 // [START iot_mqtt_publish]
-function publishAsync (messagesSent, numMessages) {
+function publishAsync(messagesSent, numMessages) {
   // If we have published enough messages or backed off too many times, stop.
   if (messagesSent > numMessages || backoffTime >= MAXIMUM_BACKOFF_TIME) {
     if (backoffTime >= MAXIMUM_BACKOFF_TIME) {
