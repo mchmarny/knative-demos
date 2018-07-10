@@ -17,28 +17,28 @@ metadata:
   name: repo-to-url
 spec:
   traffic:
-  - configurationName: repo-conf
+  - configurationName: repo-to-url-conf
     percent: 100
 ---
 apiVersion: serving.knative.dev/v1alpha1
 kind: Configuration
 metadata:
-  name: repo-conf
+  name: repo-to-url-conf
 spec:
   build:
     source:
       git:
         url: git@github.com:mchmarny/primer.git
-        branch: master
+        # branch: master
     template:
       name: kaniko
       arguments:
       - name: IMAGE
-        value: &image REPLACE_ME
+        value: us.gcr.io/s9-demo/src-to-url:latest
   revisionTemplate:
     metadata:
       labels:
         knative.dev/type: app
     spec:
       container:
-        image: *image
+        image: us.gcr.io/s9-demo/src-to-url:latest
