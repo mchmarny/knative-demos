@@ -28,8 +28,8 @@ spec:
   build:
     source:
       git:
-        url: git@github.com:mchmarny/primer.git
-        # branch: master
+        url: https://github.com/mchmarny/simple-app.git
+        revision: master
     template:
       name: kaniko
       arguments:
@@ -42,3 +42,7 @@ spec:
     spec:
       container:
         image: us.gcr.io/s9-demo/src-to-url:latest
+        imagePullPolicy: Always
+        env:
+          - name: SIMPLE_MSG
+            value: "GCP Next 18"
