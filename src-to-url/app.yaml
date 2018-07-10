@@ -45,4 +45,4 @@ spec:
         imagePullPolicy: Always
         env:
           - name: SIMPLE_MSG
-            value: "GCP Next 18"
+            value: "GCP Next 19"
