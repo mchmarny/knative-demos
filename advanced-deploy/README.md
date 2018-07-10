@@ -4,17 +4,13 @@ Your map to help you navigate the Knative routes. Simple blue/green-like app dep
 
 ## Deploy app (blue)
 
-`kubectl apply -f 3-advanced-deploy-blue-green/stage1.yaml`
-
-Check for external IP being assigned in k8s ingress service
-
-`kubectl get ing`
+`kubectl apply -f advanced-deploy/stage1.yaml`
 
 When route created and IP assigned, navigate to http://route-demo.default.project-serverless.com to show deployed app. Let's call this blue (aka v1) version of the app.
 
 ## Deploy new (green) version of the app
 
-`kubectl apply -f 3-advanced-deploy-blue-green/stage2.yaml`
+`kubectl apply -f advanced-deploy/stage2.yaml`
 
 This will only stage v2. That means:
 
@@ -26,7 +22,7 @@ and navigate to http://v2.route-demo.default.project-serverless.com to show the 
 
 ## Migrate portion of v1 (blew) traffic to v2 (green)
 
-`kubectl apply -f 3-advanced-deploy-blue-green/stage3.yaml`
+`kubectl apply -f advanced-deploy/stage3.yaml`
 
 Refresh (a few times) the original route http://route-demo.default.project-serverless.com to show part of traffic going to v2
 
@@ -34,7 +30,7 @@ Refresh (a few times) the original route http://route-demo.default.project-serve
 
 ## Re-route 100% of traffic to v2 (green)
 
-`kubectl apply -f 3-advanced-deploy-blue-green/stage4.yaml`
+`kubectl apply -f advanced-deploy/stage4.yaml`
 
 This will complete the deployment by sending all traffic to the new (green) version.
 
@@ -51,8 +47,8 @@ Navigate to http://v1.route-demo.default.project-serverless.com to show the old 
 ## Cleanup
 
 ```
-kubectl delete -f 3-advanced-deploy-blue-green/stage4.yaml --ignore-not-found=true
-kubectl delete -f 3-advanced-deploy-blue-green/stage3.yaml --ignore-not-found=true
-kubectl delete -f 3-advanced-deploy-blue-green/stage2.yaml --ignore-not-found=true
-kubectl delete -f 3-advanced-deploy-blue-green/stage1.yaml --ignore-not-found=true
+kubectl delete -f advanced-deploy/stage4.yaml --ignore-not-found=true
+kubectl delete -f advanced-deploy/stage3.yaml --ignore-not-found=true
+kubectl delete -f advanced-deploy/stage2.yaml --ignore-not-found=true
+kubectl delete -f advanced-deploy/stage1.yaml --ignore-not-found=true
 ```
