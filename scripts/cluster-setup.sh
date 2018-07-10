@@ -2,8 +2,8 @@
 
 export PROJECT_ID=s9-demo
 export CLUSTER_NAME=knative
-export CLUSTER_ZONE=us-west1-c
-export GKE_VERSION=1.10.4-gke.2
+export CLUSTER_REGION=us-west1
+export CLUSTER_ZONE="${CLUSTER_REGION}-c"
 export GCE_NODE_TYPE=n1-standard-4
 
 
@@ -18,14 +18,13 @@ gcloud services enable \
 
 
 echo "Deleteing previous cluster..."
-# add --quiet
-gcloud container clusters delete $CLUSTER_NAME
+gcloud container clusters delete $CLUSTER_NAME --quiet
 
 
 echo "Creating new cluster..."
 gcloud container clusters create $CLUSTER_NAME \
   --zone=$CLUSTER_ZONE \
-  --cluster-version $GKE_VERSION \
+  --cluster-version latest \
   --machine-type $GCE_NODE_TYPE \
   --num-nodes 3 \
   --enable-autoscaling --min-nodes=1 --max-nodes=10 \
@@ -50,3 +49,6 @@ kubectl apply -f https://storage.googleapis.com/knative-releases/latest/release.
 
 echo "Waiting for Istio to start..."
 sleep 5 # //TODO: Chnage that to watch object
+
+echo "Setting external IP..."
+gcloud compute addresses create "${CLUSTER_NAME}-external-ip" --region $CLUSTER_REGION
