@@ -46,22 +46,6 @@ gcloud iot devices create $IOTCORE_DEVICE \
   --public-key path=./rsa_public.pem,type=rs256
 ```
 
-## Create Subscription
-
-IoT Core creates topics. If you have not done so already, you can create
-GCP PubSub subscription for that topic using  `gcloud` by executing the
-following command:
-
-```shell
-gcloud pubsub subscriptions create iot-demo-sub-view --topic=iot-demo
-```
-
-To pull on the topic for latest messages
-
-```shell
-gcloud alpha pubsub subscriptions pull iot-demo-sub-view --wait
-```
-
 ## Generate Data
 
 To mimic IoT device sending data to the IoT gateway just run the provide
@@ -81,3 +65,41 @@ node device.js \
 The above "device" will publish event per second to the IoT Core gateway.
 The gateway will automatically publish the received events to the configured
 PubSub topic (`iot-demo`).
+
+## Create Function That Handles Events
+
+Now we want to consume our IoT events and handle them in our function code.
+Let's create the function for it.
+
+```shell
+ko apply -f ./route.yaml
+ko apply -f ./configuration.yaml
+```
+
+## Create Event Source
+
+Before we can Bind an Action to an Event Source, we have to create the Event Source
+that knows how to wire events into actions for that particular Event Type.
+First let's create a ServiceAccount so that we can run the local receive adapter
+(in Pull mode) to poll for events from this topic. Then let's create a GCP PubSub
+as an event source that we can bind to.
+
+```shell
+ko apply -f ./serviceaccount.yaml
+ko apply -f ./serviceaccountbinding.yaml
+```
+
+```shell
+cd <ROOT OF github.com/knative/eventing>
+ko apply -f pkg/sources/gcppubsub/
+```
+
+## Bind IoT Events to our function
+
+We have created a Function that we want to consume our IoT events, and we have an event
+source that's emitting events via GCP PubSub, let's wire the two together.
+
+```shell
+ ko apply -f ./bind.yaml
+```
+
