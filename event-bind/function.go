@@ -24,6 +24,7 @@ import (
 	"net/http"
 )
 
+// Event represents PubSub payload
 type Event struct {
 	ID         string            `json:"ID"`
 	Data       string            `json:"Data"`
