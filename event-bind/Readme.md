@@ -72,8 +72,8 @@ Now we want to consume our IoT events and handle them in our function code.
 Let's create the function for it.
 
 ```shell
-ko apply -f ./route.yaml
-ko apply -f ./configuration.yaml
+kubectl apply -f event-bind/route.yaml
+kubectl apply -f event-bind/configuration.yaml
 ```
 
 ## Create Event Source
@@ -85,13 +85,10 @@ First let's create a ServiceAccount so that we can run the local receive adapter
 as an event source that we can bind to.
 
 ```shell
-ko apply -f ./serviceaccount.yaml
-ko apply -f ./serviceaccountbinding.yaml
-```
-
-```shell
-cd <ROOT OF github.com/knative/eventing>
-ko apply -f pkg/sources/gcppubsub/
+kubectl apply -f event-bind/serviceaccount.yaml
+kubectl apply -f event-bind/serviceaccountbinding.yaml
+kubectl apply -f event-bind/eventsource.yaml
+kubectl apply -f event-bind/eventtype.yaml
 ```
 
 ## Bind IoT Events to our function
@@ -100,6 +97,6 @@ We have created a Function that we want to consume our IoT events, and we have a
 source that's emitting events via GCP PubSub, let's wire the two together.
 
 ```shell
- ko apply -f ./bind.yaml
+kubectl apply -f event-bind/bind.yaml
 ```
 
