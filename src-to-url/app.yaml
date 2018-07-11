@@ -34,15 +34,15 @@ spec:
       name: kaniko
       arguments:
       - name: IMAGE
-        value: us.gcr.io/s9-demo/src-to-url:latest
+        value: &image us.gcr.io/s9-demo/src-to-url:latest
   revisionTemplate:
     metadata:
       labels:
         knative.dev/type: app
     spec:
       container:
-        image: us.gcr.io/s9-demo/src-to-url:latest
+        image: *image
         imagePullPolicy: Always
         env:
           - name: SIMPLE_MSG
-            value: "GCP Next 19"
+            value: "GCP Next 18"
