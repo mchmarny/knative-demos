@@ -12,37 +12,31 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 apiVersion: serving.knative.dev/v1alpha1
-kind: Route
+kind: Service
 metadata:
   name: repo-to-url
+  namespace: default
 spec:
-  traffic:
-  - configurationName: repo-to-url-conf
-    percent: 100
----
-apiVersion: serving.knative.dev/v1alpha1
-kind: Configuration
-metadata:
-  name: repo-to-url-conf
-spec:
-  build:
-    source:
-      git:
-        url: https://github.com/mchmarny/simple-app.git
-        revision: master
-    template:
-      name: kaniko
-      arguments:
-      - name: IMAGE
-        value: &image us.gcr.io/s9-demo/src-to-url:latest
-  revisionTemplate:
-    metadata:
-      labels:
-        knative.dev/type: app
-    spec:
-      container:
-        image: *image
-        imagePullPolicy: Always
-        env:
-          - name: SIMPLE_MSG
-            value: "GCP Next 18"
+  runLatest:
+    configuration:
+      build:
+        source:
+          git:
+            url: https://github.com/mchmarny/simple-app.git
+            revision: master
+        template:
+          name: kaniko
+          arguments:
+          - name: IMAGE
+            value: &image us.gcr.io/s9-demo/src-to-url:latest
+      revisionTemplate:
+        metadata:
+          labels:
+            knative.dev/type: app
+        spec:
+          container:
+            image: *image
+            imagePullPolicy: Always
+            env:
+              - name: SIMPLE_MSG
+                value: "Hello GCP Next 2018!"
