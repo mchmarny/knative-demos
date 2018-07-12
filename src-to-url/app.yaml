@@ -14,7 +14,7 @@
 apiVersion: serving.knative.dev/v1alpha1
 kind: Service
 metadata:
-  name: repo-to-url
+  name: src-to-url
   namespace: default
 spec:
   runLatest:
@@ -39,4 +39,4 @@ spec:
             imagePullPolicy: Always
             env:
               - name: SIMPLE_MSG
-                value: "Hello GCP Next 2018!"
+                value: "Image, what image? I'm Knative built"
