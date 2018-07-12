@@ -15,7 +15,7 @@
 apiVersion: serving.knative.dev/v1alpha1
 kind: Service
 metadata:
-  name: primer
+  name: simple
   namespace: default
 spec:
   runLatest:
@@ -23,7 +23,7 @@ spec:
       revisionTemplate:
         spec:
           container:
-            image: gcr.io/knative-samples/primer:latest
+            image: gcr.io/knative-samples/simple-app:latest
             env:
-            - name: DEMO_LOCATION
-              value: "next18"
+            - name: SIMPLE_MSG
+              value: "Hellow GCP Next 2018!"
