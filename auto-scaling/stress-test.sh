@@ -1,53 +1,19 @@
 #!/bin/bash
 
-#### Default Configuration
-
+# Defaults
 CONCURRENCY=4
-REQUESTS=100
-ADDRESS="http://localhost:8080/"
+REQUESTS=1000
+URL="http://simple.default.project-serverless.com/"
 
-show_help() {
-cat << EOF
-
-Usage: ./stress-test.sh [-a ADDRESS] [-c CONCURRENCY] [-r REQUESTS]
-
-Params:
-  -a  address to be tested.
-      Defaults to localhost:8080
-
-  -c  conccurency: how many process to spawn
-      Defaults to 4
-
-  -r  number of requests per process
-      Defaults to 100
-
-  -h  show this help text
-
-Example:
-  $ ./stress-test.sh -c 4 -r 100 (400 requests to localhost:8080)
-EOF
-}
-
-
-#### CLI
-
-while getopts ":a:c:r:h" opt; do
-  case $opt in
-    a)
-      ADDRESS=$OPTARG
-      ;;
+while getopts "c:r" arg; do
+  case $arg in
     c)
       CONCURRENCY=$OPTARG
       ;;
     r)
       REQUESTS=$OPTARG
       ;;
-    h)
-      show_help
-      exit 0
-      ;;
     \?)
-      show_help >&2
       echo "Invalid argument: $OPTARG" &2
       exit 1
       ;;
@@ -56,22 +22,21 @@ done
 
 shift $((OPTIND-1))
 
-#### Main
-
+# run
 for i in `seq 1 $CONCURRENCY`; do
-  curl --silent --output /dev/null -s "$ADDRESS?[1-$REQUESTS]" & pidlist="$pidlist $!"
+  curl --silent --output /dev/null -s "$URL?[1-$REQUESTS]" & pidlist="$pidlist $!"
 done
 
-# Execute and wait
+# run and wait
 FAIL=0
 for job in $pidlist; do
   echo $job
   wait $job || let "FAIL += 1"
 done
 
-# Verify if any failed
+# results
 if [ "$FAIL" -eq 0 ]; then
-  echo "SUCCESS!"
+  echo "DONE"
 else
   echo "Failed Requests: ($FAIL)"
 fi
