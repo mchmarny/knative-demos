@@ -22,6 +22,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"time"
 )
 
 // Event represents PubSub payload
@@ -31,13 +32,23 @@ type Event struct {
 	Attributes map[string]string `json:"Attributes"`
 }
 
+// EventPayload represents PubSub Data payload
+type EventPayload struct {
+	ID       string    `json:"event_id"`
+	SourceID string    `json:"source_id"`
+	SentOn   time.Time `json:"event_ts"`
+	Metric   int       `json:"metric"`
+}
+
 func handlePost(rw http.ResponseWriter, req *http.Request) {
+
 	body, err := ioutil.ReadAll(req.Body)
 	if err != nil {
 		panic(err)
 	}
 	log.Println(string(body))
 
+	// decode the pubsub message
 	//	var event map[string]string
 	var event Event
 	if err := json.Unmarshal(body, &event); err != nil {
@@ -45,7 +56,16 @@ func handlePost(rw http.ResponseWriter, req *http.Request) {
 		return
 	}
 	data, _ := base64.StdEncoding.DecodeString(event.Data)
-	log.Printf("Received data from device %q: %q", event.Attributes["deviceId"], data)
+
+	// decode the pubsub message payload
+	var payload EventPayload
+	if err := json.Unmarshal(data, &payload); err != nil {
+		log.Printf("Failed to unmarshal payload: %s", err)
+		return
+	}
+
+	log.Printf("Data sent by device %q: [metric: %d, on: %v]",
+		event.Attributes["deviceId"], payload.Metric, payload.SentOn)
 }
 
 func main() {
