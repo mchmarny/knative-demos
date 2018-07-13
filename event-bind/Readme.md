@@ -69,7 +69,8 @@ PubSub topic (`iot-demo`).
 The payload sent by this mocked IoT Client looks like this
 
 ```shell
-{ source_id: 'next18-demo-client',
+{
+  source_id: 'next18-demo-client',
   event_id: '41e13421-25aa-4e93-bca8-0ffeb5c040c8',
   event_ts: 1531515192370,
   metric: 9
