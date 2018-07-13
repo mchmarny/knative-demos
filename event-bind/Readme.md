@@ -53,7 +53,7 @@ Node.js client with following parameters
 
 
 ```shell
-node device.js \
+node send-data.js \
     --projectId=$IOTCORE_PROJECT \
     --cloudRegion=$IOTCORE_REGION \
     --registryId=$IOTCORE_REG \
@@ -65,6 +65,18 @@ node device.js \
 The above "device" will publish event per second to the IoT Core gateway.
 The gateway will automatically publish the received events to the configured
 PubSub topic (`iot-demo`).
+
+The payload sent by this mocked IoT Client looks like this
+
+```shell
+{ source_id: 'next18-demo-client',
+  event_id: '41e13421-25aa-4e93-bca8-0ffeb5c040c8',
+  event_ts: 1531515192370,
+  metric: 9
+}
+```
+
+Where `event_id` is a unique UUIDv4 ID, `event_ts` is Epoch time, and `metric` is a random number 1-10.
 
 ## Create Function That Handles Events
 
