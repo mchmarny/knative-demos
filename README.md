@@ -13,8 +13,7 @@ The `setup.sh` script will
 ## Demos
 
 * [image-deploy](image-deploy/README.md)
-* [knative-objects](knative-objects/README.md)
-* [advanced-deploy](advanced-deploy/README.md)
+* [blue-green-deploy](blue-green-deploy/README.md)
 * [src-to-url](src-to-url/README.md)
 * [auto-scaling](auto-scaling/README.md)
 * [event-bind](event-bind/README.md)
