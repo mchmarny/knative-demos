@@ -28,3 +28,5 @@ vendor/*
 demo.*
 node_modules
 *.pem
+scripts/presenter.sh
+
