@@ -14,8 +14,8 @@ The `setup.sh` script will
 
 * [image-deploy](image-deploy/README.md)
 * [blue-green-deploy](blue-green-deploy/README.md)
-* [src-to-url](src-to-url/README.md)
 * [auto-scaling](auto-scaling/README.md)
+* [src-to-url](src-to-url/README.md)
 * [event-bind](event-bind/README.md)
 
 
