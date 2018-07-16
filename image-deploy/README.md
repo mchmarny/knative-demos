@@ -13,7 +13,7 @@ Wait for the created ingress to obtain a public IP...
 watch kubectl get pods
 ```
 
-Navigate to the (http://simple.default.project-serverless.com/) to see results
+Navigate to the http://simple.default.project-serverless.com/ to see results
 
 ## Cleanup
 
