@@ -12,7 +12,7 @@ The `setup.sh` script will
 
 ## Demos
 
-* [service-deploy](service-deploy/README.md)
+* [image-deploy](image-deploy/README.md)
 * [knative-objects](knative-objects/README.md)
 * [advanced-deploy](advanced-deploy/README.md)
 * [src-to-url](src-to-url/README.md)
