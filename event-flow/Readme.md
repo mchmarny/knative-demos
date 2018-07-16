@@ -85,8 +85,8 @@ Now we want to consume our IoT events and handle them in our function code.
 Let's create the function for it.
 
 ```shell
-kubectl apply -f event-bind/route.yaml
-kubectl apply -f event-bind/configuration.yaml
+kubectl apply -f event-flow/route.yaml
+kubectl apply -f event-flow/configuration.yaml
 ```
 
 ## Create Event Source
@@ -98,10 +98,10 @@ First let's create a ServiceAccount so that we can run the local receive adapter
 as an event source that we can bind to.
 
 ```shell
-kubectl apply -f event-bind/serviceaccount.yaml
-kubectl apply -f event-bind/serviceaccountbinding.yaml
-kubectl apply -f event-bind/eventsource.yaml
-kubectl apply -f event-bind/eventtype.yaml
+kubectl apply -f event-flow/serviceaccount.yaml
+kubectl apply -f event-flow/serviceaccountbinding.yaml
+kubectl apply -f event-flow/eventsource.yaml
+kubectl apply -f event-flow/eventtype.yaml
 ```
 
 ## Bind IoT Events to our function
@@ -110,6 +110,6 @@ We have created a Function that we want to consume our IoT events, and we have a
 source that's emitting events via GCP PubSub, let's wire the two together.
 
 ```shell
-kubectl apply -f event-bind/bind.yaml
+kubectl apply -f event-flow/flow.yaml
 ```
 
