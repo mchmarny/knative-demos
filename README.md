@@ -1,14 +1,12 @@
 # Overview
 
-Collection of GCP Next Demos and Samples
+Collection of GCP Next demos and samples used in Knative techncial session called [Knative platform for your functions, apps, and containers](https://cloud.withgoogle.com/next18/sf/sessions/session/156847). 
 
 ## Setup
 
-The `setup.sh` script will
+To run these samples you will need to follow Knative [install](https://github.com/knative/docs/tree/master/install) steps and post-install cluster configuration instrcutions for both [assigning static IP](https://github.com/knative/docs/blob/master/serving/gke-assigning-static-ip-address.md) and [setting custom domain](https://github.com/knative/docs/blob/master/serving/using-a-custom-domain.md).
 
-* Setup cluster (delete previous one if already there)
-* Install Istio and Knative
-* Setup all demos to ready state
+To setup/reset the demos to correct state, run `scripts/demo-setup.sh` script which will re-initialize the Knative system. 
 
 ## Demos
 
@@ -16,6 +14,6 @@ The `setup.sh` script will
 * [blue-green-deploy](blue-green-deploy/README.md)
 * [auto-scaling](auto-scaling/README.md)
 * [src-to-url](src-to-url/README.md)
-* [event-bind](event-bind/README.md)
+* [event-flow](event-flow/README.md)
 
 
