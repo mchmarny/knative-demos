@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-apiVersion: feeds.knative.dev/v1alpha1
-kind: Bind
+apiVersion: flows.knative.dev/v1alpha1
+kind: Flow
 metadata:
   name: iot-example
   namespace: default
@@ -22,9 +22,12 @@ spec:
   trigger:
     service: gcppubsub
     eventType: receive
-    resource: s9-demo/iot-demo
+    resource: gcppubsub/receive
     parameters:
       projectID: s9-demo
       topic: iot-demo
   action:
-    routeName: iot-function
+    target:
+      kind: Revision
+      apiVersion: serving.knative.dev/v1alpha1
+      name: iot-function-00001
