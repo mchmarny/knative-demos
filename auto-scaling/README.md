@@ -31,11 +31,11 @@ Now we can see the `simple-*` pod span up and ready to serve
 Now, let's use synthetic load generator to quickly increase the number of Queries Per Second (QPS) to demonstrate how Knative sales its workloads.
 
 ```shell
- auto-scaling/stress-test.sh
- ```
+auto-scaling/stress-test.sh
+```
 
 We gonna use our script to spin up 4 threads running 1K QPS each to see how Knative scales the underlining pod
 
- ```shell
+```shell
 watch kubectl get pods
 ```
