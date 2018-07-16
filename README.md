@@ -1,6 +1,6 @@
 # Overview
 
-Collection of GCP Next demos and samples used in Knative techncial session called [Knative platform for your functions, apps, and containers](https://cloud.withgoogle.com/next18/sf/sessions/session/156847). 
+Collection of GCP Next demos and samples used in Knative technical session called [Knative platform for your functions, apps, and containers](https://cloud.withgoogle.com/next18/sf/sessions/session/156847). 
 
 ## Setup
 
