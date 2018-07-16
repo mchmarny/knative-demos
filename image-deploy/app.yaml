@@ -11,32 +11,19 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 apiVersion: serving.knative.dev/v1alpha1
 kind: Service
 metadata:
-  name: src-to-url
+  name: simple
   namespace: default
 spec:
   runLatest:
     configuration:
-      build:
-        source:
-          git:
-            url: https://github.com/mchmarny/simple-app.git
-            revision: master
-        template:
-          name: kaniko
-          arguments:
-          - name: IMAGE
-            value: &image us.gcr.io/s9-demo/src-to-url:latest
       revisionTemplate:
-        metadata:
-          labels:
-            knative.dev/type: app
         spec:
           container:
-            image: *image
-            imagePullPolicy: Always
+            image: gcr.io/knative-samples/simple-app:latest
             env:
-              - name: SIMPLE_MSG
-                value: "Image, what image? I was Knative built!"
+            - name: SIMPLE_MSG
+              value: "Hellow GCP Next 2018!"

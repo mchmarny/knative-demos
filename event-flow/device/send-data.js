@@ -19,13 +19,15 @@
 const fs = require('fs');
 const jwt = require('jsonwebtoken');
 const mqtt = require('mqtt');
+const uuid = require('node-uuid');
+const os = require('os');
 // [END iot_mqtt_include]
 
 // The initial backoff time after a disconnection occurs, in seconds.
 var MINIMUM_BACKOFF_TIME = 1;
 
 // The maximum backoff time before giving up, in seconds.
-var MAXIMUM_BACKOFF_TIME = 32;
+var MAXIMUM_BACKOFF_TIME = 59;
 
 // Whether to wait with exponential backoff before publishing.
 var shouldBackoff = false;
@@ -108,7 +110,7 @@ var argv = require(`yargs`)
       type: 'string'
     }
   })
-  .example(`node $0 cloudiot_mqtt_example_nodejs.js --projectId=blue-jet-123 \\\n\t--registryId=my-registry --deviceId=my-node-device \\\n\t--privateKeyFile=../rsa_private.pem --algorithm=RS256 \\\n\t --cloudRegion=us-central1`)
+  .example(`node $0 send-data.js --projectId=blue-jet-123 \\\n\t--registryId=my-registry --deviceId=my-node-device \\\n\t--privateKeyFile=../rsa_private.pem --algorithm=RS256 \\\n\t --cloudRegion=us-west1`)
   .wrap(120)
   .recommendCommands()
   .epilogue(`For more information, see https://cloud.google.com/iot-core/docs`)
@@ -132,6 +134,19 @@ function createJwt(projectId, privateKeyFile, algorithm) {
   return jwt.sign(token, privateKey, { algorithm: algorithm });
 }
 // [END iot_mqtt_jwt]
+
+// Mock some data
+var mockData = function () {
+  var load = os.loadavg();
+  var msg = {
+    'source_id': "next18-demo-client",
+    'event_id': uuid.v4(),
+    'event_ts': new Date().getTime(),
+    'metric': Math.floor(Math.random() * 10) + 1
+  };
+  console.dir(msg);
+  return Buffer.from(JSON.stringify(msg)).toString('base64');
+}
 
 // Publish numMessages messages asynchronously, starting from message
 // messagesSent.
@@ -158,7 +173,10 @@ function publishAsync(messagesSent, numMessages) {
   }
 
   setTimeout(function () {
-    const payload = `${argv.registryId}/${argv.deviceId}-payload-${messagesSent}`;
+
+    // const payload = `${argv.registryId}/${argv.deviceId}-payload-${messagesSent}`;
+
+    const payload = mockData();
 
     // Publish "payload" to the MQTT topic. qos=1 means at least once delivery.
     // Cloud IoT Core also supports qos=0 for at most once delivery.

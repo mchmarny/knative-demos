@@ -26,4 +26,7 @@ vendor/*
 
 ## App specific
 demo.*
+node_modules
+*.pem
+scripts/presenter.sh
 

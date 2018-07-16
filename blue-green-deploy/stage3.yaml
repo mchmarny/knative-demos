@@ -5,8 +5,8 @@ metadata:
   namespace: default
 spec:
   traffic:
-  - configurationName: route-demo-config-v1
+  - configurationName: revision0-config
     percent: 50
-  - configurationName: route-demo-config-v2
+  - configurationName: revision1-config
     percent: 50
     name: v2

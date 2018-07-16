@@ -53,7 +53,7 @@ Node.js client with following parameters
 
 
 ```shell
-node device.js \
+node send-data.js \
     --projectId=$IOTCORE_PROJECT \
     --cloudRegion=$IOTCORE_REGION \
     --registryId=$IOTCORE_REG \
@@ -66,14 +66,27 @@ The above "device" will publish event per second to the IoT Core gateway.
 The gateway will automatically publish the received events to the configured
 PubSub topic (`iot-demo`).
 
+The payload sent by this mocked IoT Client looks like this
+
+```shell
+{
+  source_id: 'next18-demo-client',
+  event_id: '41e13421-25aa-4e93-bca8-0ffeb5c040c8',
+  event_ts: 1531515192370,
+  metric: 9
+}
+```
+
+Where `event_id` is a unique UUIDv4 ID, `event_ts` is Epoch time, and `metric` is a random number 1-10.
+
 ## Create Function That Handles Events
 
 Now we want to consume our IoT events and handle them in our function code.
 Let's create the function for it.
 
 ```shell
-ko apply -f ./route.yaml
-ko apply -f ./configuration.yaml
+ko apply -f event-flow/route.yaml
+ko apply -f event-flow/configuration.yaml
 ```
 
 ## Create Event Source
@@ -85,13 +98,10 @@ First let's create a ServiceAccount so that we can run the local receive adapter
 as an event source that we can bind to.
 
 ```shell
-ko apply -f ./serviceaccount.yaml
-ko apply -f ./serviceaccountbinding.yaml
-```
-
-```shell
-cd <ROOT OF github.com/knative/eventing>
-ko apply -f pkg/sources/gcppubsub/
+kubectl apply -f event-flow/serviceaccount.yaml
+kubectl apply -f event-flow/serviceaccountbinding.yaml
+ko apply -f event-flow/eventsource.yaml
+kubectl apply -f event-flow/eventtype.yaml
 ```
 
 ## Bind IoT Events to our function
@@ -100,6 +110,6 @@ We have created a Function that we want to consume our IoT events, and we have a
 source that's emitting events via GCP PubSub, let's wire the two together.
 
 ```shell
- ko apply -f ./bind.yaml
+kubectl apply -f event-flow/flow.yaml
 ```
 

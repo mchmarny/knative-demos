@@ -5,13 +5,16 @@ metadata:
   namespace: default
 spec:
   traffic:
-  - configurationName: route-demo-config-v1
+  - configurationName: revision0-config
     percent: 100
+  - configurationName: revision1-config
+    percent: 0
+    name: v2
 ---
 apiVersion: serving.knative.dev/v1alpha1
 kind: Configuration
 metadata:
-  name: route-demo-config-v1
+  name: revision1-config
   namespace: default
 spec:
   revisionTemplate:
@@ -20,8 +23,8 @@ spec:
         knative.dev/type: container
     spec:
       container:
-        image: gcr.io/knative-samples/knative-route-demo:blue
+        image: gcr.io/knative-samples/knative-route-demo:green
         imagePullPolicy: Always
         env:
           - name: T_VERSION
-            value: "blue"
+            value: "green"
