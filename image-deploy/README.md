@@ -1,6 +1,6 @@
 # Simple image deploy using Service
 
-In this demo we will deploy a pre-built sample docker image of [simple-app](https://github.com/mchmarny/simple-app) to Knative cluster.
+In this demo we will deploy a pre-built docker image of [simple-app](https://github.com/mchmarny/simple-app) to Knative cluster.
 
 
 ```bash
