@@ -28,6 +28,6 @@ spec:
       topic: iot-demo
   action:
     target:
-      kind: Revision
+      kind: Route
       apiVersion: serving.knative.dev/v1alpha1
-      name: iot-function-00001
+      name: iot-function
