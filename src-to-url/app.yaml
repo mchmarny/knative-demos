@@ -39,4 +39,4 @@ spec:
             imagePullPolicy: Always
             env:
               - name: SIMPLE_MSG
-                value: "Image, what image? I was Knative built!"
+                value: "Image, what image? I'm Knative built!"

@@ -58,7 +58,7 @@ node send-data.js \
     --cloudRegion=$IOTCORE_REGION \
     --registryId=$IOTCORE_REG \
     --deviceId=$IOTCORE_DEVICE \
-    --privateKeyFile=./rsa_private.pem \
+    --privateKeyFile=./iot_demo_private.pem \
     --algorithm=RS256
 ```
 
