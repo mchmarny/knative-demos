@@ -24,4 +24,4 @@ spec:
         knative.dev/type: container
     spec:
       container:
-        image: github.com/next18/event-bind
+        image: github.com/next18/event-flow
