@@ -85,8 +85,8 @@ Now we want to consume our IoT events and handle them in our function code.
 Let's create the function for it.
 
 ```shell
-ko apply -f event-flow/route.yaml
-ko apply -f event-flow/configuration.yaml
+kubectl apply -f event-flow/route.yaml
+kubectl apply -f event-flow/configuration.yaml
 ```
 
 ## Create Event Source
@@ -100,7 +100,7 @@ as an event source that we can bind to.
 ```shell
 kubectl apply -f event-flow/serviceaccount.yaml
 kubectl apply -f event-flow/serviceaccountbinding.yaml
-ko apply -f event-flow/eventsource.yaml
+kubectl apply -f event-flow/eventsource.yaml
 kubectl apply -f event-flow/eventtype.yaml
 ```
 
