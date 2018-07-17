@@ -31,3 +31,4 @@ spec:
       kind: Route
       apiVersion: serving.knative.dev/v1alpha1
       name: iot-function
+
