@@ -5,8 +5,8 @@ metadata:
   namespace: default
 spec:
   traffic:
-  - configurationName: revision0-config
+  - configurationName: blue-config
     percent: 0
     name: v1
-  - configurationName: revision1-config
+  - configurationName: green-config
     percent: 100

@@ -5,13 +5,13 @@ metadata:
   namespace: default
 spec:
   traffic:
-  - configurationName: revision0-config
+  - configurationName: blue-config
     percent: 100
 ---
 apiVersion: serving.knative.dev/v1alpha1
 kind: Configuration
 metadata:
-  name: revision0-config
+  name: blue-config
   namespace: default
 spec:
   revisionTemplate:
