@@ -42,10 +42,7 @@ func tweetHandler(rw http.ResponseWriter, req *http.Request) {
 	}
 
 	// decode pubsub payload
-	rawEvent, _ := base64.StdEncoding.DecodeString(event.Data)
-
-	// decode iot data
-	data, _ := base64.StdEncoding.DecodeString(string(rawEvent))
+	data, _ := base64.StdEncoding.DecodeString(event.Data)
 
 	// decode the pubsub message payload
 	var payload MonitoredItem
@@ -54,7 +51,7 @@ func tweetHandler(rw http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	log.Printf("\nContent:%s Score:%s\n",
+	log.Printf("\nTweet[%s] Sentiment[%s]\n",
 		payload.Content.String(), payload.Sentiment.String())
 }
 
