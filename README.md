@@ -1,23 +1,27 @@
 # Overview
 
-Collection of GCP Next demos and samples used in Knative technical session called [Knative platform for your functions, apps, and containers](https://cloud.withgoogle.com/next18/sf/sessions/session/156847).
+This repository contains a collection of GCP Next demos and samples used in Knative technical session called [Knative platform for your functions, apps, and containers](https://cloud.withgoogle.com/next18/sf/sessions/session/156847).
 
 ## Setup
 
-To run these samples you will need to follow Knative [install](https://github.com/knative/docs/tree/master/install) steps and post-install cluster configuration instrcutions for both [assigning static IP](https://github.com/knative/docs/blob/master/serving/gke-assigning-static-ip-address.md) and [setting custom domain](https://github.com/knative/docs/blob/master/serving/using-a-custom-domain.md).
+To run these samples you need to follow Knative [install](https://github.com/knative/docs/tree/master/install) steps and post-install cluster configuration instrcutions for both [assigning a static IP](https://github.com/knative/docs/blob/master/serving/gke-assigning-static-ip-address.md) and [setting up a custom domain](https://github.com/knative/docs/blob/master/serving/using-a-custom-domain.md).
 
-To setup/reset the demos to correct state, run `scripts/demo-setup.sh` script which will re-initialize the Knative system.
+After you installed and configured Knative, run the `scripts/demo-setup.sh` script to re-initialize the Knative system to make sure you can run these demos.
 
 ## Demos
 
-* [image-deploy](image-deploy/README.md)
-* [blue-green-deploy](blue-green-deploy/README.md)
-* [auto-scaling](auto-scaling/README.md)
-* [src-to-url](src-to-url/README.md)
-* [event-flow](event-flow/README.md)
+Follow these instructions to run the demos in the presentation:
+
+* [Deploying and image](image-deploy/README.md)
+* [Routing and managing traffic with blue/green deployment](blue-green-deploy/README.md)
+* [Automatic scaling and sizing workloads](auto-scaling/README.md)
+* [Orchestrating source-to-URL workflows](src-to-url/README.md)
+* [Binding running services to eventing ecosystems](event-flow/README.md)
 
 
 ## Monitoring
+
+Run the following command to watch your Kubernetes pods:
 
 ```shell
 kubectl port-forward -n monitoring \
