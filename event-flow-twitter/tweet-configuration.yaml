@@ -13,17 +13,15 @@
 # limitations under the License.
 
 apiVersion: serving.knative.dev/v1alpha1
-kind: Service
+kind: Configuration
 metadata:
-  name: simple
+  name: tweet-example
   namespace: default
 spec:
-  runLatest:
-    configuration:
-      revisionTemplate:
-        spec:
-          container:
-            image: gcr.io/knative-samples/simple-app:latest
-            env:
-            - name: SIMPLE_MSG
-              value: "Hello GCP Next 2019!"
+  revisionTemplate:
+    metadata:
+      labels:
+        knative.dev/type: container
+    spec:
+      container:
+        image: github.com/mchmarny/next18/event-flow-twitter

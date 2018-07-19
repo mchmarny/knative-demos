@@ -12,18 +12,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-apiVersion: serving.knative.dev/v1alpha1
-kind: Service
+apiVersion: flows.knative.dev/v1alpha1
+kind: Flow
 metadata:
-  name: simple
+  name: tweet-example
   namespace: default
 spec:
-  runLatest:
-    configuration:
-      revisionTemplate:
-        spec:
-          container:
-            image: gcr.io/knative-samples/simple-app:latest
-            env:
-            - name: SIMPLE_MSG
-              value: "Hello GCP Next 2019!"
+  serviceAccountName: binder
+  trigger:
+    service: gcppubsub
+    eventType: receive
+    resource: gcppubsub/receive
+    parameters:
+      projectID: s9-demo
+      topic: knative-tweets
+  action:
+    target:
+      kind: Route
+      apiVersion: serving.knative.dev/v1alpha1
+      name: tweet-example
+
