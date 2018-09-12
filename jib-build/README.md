@@ -15,6 +15,7 @@ kubectl apply -f https://raw.githubusercontent.com/knative/build-templates/maste
 
 2. Deploy your app:
 
+
 ```shell
 kubectl apply -f jib-build/app.yaml
 ```
@@ -24,7 +25,7 @@ kubectl apply -f jib-build/app.yaml
 > First time you build, Maven will have to download all the dependencies (~3 min). After that, things get a lot faster. Subsequent builds as fast as ~15 sec.
 
 ```bash
-watch kubectl get pods
+kubectl get pods
 ```
 
 If you are interested what the build is doing, you can watch the build logs
