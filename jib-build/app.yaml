@@ -39,7 +39,7 @@ spec:
           name: jib-maven
           arguments:
           - name: IMAGE
-            value: &image us.gcr.io/s9-demo/vision:1.0.1
+            value: &image us.gcr.io/s9-demo/vision:1.0.3
           - name: CACHE
             value: build-cache
           - name: DIRECTORY
