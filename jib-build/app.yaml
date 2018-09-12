@@ -11,10 +11,21 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: build-cache-claim
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
 apiVersion: serving.knative.dev/v1alpha1
 kind: Service
 metadata:
-  name: src-to-url
+  name: vision
   namespace: default
 spec:
   runLatest:
@@ -22,13 +33,21 @@ spec:
       build:
         source:
           git:
-            url: https://github.com/mchmarny/simple-app.git
+            url: https://github.com/mchmarny/spring-cloud-gcp.git
             revision: master
         template:
-          name: kaniko
+          name: jib-maven
           arguments:
           - name: IMAGE
-            value: &image us.gcr.io/s9-demo/src-to-url:latest
+            value: &image us.gcr.io/s9-demo/vision:1.0.1
+          - name: CACHE
+            value: build-cache
+          - name: DIRECTORY
+            value: spring-cloud-gcp-samples/spring-cloud-gcp-vision-api-sample
+        volumes:
+          - name: build-cache
+            persistentVolumeClaim:
+              claimName: build-cache-claim
       revisionTemplate:
         metadata:
           labels:
@@ -36,6 +55,3 @@ spec:
         spec:
           container:
             image: *image
-            env:
-              - name: SIMPLE_MSG
-                value: "Images, what images? I'm Knative-built!"

@@ -1,19 +1,19 @@
 # Demo: Orchestrating source-to-URL workflows on Kubernetes
 
 
-This demo shows how to use Knative to go from source code in a git repository to a 
-running application with a URL. In this demo we will deploy a [simple app](https://github.com/mchmarny/simple-app) 
-to a Knative cluster. 
+This demo shows how to use Knative to go from source code in a git repository to a
+running application with a URL. In this demo we will deploy a [simple app](https://github.com/mchmarny/simple-app)
+to a Knative cluster.
 
 > Make sure to populate the service account password with JSON from the file.
 
-This sample leverages the kaniko build template to perform a source-to-container build on the 
+This sample leverages the kaniko build template to perform a source-to-container build on the
 Kubernetes cluster.
 
 1. Install the kaniko manifest and deploy the app:
-   
+
    ```bash
-   kubectl apply -f src-to-url/kaniko.yaml
+   kubectl apply -f https://raw.githubusercontent.com/knative/build-templates/master/kaniko/kaniko.yaml
    kubectl apply -f src-to-url/app.yaml
    ```
 
@@ -22,9 +22,9 @@ Kubernetes cluster.
    ```shell
    kubectl edit serviceaccount default
    ```
-   
+
 1. To find the URL for your service, use:
-   
+
    ```shell
    kubectl get services.serving.knative.dev src-to-url -o yaml
    ```

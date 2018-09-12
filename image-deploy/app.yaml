@@ -23,6 +23,7 @@ spec:
         spec:
           container:
             image: gcr.io/knative-samples/simple-app:latest
+            imagePullPolicy: Always
             env:
             - name: SIMPLE_MSG
-              value: "Hello GCP Next 2018!"
+              value: "こんにちはGCP次の2018"
