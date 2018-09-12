@@ -9,23 +9,23 @@ and deploy it to a Knative cluster.
 
 The Jib template builds Java/Kotlin/Groovy/Scala source into a container image using Google's Jib tool.
 
-   ```bash
-   kubectl apply -f https://raw.githubusercontent.com/knative/build-templates/master/jib/jib-maven.yaml
-   ```
+```bash
+kubectl apply -f https://raw.githubusercontent.com/knative/build-templates/master/jib/jib-maven.yaml
+```
 
 2. Deploy your app:
 
-   ```shell
-   kubectl apply -f jib-build/app.yaml
-   ```
+```shell
+kubectl apply -f jib-build/app.yaml
+```
 
 3. Wait for the build to complete:
 
 > First time you build, Maven will have to download all the dependencies (~3 min). After that, things get a lot faster. Subsequent builds as fast as ~15 sec.
 
-   ```bash
-   watch kubectl get pods
-   ```
+```bash
+watch kubectl get pods
+```
 
 If you are interested what the build is doing, you can watch the build logs
 
