@@ -28,15 +28,15 @@ kubectl apply -f jib-build/app.yaml
 kubectl get pods
 ```
 
-If you are interested what the build is doing, you can watch the build logs
+If you are interested in watching the on-cluster build, you can watch the `build-step-build-and-push` logs
 
 ```shell
 kubectl logs POD_NAME -c build-step-build-and-push -f
 ```
 
+1. Run the deployed app
 
-4. Navigate to the `vision` URL (https://vision.default.project-serverless.com/) to see the results.
-
+Navigate to the `vision` URL (https://vision.default.project-serverless.com/) to see the results.
 
 ## Cleanup
 
