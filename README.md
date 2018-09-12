@@ -14,6 +14,7 @@ Follow these instructions to run the demos in the presentation:
 * [Routing and managing traffic with blue/green deployment](blue-green-deploy/README.md)
 * [Automatic scaling and sizing workloads](auto-scaling/README.md)
 * [Orchestrating source-to-URL workflows](src-to-url/README.md)
+* [On-cluster Java/Kotlin/Groovy/Scala build and deploy using Jib](jib-build/README.md)
 * [Binding running services to an IoT core](event-flow/README.md)
 
 
