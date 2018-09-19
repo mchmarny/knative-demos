@@ -11,17 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-kind: PersistentVolumeClaim
-apiVersion: v1
-metadata:
-  name: build-cache-claim
-spec:
-  accessModes:
-  - ReadWriteOnce
-  resources:
-    requests:
-      storage: 5Gi
----
 apiVersion: serving.knative.dev/v1alpha1
 kind: Service
 metadata:
@@ -39,7 +28,7 @@ spec:
           name: jib-maven
           arguments:
           - name: IMAGE
-            value: &image us.gcr.io/s9-demo/vision:1.0.3
+            value: &image us.gcr.io/s9-demo/vision:1.1.10
           - name: CACHE
             value: build-cache
           - name: DIRECTORY
@@ -47,7 +36,7 @@ spec:
         volumes:
           - name: build-cache
             persistentVolumeClaim:
-              claimName: build-cache-claim
+              claimName: jib-build-cache-claim
       revisionTemplate:
         metadata:
           labels:

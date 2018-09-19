@@ -11,19 +11,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-apiVersion: serving.knative.dev/v1alpha1
-kind: Service
+kind: PersistentVolumeClaim
+apiVersion: v1
 metadata:
-  name: simple
-  namespace: default
+  name: jib-build-cache-claim
 spec:
-  runLatest:
-    configuration:
-      revisionTemplate:
-        spec:
-          container:
-            image: gcr.io/knative-samples/simple-app:latest
-            imagePullPolicy: Always
-            env:
-            - name: SIMPLE_MSG
-              value: "こんにちは Google Cloud Next 東京 2018"
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
