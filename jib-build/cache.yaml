@@ -14,10 +14,11 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: jib-build-cache-claim
+  name: jib-build-cache
 spec:
   accessModes:
-  - ReadWriteOnce
+    - ReadWriteOnce
+  volumeMode: Filesystem
   resources:
     requests:
       storage: 5Gi

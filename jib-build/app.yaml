@@ -23,24 +23,21 @@ spec:
         source:
           git:
             url: https://github.com/mchmarny/spring-cloud-gcp.git
-            revision: master
+            revision: s1p-demo
         template:
           name: jib-maven
           arguments:
-          - name: IMAGE
-            value: &image us.gcr.io/s9-demo/vision:1.1.10
-          - name: CACHE
-            value: build-cache
           - name: DIRECTORY
             value: spring-cloud-gcp-samples/spring-cloud-gcp-vision-api-sample
+          - name: IMAGE
+            value: &image us.gcr.io/s9-demo/vision:1.5.6
+          - name: CACHE
+            value: persistent-cache
         volumes:
-          - name: build-cache
-            persistentVolumeClaim:
-              claimName: jib-build-cache-claim
+        - name: persistent-cache
+          persistentVolumeClaim:
+            claimName: jib-build-cache
       revisionTemplate:
-        metadata:
-          labels:
-            knative.dev/type: app
         spec:
           container:
             image: *image
