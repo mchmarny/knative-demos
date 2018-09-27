@@ -47,6 +47,10 @@ export TLS_KEY_PATH="/etc/letsencrypt/live/demo.project-serverless.com/privkey.p
 export START_CLUSTER_NODE_SIZE=3
 export MAX_CLUSTER_NODE_SIZE=10
 
+# Service Account (Used for on-cluster buiods)
+# If empty one will be created,
+export SA_KEY_PATH=""
+
 # ==================================================================
 # You shouldn't have to edit anyting from here on
 # ==================================================================
@@ -88,6 +92,29 @@ else
   export IP_NAME=$STATIC_IP_NAME
 fi
 
+# ==================================================================
+# Printout Config
+# ==================================================================
+
+echo "=============================================================="
+echo "Runtime configuration:"
+echo "PROJECT_ID=${PROJECT_ID}"
+echo "CLUSTER_PREFIX=${CLUSTER_PREFIX}"
+echo "CLUSTER_REGION=${CLUSTER_REGION}"
+echo "BUILD_HEAD=${BUILD_HEAD}"
+echo "CLUSTER_DOMAIN=${CLUSTER_DOMAIN}"
+echo "STATIC_IP_NAME=${STATIC_IP_NAME}"
+echo "TLS_CERT_PATH=${TLS_CERT_PATH}"
+echo "TLS_KEY_PATH=${TLS_KEY_PATH}"
+echo "START_CLUSTER_NODE_SIZE=${START_CLUSTER_NODE_SIZE}"
+echo "MAX_CLUSTER_NODE_SIZE=${MAX_CLUSTER_NODE_SIZE}"
+echo "SA_KEY_PATH=${SA_KEY_PATH}"
+echo "=============================================================="
+
+
+
+
+
 # APIs
 # To speed up comment out if rerunning in existing already configured project
 echo "Enabling APIs..."
@@ -122,8 +149,7 @@ kubectl label namespace default istio-injection=enabled
 # Wait
 # TODO
 # kubectl get pods --namespace istio-system --field-selector=status.phase=Pending
-# for now just wait 10 sec
-sleep 10
+sleep 20
 kubectl get pods --namespace istio-system
 
 
@@ -133,9 +159,7 @@ kubectl apply -f $KNATIVE_MANIFEST
 
 # Wait
 # kubectl get pods --namespace knative-serving --field-selector=status.phase=Pending
-# kubectl get pods --namespace knative-build --field-selector=status.phase=Pending
-# for now just wait 10 sec
-sleep 10
+sleep 20
 kubectl get pods --namespace knative-serving
 kubectl get pods --namespace knative-build
 
@@ -218,5 +242,32 @@ EOF
 fi
 
 
-# TODO
 # Service Entry account
+if [ -z $SA_KEY_PATH ]
+then
+
+    export SA_NAME="sa-${CLUSTER_NAME}"
+    export SA_EMAIL="${SA_NAME}@${PROJECT_ID}.iam.gserviceaccount.com"
+    export SA_KEY_PATH="./${SA_NAME}-build.json"
+
+    echo "Creating build service account..."
+    gcloud iam service-accounts create $SA_NAME \
+      --display-name="${CLUSTER_ZONE} buil service account"
+
+    echo "Downloading build service account key..."
+    gcloud iam service-accounts keys create $SA_KEY_PATH --iam-account=$SA_EMAIL
+
+    echo "Binding build service account policy..."
+    gcloud projects add-iam-policy-binding $PROJECT_ID \
+      --member "serviceAccount:${SA_EMAIL}" \
+      --role roles/storage.objectCreator \
+      --role roles/storage.objectViewer
+
+else
+  if [ -f $SA_KEY_PATH ]
+  then
+
+  else
+    echo "Error: Service Account key specified but not found"
+  fi
+fi
