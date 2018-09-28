@@ -11,6 +11,22 @@
 #
 # ==================================================================
 
+# ==================================================================
+# What this script does
+# ==================================================================
+# 1.  Enables GCP APIs (cloudapis, container, containerregistry)
+# 2.  Creates a GKE cluster and binds you as an admin
+# 3.  Installs Knative with Istio on the GKE cluster
+# 4.  Installs common build pipelines (Kaniko,jib-maven)
+# 5.  Creates a static IP (unless existing one defined in STATIC_IP_NAME)
+# 6.  Configures Static IP in Istio ingress (#5 created or STATIC_IP_NAME)
+# 7.  Configures outbound network scope
+# 8.  Configures cusomt domain if one defined in CLUSTER_DOMAIN)
+# 9.  Configures Istio TLS (if certs provided)
+# 10. Creates Service Account in IAM (gets key, grants GCS R/W roles)
+# 11. Creates build secret and configures service account with it
+# ==================================================================
+
 
 # ==================================================================
 # Config
@@ -123,15 +139,6 @@ gcloud services enable \
   containerregistry.googleapis.com
 
 
-# IP
-if [[ -z "$STATIC_IP_NAME" ]]
-then
-  echo "Creating static IP (${IP_NAME})..."
-  gcloud beta compute addresses create $IP_NAME --region=${CLUSTER_REGION}
-  sleep 30 #TODO: watch for public IP being assigned
-  gcloud beta compute addresses list
-fi
-
 # Cluster
 echo "Creating cluster ${CLUSTER_NAME} in ${CLUSTER_ZONE}..."
 gcloud container clusters create $CLUSTER_NAME \
@@ -171,6 +178,29 @@ sleep 20
 kubectl get pods --namespace knative-serving
 kubectl get pods --namespace knative-build
 
+# Build Pipelines
+echo "Configuring build pipelines..."
+kubectl apply -f https://raw.githubusercontent.com/knative/build-templates/master/kaniko/kaniko.yaml
+kubectl apply -f https://raw.githubusercontent.com/knative/build-templates/master/jib/jib-maven.yaml
+
+
+# Static IP Gateway
+if [[ -z "$STATIC_IP_NAME" ]]
+then
+  echo "Creating static IP (${IP_NAME})..."
+  gcloud beta compute addresses create $IP_NAME --region=${CLUSTER_REGION}
+  sleep 30 #TODO: watch for public IP being assigned
+  gcloud beta compute addresses list
+fi
+
+# Static IP configured in ingress
+echo "Configuring static IP (${IP_NAME})..."
+kubectl patch svc knative-ingressgateway --namespace istio-system \
+  -p "{\"spec\":{\"loadBalancerIP\":\"${IP_NAME}\"}}"
+
+#TODO: validaiton, wait until EXTERNAL-IP == $IP_NAME
+kubectl get svc knative-ingressgateway --namespace istio-system
+
 
 # Network
 echo "Configuring outbound network..."
@@ -190,19 +220,6 @@ kubectl get configmap config-domain -n knative-serving -oyaml | \
   sed "s/example.com/${CLUSTER_DOMAIN}/" | \
   kubectl replace -f -
 
-
-# Build Pipelines
-echo "Configuring build pipelines..."
-kubectl apply -f https://raw.githubusercontent.com/knative/build-templates/master/kaniko/kaniko.yaml
-kubectl apply -f https://raw.githubusercontent.com/knative/build-templates/master/jib/jib-maven.yaml
-
-# Static IP
-echo "Configuring static IP (${IP_NAME})..."
-kubectl patch svc knative-ingressgateway --namespace istio-system \
-  -p "{\"spec\":{\"loadBalancerIP\":\"${IP_NAME}\"}}"
-
-#TODO: validaiton, wait until EXTERNAL-IP == $IP_NAME
-kubectl get svc knative-ingressgateway --namespace istio-system
 
 # TLS
 if [ ! -z $TLS_KEY_PATH ] || [ ! -z $TLS_CERT_PATH ]
@@ -280,8 +297,8 @@ fi
 # TODO: Add build-secret
   if [ -f $SA_KEY_PATH ]
   then
-    echo "Still need to parse out the $SA_KEY_PATH file..."
 
+    echo "Creating build secret..."
     export SA_KEY_TXT=$(cat ${SA_KEY_PATH} | tr -d '\n')
 
     OLDIFS="$IFS"
