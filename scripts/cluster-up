@@ -1,19 +1,19 @@
 #!/bin/bash
 
-# ==================================================================
+# =============================================================================
 # Disclaimer
-# ==================================================================
+# =============================================================================
 # This script is only a sample I use to create demo Knative cluster
 # It is not meant to be "easy install" or a recomanded way of
 # deploying Knative. Use GKE Serverless add-on to do that.
 #
 # This script comes without any warranty!
 #
-# ==================================================================
+# =============================================================================
 
-# ==================================================================
+# =============================================================================
 # What this script does
-# ==================================================================
+# =============================================================================
 # 1.  Enables GCP APIs (cloudapis, container, containerregistry)
 # 2.  Creates a GKE cluster and binds you as an admin
 # 3.  Installs Knative with Istio on the GKE cluster
@@ -25,12 +25,12 @@
 # 9.  Configures Istio TLS (if certs provided)
 # 10. Creates Service Account in IAM (gets key, grants GCS R/W roles)
 # 11. Creates build secret and configures service account with it
-# ==================================================================
+# =============================================================================
 
 
-# ==================================================================
+# =============================================================================
 # Config
-# ==================================================================
+# =============================================================================
 
 # GCP Project ID (not name)
 export PROJECT_ID="s9-demo"
@@ -67,15 +67,15 @@ export MAX_CLUSTER_NODE_SIZE=10
 # If empty one will be created,
 export SA_KEY_PATH=""
 
-# ==================================================================
+# =============================================================================
 # You shouldn't have to edit anyting from here on
-# ==================================================================
+# =============================================================================
 #
 # Todo
 # * Error handling (stop on ferst error)
 # * Service account (required for builds)
 #
-# ==================================================================
+# =============================================================================
 
 # Zone
 export CLUSTER_ZONE="${CLUSTER_REGION}-c"
@@ -105,13 +105,13 @@ else
   export IP_NAME=$STATIC_IP_NAME
 fi
 
-# ==================================================================
+# =============================================================================
 # Printout Config
-# ==================================================================
+# =============================================================================
 
-echo "=============================================================="
+echo "================================================================================"
 echo "Runtime configuration:"
-echo "=============================================================="
+echo "================================================================================"
 echo "PROJECT_ID=${PROJECT_ID}"
 echo "CLUSTER_PREFIX=${CLUSTER_PREFIX}"
 echo "CLUSTER_REGION=${CLUSTER_REGION}"
@@ -124,23 +124,24 @@ echo "STATIC_IP_NAME=${STATIC_IP_NAME}"
 echo "TLS_CERT_PATH=${TLS_CERT_PATH}"
 echo "TLS_KEY_PATH=${TLS_KEY_PATH}"
 echo "SA_KEY_PATH=${SA_KEY_PATH}"
-echo "=============================================================="
+echo "================================================================================"
 
 
 
-
-
-# APIs
-# To speed up comment out if rerunning in existing already configured project
+echo "================================================================================"
 echo "Enabling APIs..."
+echo "================================================================================"
+
 gcloud services enable \
   cloudapis.googleapis.com \
   container.googleapis.com \
   containerregistry.googleapis.com
 
 
-# Cluster
+echo "================================================================================"
 echo "Creating cluster ${CLUSTER_NAME} in ${CLUSTER_ZONE}..."
+echo "================================================================================"
+
 gcloud container clusters create $CLUSTER_NAME \
   --zone=$CLUSTER_ZONE \
   --cluster-version=latest \
@@ -156,8 +157,10 @@ kubectl create clusterrolebinding cluster-admin-binding \
 --clusterrole=cluster-admin \
 --user=$(gcloud config get-value core/account)
 
-# Istio
+echo "================================================================================"
 echo "Configuring Istio..."
+echo "================================================================================"
+
 kubectl apply -f $ISTIO_MANIFEST
 kubectl label namespace default istio-injection=enabled
 
@@ -168,8 +171,10 @@ sleep 20
 kubectl get pods --namespace istio-system
 
 
-# Knative
+echo "================================================================================"
 echo "Configuring Knative..."
+echo "================================================================================"
+
 kubectl apply -f $KNATIVE_MANIFEST
 
 # Wait
@@ -178,21 +183,23 @@ sleep 20
 kubectl get pods --namespace knative-serving
 kubectl get pods --namespace knative-build
 
-# Build Pipelines
+echo "================================================================================"
 echo "Configuring build pipelines..."
+echo "================================================================================"
+
 kubectl apply -f https://raw.githubusercontent.com/knative/build-templates/master/kaniko/kaniko.yaml
 kubectl apply -f https://raw.githubusercontent.com/knative/build-templates/master/jib/jib-maven.yaml
 
 
-# Static IP Gateway
+echo "================================================================================"
+echo "Configuring static public IP..."
+echo "================================================================================"
+
 if [[ -z "$STATIC_IP_NAME" ]]
 then
   echo "Creating static IP (${IP_NAME})..."
   gcloud beta compute addresses create $IP_NAME --region=${CLUSTER_REGION}
-  sleep 30 #TODO: watch for public IP being assigned
-  # TODO: Wait for the IP to be assigned
-  gcloud beta compute addresses list
-
+  gcloud beta compute addresses describe ${IP_NAME} --region=${CLUSTER_REGION}
 fi
 
 # Public IP
@@ -205,12 +212,12 @@ echo "Configuring static IP (${IP_ADDRESS})..."
 kubectl patch svc knative-ingressgateway --namespace istio-system \
   -p "{\"spec\":{\"loadBalancerIP\":\"${IP_ADDRESS}\"}}"
 
-#TODO: validaiton, wait until EXTERNAL-IP == $IP_NAME
 kubectl get svc knative-ingressgateway --namespace istio-system
 
-
-# Network
+echo "================================================================================"
 echo "Configuring outbound network..."
+echo "================================================================================"
+
 export NET_SCOPE=$(gcloud container clusters describe ${CLUSTER_NAME} --zone=${CLUSTER_ZONE} \
                   | grep -e clusterIpv4Cidr -e servicesIpv4Cidr \
                   | sed -e "s/clusterIpv4Cidr://" -e "s/servicesIpv4Cidr://" \
@@ -221,14 +228,21 @@ kubectl patch configmap config-network -n knative-serving -p \
 
 kubectl get configmap config-network -n knative-serving
 
-# Domain
+
+echo "================================================================================"
 echo "Configuring custom domain..."
+echo "================================================================================"
+
 kubectl get configmap config-domain -n knative-serving -oyaml | \
   sed "s/example.com/${CLUSTER_DOMAIN}/" | \
   kubectl replace -f -
 
 
-# TLS
+echo "================================================================================"
+echo "Configuring TLS (certificates)..."
+echo "================================================================================"
+
+
 if [ ! -z $TLS_KEY_PATH ] || [ ! -z $TLS_CERT_PATH ]
 then
   if [ -f $TLS_KEY_PATH ] && [ -f $TLS_CERT_PATH ]
@@ -278,7 +292,11 @@ EOF
 fi
 
 
-# Service account
+
+echo "================================================================================"
+echo "Configuring service account..."
+echo "================================================================================"
+
 if [ -z $SA_KEY_PATH ]
 then
 
@@ -301,7 +319,6 @@ then
 
 fi
 
-# TODO: Add build-secret
   if [ -f $SA_KEY_PATH ]
   then
 
@@ -344,3 +361,7 @@ select yn in "Yes" "No"; do
         No ) break;;
     esac
 done
+
+echo "================================================================================"
+echo "DONE"
+echo "================================================================================"
