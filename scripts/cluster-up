@@ -37,7 +37,7 @@ export CLUSTER_DOMAIN="wentserverless.com"
 
 # Static IP: check "gcloud beta compute addresses list"
 # leave empty to create, if specified, else use the specified
-export STATIC_IP_NAME="wentserverless-ip"
+export STATIC_IP_NAME=""
 
 # Certs: Leave empty if not needed, otherwise files must exist
 export TLS_CERT_PATH="/etc/letsencrypt/live/demo.project-serverless.com/fullchain.pem"
@@ -63,7 +63,6 @@ export SA_KEY_PATH=""
 
 # Zone
 export CLUSTER_ZONE="${CLUSTER_REGION}-c"
-echo "Using zone: ${CLUSTER_ZONE}"
 
 # Knative version variables
 if [ $BUILD_HEAD -eq 1 ]
@@ -85,8 +84,6 @@ fi
 if [[ -z "$STATIC_IP_NAME" ]]
 then
   export IP_NAME="${CLUSTER_NAME}-ip"
-  echo "Creating static IP (${IP_NAME})..."
-  gcloud beta compute addresses create $IP_NAME --region=${CLUSTER_REGION}
 else
   echo "Using existing IP (${STATIC_IP_NAME})..."
   export IP_NAME=$STATIC_IP_NAME
@@ -98,16 +95,18 @@ fi
 
 echo "=============================================================="
 echo "Runtime configuration:"
+echo "=============================================================="
 echo "PROJECT_ID=${PROJECT_ID}"
 echo "CLUSTER_PREFIX=${CLUSTER_PREFIX}"
 echo "CLUSTER_REGION=${CLUSTER_REGION}"
-echo "BUILD_HEAD=${BUILD_HEAD}"
+echo "CLUSTER_ZONE=${CLUSTER_ZONE}"
+echo "START_CLUSTER_NODE_SIZE=${START_CLUSTER_NODE_SIZE}"
+echo "MAX_CLUSTER_NODE_SIZE=${MAX_CLUSTER_NODE_SIZE}"
+echo "BUILD_HEAD=${BUILD_HEAD} (0=Stable 0.1.1, 1=HEAD)"
 echo "CLUSTER_DOMAIN=${CLUSTER_DOMAIN}"
 echo "STATIC_IP_NAME=${STATIC_IP_NAME}"
 echo "TLS_CERT_PATH=${TLS_CERT_PATH}"
 echo "TLS_KEY_PATH=${TLS_KEY_PATH}"
-echo "START_CLUSTER_NODE_SIZE=${START_CLUSTER_NODE_SIZE}"
-echo "MAX_CLUSTER_NODE_SIZE=${MAX_CLUSTER_NODE_SIZE}"
 echo "SA_KEY_PATH=${SA_KEY_PATH}"
 echo "=============================================================="
 
@@ -123,6 +122,15 @@ gcloud services enable \
   container.googleapis.com \
   containerregistry.googleapis.com
 
+
+# IP
+if [[ -z "$STATIC_IP_NAME" ]]
+then
+  echo "Creating static IP (${IP_NAME})..."
+  gcloud beta compute addresses create $IP_NAME --region=${CLUSTER_REGION}
+  sleep 30 #TODO: watch for public IP being assigned
+  gcloud beta compute addresses list
+fi
 
 # Cluster
 echo "Creating cluster ${CLUSTER_NAME} in ${CLUSTER_ZONE}..."
@@ -191,7 +199,7 @@ kubectl apply -f https://raw.githubusercontent.com/knative/build-templates/maste
 # Static IP
 echo "Configuring static IP (${IP_NAME})..."
 kubectl patch svc knative-ingressgateway --namespace istio-system \
-  --patch "{\"spec\":{\"loadBalancerIP\":\"${IP_NAME}\"}}"
+  -p "{\"spec\":{\"loadBalancerIP\":\"${IP_NAME}\"}}"
 
 #TODO: validaiton, wait until EXTERNAL-IP == $IP_NAME
 kubectl get svc knative-ingressgateway --namespace istio-system
@@ -201,10 +209,14 @@ if [ ! -z $TLS_KEY_PATH ] || [ ! -z $TLS_CERT_PATH ]
 then
   if [ -f $TLS_KEY_PATH ] && [ -f $TLS_CERT_PATH ]
   then
+
     echo "Configuring TLS cert (${IP_NAME})..."
     kubectl create --namespace istio-system secret tls istio-ingressgateway-certs \
       --key $TLS_KEY_PATH --cert $TLS_CERT_PATH
 
+    # TODO: cleaner way to preserve lines in cat
+    # Ideally this would be a normal patch command but the arrays get complicated
+    OLDIFS="$IFS"
     IFS=
     echo $(cat << EOF
 apiVersion: networking.istio.io/v1alpha3
@@ -234,7 +246,7 @@ spec:
       serverCertificate: /etc/istio/ingressgateway-certs/tls.crt
 EOF
 ) | kubectl apply -f -
-
+    IFS="$OLDIFS"
 
   else
     echo "Error: TLS key or cert specified but not found"
@@ -242,7 +254,7 @@ EOF
 fi
 
 
-# Service Entry account
+# Service account
 if [ -z $SA_KEY_PATH ]
 then
 
@@ -263,11 +275,48 @@ then
       --role roles/storage.objectCreator \
       --role roles/storage.objectViewer
 
-else
+fi
+
+# TODO: Add build-secret
   if [ -f $SA_KEY_PATH ]
   then
+    echo "Still need to parse out the $SA_KEY_PATH file..."
+
+    export SA_KEY_TXT=$(cat ${SA_KEY_PATH} | tr -d '\n')
+
+    OLDIFS="$IFS"
+    IFS=
+    echo $(cat << EOF
+apiVersion: v1
+kind: Secret
+metadata:
+  name: build-secret
+  annotations:
+    build.knative.dev/docker-0: https://us.gcr.io
+type: kubernetes.io/basic-auth
+stringData:
+  username: _json_key
+  password: |
+    $SA_KEY_TXT
+EOF
+) | kubectl apply -f -
+    IFS="$OLDIFS"
 
   else
     echo "Error: Service Account key specified but not found"
   fi
-fi
+
+
+echo "Configuring build service account in cluster..."
+kubectl patch serviceaccount default -p \
+  "{\"secrets\":[{\"name\":\"build-secret\"}]}"
+
+
+# Cleanup keys
+echo "Do you want to delete the Service Account key [${SA_KEY_PATH}]?"
+select yn in "Yes" "No"; do
+    case $yn in
+        Yes ) rm $SA_KEY_PATH ; break;;
+        No ) break;;
+    esac
+done
