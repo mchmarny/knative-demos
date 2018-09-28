@@ -190,13 +190,20 @@ then
   echo "Creating static IP (${IP_NAME})..."
   gcloud beta compute addresses create $IP_NAME --region=${CLUSTER_REGION}
   sleep 30 #TODO: watch for public IP being assigned
+  # TODO: Wait for the IP to be assigned
   gcloud beta compute addresses list
+
 fi
 
+# Public IP
+export IP_ADDRESS=$(gcloud beta compute addresses describe ${IP_NAME} \
+  --region=${CLUSTER_REGION} --format="value(address)")
+
+
 # Static IP configured in ingress
-echo "Configuring static IP (${IP_NAME})..."
+echo "Configuring static IP (${IP_ADDRESS})..."
 kubectl patch svc knative-ingressgateway --namespace istio-system \
-  -p "{\"spec\":{\"loadBalancerIP\":\"${IP_NAME}\"}}"
+  -p "{\"spec\":{\"loadBalancerIP\":\"${IP_ADDRESS}\"}}"
 
 #TODO: validaiton, wait until EXTERNAL-IP == $IP_NAME
 kubectl get svc knative-ingressgateway --namespace istio-system
