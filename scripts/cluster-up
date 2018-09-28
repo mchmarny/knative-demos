@@ -314,8 +314,7 @@ then
     echo "Binding build service account policy..."
     gcloud projects add-iam-policy-binding $PROJECT_ID \
       --member "serviceAccount:${SA_EMAIL}" \
-      --role roles/storage.objectCreator \
-      --role roles/storage.objectViewer
+      --role roles/storage.admin
 
 fi
 
