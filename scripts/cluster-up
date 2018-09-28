@@ -49,15 +49,15 @@ export CLUSTER_REGION="us-west1"
 export BUILD_HEAD=1
 
 # Custom domain: Leave empty if not necessary
-export CLUSTER_DOMAIN="wentserverless.com"
+export CLUSTER_DOMAIN="project-serverless.com"
 
 # Static IP: check "gcloud beta compute addresses list"
 # leave empty to create, if specified, else use the specified
 export STATIC_IP_NAME=""
 
 # Certs: Leave empty if not needed, otherwise files must exist
-export TLS_CERT_PATH="/etc/letsencrypt/live/demo.project-serverless.com/fullchain.pem"
-export TLS_KEY_PATH="/etc/letsencrypt/live/demo.project-serverless.com/privkey.pem"
+export TLS_CERT_PATH="/etc/letsencrypt/live/default.project-serverless.com-0001/fullchain.pem"
+export TLS_KEY_PATH="/etc/letsencrypt/live/default.project-serverless.com-0001/privkey.pem"
 
 # Clister size
 export START_CLUSTER_NODE_SIZE=3
@@ -306,7 +306,7 @@ then
 
     echo "Creating build service account..."
     gcloud iam service-accounts create $SA_NAME \
-      --display-name="${CLUSTER_ZONE} buil service account"
+      --display-name="${SA_NAME} buil service account"
 
     echo "Downloading build service account key..."
     gcloud iam service-accounts keys create $SA_KEY_PATH --iam-account=$SA_EMAIL
@@ -354,14 +354,19 @@ kubectl patch serviceaccount default -p \
 
 
 # Cleanup keys
-echo "Do you want to delete the Service Account key [${SA_KEY_PATH}]?"
-select yn in "Yes" "No"; do
-    case $yn in
-        Yes ) rm $SA_KEY_PATH ; break;;
-        No ) break;;
-    esac
-done
+echo "Removing created Service Account key [${SA_KEY_PATH}]?"
+rm $SA_KEY_PATH
+
+
+
+
 
 echo "================================================================================"
 echo "DONE"
+echo "================================================================================"
+echo ""
+echo "Next:"
+echo " * Create a A entry in your DNS service to point"
+echo "   [default.${CLUSTER_DOMAIN}] to [${IP_ADDRESS}]"
+echo ""
 echo "================================================================================"
