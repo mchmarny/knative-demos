@@ -13,7 +13,7 @@ Deploy the first version of the app to your cluster:
 `kubectl apply -f blue-green-deploy/stage1.yaml`
 
 The result will look like this
-![Stage 1](../images/bg-1.png)
+![Stage 1](../images/bg1.png)
 
 When the route is created and IP is assigned, navigate to https://route-demo.default.project-serverless.com
 to view the deployed app.
