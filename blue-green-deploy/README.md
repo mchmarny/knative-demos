@@ -30,7 +30,7 @@ Version 2 of the app is staged at this point. That means:
 * Knative creates a new route named v2 for testing the newly deployed version
 
 The result will look like this
-![Stage 2](../images/bg-2.png)
+![Stage 2](../images/bg2.png)
 
 You can refresh the app URL (https://route-demo.default.project-serverless.com) to see that
 the v2 app takes no traffic, but you can navigate directly to http://v2.route-demo.default.project-serverless.com
@@ -43,7 +43,7 @@ Deploy the updated routing configuration to your cluster:
 `kubectl apply -f blue-green-deploy/stage3.yaml`
 
 The result will look like this
-![Stage 3](../images/bg-3.png)
+![Stage 3](../images/bg3.png)
 
 Now, refresh the original route https://route-demo.default.project-serverless.com a few times to see
 that some traffic now goes to version 2 of the app.
@@ -60,7 +60,7 @@ Deploy the updated routing configuration to your cluster:
 This will complete the deployment by sending all traffic to the new (green) version.
 
 The result will look like this
-![Stage 4](../images/bg-4.png)
+![Stage 4](../images/bg4.png)
 
 Refresh original route https://route-demo.default.project-serverless.com a few times to verify that
 no traffic is being routed to v1 of the app.
