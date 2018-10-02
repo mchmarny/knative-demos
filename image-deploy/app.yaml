@@ -26,4 +26,4 @@ spec:
             imagePullPolicy: Always
             env:
             - name: SIMPLE_MSG
-              value: "こんにちは Google Cloud Next 東京 2018"
+              value: "Hello there"

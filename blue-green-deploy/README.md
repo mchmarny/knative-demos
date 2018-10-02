@@ -15,7 +15,7 @@ Deploy the first version of the app to your cluster:
 The result will look like this
 ![Stage 1](../images/bg1.png)
 
-When the route is created and IP is assigned, navigate to https://route-demo.default.project-serverless.com
+When the route is created and IP is assigned, navigate to https://blue-green.default.project-serverless.com
 to view the deployed app.
 
 ## Deploying Version 2 (Green)
@@ -32,8 +32,8 @@ Version 2 of the app is staged at this point. That means:
 The result will look like this
 ![Stage 2](../images/bg2.png)
 
-You can refresh the app URL (https://route-demo.default.project-serverless.com) to see that
-the v2 app takes no traffic, but you can navigate directly to http://v2.route-demo.default.project-serverless.com
+You can refresh the app URL (https://blue-green.default.project-serverless.com) to see that
+the v2 app takes no traffic, but you can navigate directly to http://v2.blue-green.default.project-serverless.com
 to view the new `v2` named route.
 
 ## Migrating traffic to the new version
@@ -45,7 +45,7 @@ Deploy the updated routing configuration to your cluster:
 The result will look like this
 ![Stage 3](../images/bg3.png)
 
-Now, refresh the original route https://route-demo.default.project-serverless.com a few times to see
+Now, refresh the original route https://blue-green.default.project-serverless.com a few times to see
 that some traffic now goes to version 2 of the app.
 
 > This sample shows a 50/50 split to assure that you don't have to refresh too much, but it's recommended
@@ -62,7 +62,7 @@ This will complete the deployment by sending all traffic to the new (green) vers
 The result will look like this
 ![Stage 4](../images/bg4.png)
 
-Refresh original route https://route-demo.default.project-serverless.com a few times to verify that
+Refresh original route https://blue-green.default.project-serverless.com a few times to verify that
 no traffic is being routed to v1 of the app.
 
 Note that:
@@ -70,7 +70,7 @@ Note that:
 * We kept the v1 (blue) entry with 0% traffic for the sake of speedy reverting, if that is ever necessary.
 * We added the named route `v1` to the old (blue) version of the app to allow access for comparison reasons.
 
-Now you can navigate to http://v1.route-demo.default.project-serverless.com to show that the old version
+Now you can navigate to http://v1.blue-green.default.project-serverless.com to show that the old version
 is accessible via the `v1` named route.
 
 
