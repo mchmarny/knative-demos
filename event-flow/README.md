@@ -113,7 +113,7 @@ Now we want to consume these IoT events, so let's create the function to handle 
 
 ```shell
 kubectl apply -f event-flow/route.yaml
-kubectl apply -f event-flow/configuration.yaml
+ko apply -f event-flow/configuration.yaml
 ```
 
 ## Create an event source
@@ -129,7 +129,7 @@ Then let's create a GCP PubSub as an event source that we can bind to.
 ```shell
 kubectl apply -f event-flow/serviceaccount.yaml
 kubectl apply -f event-flow/serviceaccountbinding.yaml
-kubectl apply -f event-flow/eventsource.yaml
+ko apply -f event-flow/eventsource.yaml
 kubectl apply -f event-flow/eventtype.yaml
 ```
 
