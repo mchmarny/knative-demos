@@ -17,7 +17,8 @@
 # 1.  Enables GCP APIs (cloudapis, container, containerregistry)
 # 2.  Creates a GKE cluster and binds you as an admin
 # 3.  Installs Knative with Istio on the GKE cluster
-# 4.  Installs common build pipelines (Kaniko,jib-maven)
+# 4.  Installs eventing and build into Knative cluster
+# 4.  Installs common build pipelines (kaniko,jib-maven)
 # 5.  Creates a static IP (unless existing one defined in STATIC_IP_NAME)
 # 6.  Configures Static IP in Istio ingress (#5 created or STATIC_IP_NAME)
 # 7.  Configures outbound network scope
@@ -88,7 +89,7 @@ then
   export BUILD_DATE=`date +%Y-%m-%d`
   export CLUSTER_NAME="${CLUSTER_PREFIX}-${BUILD_DATE}"
   export ISTIO_MANIFEST="https://storage.googleapis.com/knative-releases/latest/istio.yaml"
-  export KNATIVE_MANIFEST="https://storage.googleapis.com/knative-releases/latest/release.yaml"
+  export KNATIVE_MANIFEST="https://storage.googleapis.com/knative-releases/serving/latest/release.yaml"
 else
   # 0.1.1
   echo "Building using Knative 0.1.1"
@@ -195,8 +196,8 @@ echo "Configuring eventing..."
 echo "================================================================================"
 kubectl apply -f https://storage.googleapis.com/knative-releases/eventing/latest/release.yaml
 
-kubectl apply --filename https://storage.googleapis.com/knative-releases/eventing/latest/release-bus-gcppubsub.yaml
-kubectl apply --filename https://storage.googleapis.com/knative-releases/eventing/latest/release-clusterbus-gcppubsub.yaml
+kubectl apply -f https://storage.googleapis.com/knative-releases/eventing/latest/release-bus-gcppubsub.yaml
+kubectl apply -f https://storage.googleapis.com/knative-releases/eventing/latest/release-clusterbus-gcppubsub.yaml
 
 echo "================================================================================"
 echo "Configuring static public IP..."
