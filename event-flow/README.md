@@ -9,12 +9,12 @@ This demo shows how to bind a running service to an IoT core using PubSub as the
 Define environment variables:
 
 ```shell
-export IOTCORE_PROJECT="YOUR_PROJECT_NAME"
-export IOTCORE_REG="next18-demo"
-export IOTCORE_DEVICE="next18-demo-client"
+export IOTCORE_PROJECT="s9-demo"
+export IOTCORE_REG="knative-demo"
+export IOTCORE_DEVICE="knative-demo-client"
 export IOTCORE_REGION="us-central1"
-export IOTCORE_TOPIC_DATA="iot-demo"
-export IOTCORE_TOPIC_DEVICE="iot-demo-device"
+export IOTCORE_TOPIC_DATA="knative-iot-demo"
+export IOTCORE_TOPIC_DEVICE="knative-iot-demo-device"
 ```
 
 ## Create a device registry
@@ -83,13 +83,37 @@ The following payload is sent by this simulated IoT client:
 The `event_id` value here is a unique UUIDv4 ID, `event_ts` is UNIX Epoch time, and `metric`
 is a random number 1-10.
 
+## Install eventing into Kantive cluster
+
+```shell
+kubectl apply -f https://storage.googleapis.com/knative-releases/eventing/latest/release.yaml
+```
+
+## Add Knative Eventing bus
+
+In this example will use PubSub but other buses are supported
+
+```shell
+kubectl apply -f https://storage.googleapis.com/knative-releases/eventing/latest/release-bus-gcppubsub.yaml
+kubectl apply -f https://storage.googleapis.com/knative-releases/eventing/latest/release-clusterbus-gcppubsub.yaml
+```
+
+## Add Knative Eventing source
+
+GCP PubSub collects events published to a GCP PubSub topic and presents them as CloudEvents
+
+```shell
+kubectl apply -f https://storage.googleapis.com/knative-releases/eventing/latest/release-source-gcppubsub.yaml
+```
+
+
 ## Create a function that handles events
 
 Now we want to consume these IoT events, so let's create the function to handle the events:
 
 ```shell
 kubectl apply -f event-flow/route.yaml
-ko apply -f event-flow/configuration.yaml
+kubectl apply -f event-flow/configuration.yaml
 ```
 
 ## Create an event source
@@ -105,8 +129,8 @@ Then let's create a GCP PubSub as an event source that we can bind to.
 ```shell
 kubectl apply -f event-flow/serviceaccount.yaml
 kubectl apply -f event-flow/serviceaccountbinding.yaml
-ko apply -f event-flow/eventsource.yaml
-ko apply -f event-flow/eventtype.yaml
+kubectl apply -f event-flow/eventsource.yaml
+kubectl apply -f event-flow/eventtype.yaml
 ```
 
 ## Bind IoT events to our function

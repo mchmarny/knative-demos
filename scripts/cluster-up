@@ -190,6 +190,13 @@ echo "==========================================================================
 kubectl apply -f https://raw.githubusercontent.com/knative/build-templates/master/kaniko/kaniko.yaml
 kubectl apply -f https://raw.githubusercontent.com/knative/build-templates/master/jib/jib-maven.yaml
 
+echo "================================================================================"
+echo "Configuring eventing..."
+echo "================================================================================"
+kubectl apply -f https://storage.googleapis.com/knative-releases/eventing/latest/release.yaml
+
+kubectl apply --filename https://storage.googleapis.com/knative-releases/eventing/latest/release-bus-gcppubsub.yaml
+kubectl apply --filename https://storage.googleapis.com/knative-releases/eventing/latest/release-clusterbus-gcppubsub.yaml
 
 echo "================================================================================"
 echo "Configuring static public IP..."

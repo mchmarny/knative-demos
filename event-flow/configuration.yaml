@@ -25,3 +25,4 @@ spec:
     spec:
       container:
         image: github.com/mchmarny/next18/event-flow
+        imagePullPolicy: Always

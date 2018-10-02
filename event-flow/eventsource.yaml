@@ -18,7 +18,6 @@ metadata:
   name: gcppubsub
   namespace: default
 spec:
-  type: gcppubsub
   source: gcppubsub
   image: github.com/knative/eventing/pkg/sources/gcppubsub
   parameters:

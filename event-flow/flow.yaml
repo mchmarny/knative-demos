@@ -24,7 +24,7 @@ spec:
     resource: gcppubsub/receive
     parameters:
       projectID: s9-demo
-      topic: iot-demo
+      topic: knative-iot-demo
   action:
     target:
       kind: Route
