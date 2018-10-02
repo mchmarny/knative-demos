@@ -131,6 +131,7 @@ kubectl apply -f event-flow/serviceaccount.yaml
 kubectl apply -f event-flow/serviceaccountbinding.yaml
 ko apply -f event-flow/eventsource.yaml
 kubectl apply -f event-flow/eventtype.yaml
+kubectl apply -f https://storage.googleapis.com/knative-releases/eventing/latest/release-clusterbus-stub.yaml
 ```
 
 ## Bind IoT events to our function
