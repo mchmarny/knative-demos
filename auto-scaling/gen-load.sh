@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Defaults
-CONCURRENCY=4
+CONCURRENCY=1000
 REQUESTS=600
 URL="https://simple.default.project-serverless.com/"
 

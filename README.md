@@ -23,7 +23,7 @@ Follow these instructions to run the demos in the presentation:
 Run the following command to watch your Kubernetes pods while running the demos:
 
 ```shell
-kubectl port-forward -n monitoring \
-    $(kubectl get pods -n monitoring --selector=app=grafana --output=jsonpath="{.items..metadata.name}") \
-    3000
+kubectl port-forward -n knative-monitoring  \
+    $(kubectl get pods -n knative-monitoring --selector=app=grafana \
+    --output=jsonpath="{.items..metadata.name}") 3000
 ```
