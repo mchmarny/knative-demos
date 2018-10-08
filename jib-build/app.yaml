@@ -30,7 +30,7 @@ spec:
           - name: DIRECTORY
             value: spring-cloud-gcp-samples/spring-cloud-gcp-vision-api-sample
           - name: IMAGE
-            value: &image us.gcr.io/s9-demo/vision:1.0.12
+            value: &image us.gcr.io/s9-demo/vision:1.5.1
           - name: CACHE
             value: persistent-cache
         volumes:

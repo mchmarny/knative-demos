@@ -1,148 +1,25 @@
 #!/bin/bash
 
-# =============================================================================
-# Disclaimer
-# =============================================================================
-# This script is only a sample I use to create demo Knative cluster
-# It is not meant to be "easy install" or a recomanded way of
-# deploying Knative. Use GKE Serverless add-on to do that.
-#
-# This script comes without any warranty!
-#
-# =============================================================================
-
-# =============================================================================
-# What this script does
-# =============================================================================
-# 1.  Enables GCP APIs (cloudapis, container, containerregistry)
-# 2.  Creates a GKE cluster and binds you as an admin
-# 3.  Installs Knative with Istio on the GKE cluster
-# 4.  Installs eventing and build into Knative cluster
-# 4.  Installs common build pipelines (kaniko,jib-maven)
-# 5.  Creates a static IP (unless existing one defined in STATIC_IP_NAME)
-# 6.  Configures Static IP in Istio ingress (#5 created or STATIC_IP_NAME)
-# 7.  Configures outbound network scope
-# 8.  Configures cusomt domain if one defined in CLUSTER_DOMAIN)
-# 9.  Configures Istio TLS (if certs provided)
-# 10. Creates Service Account in IAM (gets key, grants GCS R/W roles)
-# 11. Creates build secret and configures service account with it
-# =============================================================================
-
-
-# =============================================================================
-# Config
-# =============================================================================
-
-# GCP Project ID (not name)
-export PROJECT_ID="s9-demo"
-
-# Cluster name: [knative]
-# Note, if oyu are using HEAD vs last know stable this will append
-# current date to this name (e.g. knative-2018-09-26)
-export CLUSTER_PREFIX="knative"
-
-# Region where the cluster will be deployed
-# Note: deployment will default to "c" zone in that region
+export PROJECT_ID="marek-demo"
+export CLUSTER_NAME="knative"
 export CLUSTER_REGION="us-west1"
-
-# Knative release or HEAD?
-# 1=HEAD 0=Last Stable (currently 0.1.1)
-export BUILD_HEAD=1
-
-# Custom domain: Leave empty if not necessary
-export CLUSTER_DOMAIN="project-serverless.com"
-
-# Static IP: check "gcloud beta compute addresses list"
-# leave empty to create, if specified, else use the specified
-export STATIC_IP_NAME=""
-
-# Certs: Leave empty if not needed, otherwise files must exist
-export TLS_CERT_PATH="/etc/letsencrypt/live/default.project-serverless.com-0001/fullchain.pem"
-export TLS_KEY_PATH="/etc/letsencrypt/live/default.project-serverless.com-0001/privkey.pem"
-
-# Clister size
+export CLUSTER_ZONE="${CLUSTER_REGION}-c"
+export CLUSTER_DOMAIN="projectserverless.com"
+export STATIC_IP="35.233.248.123" # gcloud beta compute addresses list
 export START_CLUSTER_NODE_SIZE=3
 export MAX_CLUSTER_NODE_SIZE=10
+export TLS_CERT_PATH="/home/mchmarny/knative/certs/serverlessproject.com/ca.pem"
+export TLS_KEY_PATH="/home/mchmarny/knative/certs/serverlessproject.com/pk.pem"
+# export SA_KEY_PATH="/home/mchmarny/knative/certs/build-sa.json" # edit in sa.yaml
 
-# Service Account (Used for on-cluster buiods)
-# If empty one will be created,
-export SA_KEY_PATH=""
-
-# =============================================================================
-# You shouldn't have to edit anyting from here on
-# =============================================================================
-#
-# Todo
-# * Error handling (stop on ferst error)
-# * Service account (required for builds)
-#
-# =============================================================================
-
-# Zone
-export CLUSTER_ZONE="${CLUSTER_REGION}-c"
-
-# Knative version variables
-if [ $BUILD_HEAD -eq 1 ]
-then
-  # HEAD
-  echo "Building using Knative:latest"
-  export BUILD_DATE=`date +%Y-%m-%d`
-  export CLUSTER_NAME="${CLUSTER_PREFIX}-${BUILD_DATE}"
-  export ISTIO_MANIFEST="https://storage.googleapis.com/knative-releases/latest/istio.yaml"
-  export KNATIVE_MANIFEST="https://storage.googleapis.com/knative-releases/serving/latest/release.yaml"
-else
-  # 0.1.1
-  echo "Building using Knative 0.1.1"
-  export CLUSTER_NAME="${CLUSTER_PREFIX}-011"
-  export ISTIO_MANIFEST="https://raw.githubusercontent.com/knative/serving/v0.1.1/third_party/istio-0.8.0/istio.yaml"
-  export KNATIVE_MANIFEST="https://github.com/knative/serving/releases/download/v0.1.1/release.yaml"
-fi
-
-if [[ -z "$STATIC_IP_NAME" ]]
-then
-  export IP_NAME="${CLUSTER_NAME}-ip"
-else
-  echo "Using existing IP (${STATIC_IP_NAME})..."
-  export IP_NAME=$STATIC_IP_NAME
-fi
-
-# =============================================================================
-# Printout Config
-# =============================================================================
-
-echo "================================================================================"
-echo "Runtime configuration:"
-echo "================================================================================"
-echo "PROJECT_ID=${PROJECT_ID}"
-echo "CLUSTER_PREFIX=${CLUSTER_PREFIX}"
-echo "CLUSTER_REGION=${CLUSTER_REGION}"
-echo "CLUSTER_ZONE=${CLUSTER_ZONE}"
-echo "START_CLUSTER_NODE_SIZE=${START_CLUSTER_NODE_SIZE}"
-echo "MAX_CLUSTER_NODE_SIZE=${MAX_CLUSTER_NODE_SIZE}"
-echo "BUILD_HEAD=${BUILD_HEAD} (0=Stable 0.1.1, 1=HEAD)"
-echo "CLUSTER_DOMAIN=${CLUSTER_DOMAIN}"
-echo "STATIC_IP_NAME=${STATIC_IP_NAME}"
-echo "TLS_CERT_PATH=${TLS_CERT_PATH}"
-echo "TLS_KEY_PATH=${TLS_KEY_PATH}"
-echo "SA_KEY_PATH=${SA_KEY_PATH}"
-echo "================================================================================"
-
-
-
-echo "================================================================================"
-echo "Enabling APIs..."
-echo "================================================================================"
-
+# API
 gcloud services enable \
   cloudapis.googleapis.com \
   container.googleapis.com \
   containerregistry.googleapis.com
 
-
-echo "================================================================================"
-echo "Creating cluster ${CLUSTER_NAME} in ${CLUSTER_ZONE}..."
-echo "================================================================================"
-
+# Cluster
+# gcloud container clusters delete $CLUSTER_NAME
 gcloud container clusters create $CLUSTER_NAME \
   --zone=$CLUSTER_ZONE \
   --cluster-version=latest \
@@ -152,228 +29,63 @@ gcloud container clusters create $CLUSTER_NAME \
   --scopes=cloud-platform,service-control,service-management,compute-rw,storage-ro,logging-write,monitoring-write,pubsub,datastore \
   --num-nodes=$START_CLUSTER_NODE_SIZE
 
-# cluster admin binding
-echo "Setting up cluster admin binding for current user..."
+# Binding
 kubectl create clusterrolebinding cluster-admin-binding \
 --clusterrole=cluster-admin \
 --user=$(gcloud config get-value core/account)
 
-echo "================================================================================"
-echo "Configuring Istio..."
-echo "================================================================================"
-
-kubectl apply -f $ISTIO_MANIFEST
+# Istio
+kubectl apply -f https://storage.googleapis.com/knative-releases/serving/latest/istio.yaml
 kubectl label namespace default istio-injection=enabled
+watch kubectl get pods -n istio-system
 
-# Wait
-# TODO
-# kubectl get pods --namespace istio-system --field-selector=status.phase=Pending
-sleep 20
-kubectl get pods --namespace istio-system
+# Knative
+kubectl apply -f https://storage.googleapis.com/knative-releases/serving/latest/release.yaml
+watch kubectl get pods -n knative-serving
 
-
-echo "================================================================================"
-echo "Configuring Knative..."
-echo "================================================================================"
-
-kubectl apply -f $KNATIVE_MANIFEST
-
-# Wait
-# kubectl get pods --namespace knative-serving --field-selector=status.phase=Pending
-sleep 20
-kubectl get pods --namespace knative-serving
-kubectl get pods --namespace knative-build
-
-echo "================================================================================"
-echo "Configuring build pipelines..."
-echo "================================================================================"
-
+# Knative Build
 kubectl apply -f https://raw.githubusercontent.com/knative/build-templates/master/kaniko/kaniko.yaml
 kubectl apply -f https://raw.githubusercontent.com/knative/build-templates/master/jib/jib-maven.yaml
+watch kubectl get pods -n knative-build
 
-echo "================================================================================"
-echo "Configuring eventing..."
-echo "================================================================================"
+# Knative Events
 kubectl apply -f https://storage.googleapis.com/knative-releases/eventing/latest/release.yaml
-
 kubectl apply -f https://storage.googleapis.com/knative-releases/eventing/latest/release-bus-gcppubsub.yaml
 kubectl apply -f https://storage.googleapis.com/knative-releases/eventing/latest/release-clusterbus-gcppubsub.yaml
 
-echo "================================================================================"
-echo "Configuring static public IP..."
-echo "================================================================================"
-
-if [[ -z "$STATIC_IP_NAME" ]]
-then
-  echo "Creating static IP (${IP_NAME})..."
-  gcloud beta compute addresses create $IP_NAME --region=${CLUSTER_REGION}
-  gcloud beta compute addresses describe ${IP_NAME} --region=${CLUSTER_REGION}
-fi
-
-# Public IP
-export IP_ADDRESS=$(gcloud beta compute addresses describe ${IP_NAME} \
-  --region=${CLUSTER_REGION} --format="value(address)")
-
 
 # Static IP configured in ingress
-echo "Configuring static IP (${IP_ADDRESS})..."
 kubectl patch svc knative-ingressgateway --namespace istio-system \
-  -p "{\"spec\":{\"loadBalancerIP\":\"${IP_ADDRESS}\"}}"
+  -p "{\"spec\":{\"loadBalancerIP\":\"${STATIC_IP}\"}}"
+kubectl get svc knative-ingressgateway --namespace istio-system -oyaml
 
-kubectl get svc knative-ingressgateway --namespace istio-system
 
-echo "================================================================================"
-echo "Configuring outbound network..."
-echo "================================================================================"
-
+# Outbound network
 export NET_SCOPE=$(gcloud container clusters describe ${CLUSTER_NAME} --zone=${CLUSTER_ZONE} \
                   | grep -e clusterIpv4Cidr -e servicesIpv4Cidr \
                   | sed -e "s/clusterIpv4Cidr://" -e "s/servicesIpv4Cidr://" \
                   | xargs echo | sed -e "s/ /,/")
-
 kubectl patch configmap config-network -n knative-serving -p \
     "{\"data\":{\"istio.sidecar.includeOutboundIPRanges\":\"${NET_SCOPE}\"}}"
+kubectl get configmap config-network -n knative-serving -oyaml
 
-kubectl get configmap config-network -n knative-serving
 
-
-echo "================================================================================"
-echo "Configuring custom domain..."
-echo "================================================================================"
-
+# Custom domain
 kubectl get configmap config-domain -n knative-serving -oyaml | \
   sed "s/example.com/${CLUSTER_DOMAIN}/" | \
   kubectl replace -f -
 
 
-echo "================================================================================"
-echo "Configuring TLS (certificates)..."
-echo "================================================================================"
+# Custom domain TLS
+kubectl create -n istio-system secret tls istio-ingressgateway-certs \
+  --key $TLS_KEY_PATH --cert $TLS_CERT_PATH
+
+# Gatewat
+kubectl apply -f gate.yaml
 
 
-if [ ! -z $TLS_KEY_PATH ] || [ ! -z $TLS_CERT_PATH ]
-then
-  if [ -f $TLS_KEY_PATH ] && [ -f $TLS_CERT_PATH ]
-  then
+# Build secret and service account
+kubectl apply -f build-secret.yaml
 
-    echo "Configuring TLS cert (${IP_NAME})..."
-    kubectl create --namespace istio-system secret tls istio-ingressgateway-certs \
-      --key $TLS_KEY_PATH --cert $TLS_CERT_PATH
-
-    # TODO: cleaner way to preserve lines in cat
-    # Ideally this would be a normal patch command but the arrays get complicated
-    OLDIFS="$IFS"
-    IFS=
-    echo $(cat << EOF
-apiVersion: networking.istio.io/v1alpha3
-kind: Gateway
-metadata:
-  name: knative-shared-gateway
-  namespace: knative-serving
-spec:
-  selector:
-    knative: ingressgateway
-  servers:
-  - hosts:
-    - '*'
-    port:
-      name: http
-      number: 80
-      protocol: HTTP
-  - hosts:
-    - '*'
-    port:
-      name: https
-      number: 443
-      protocol: HTTPS
-    tls:
-      mode: SIMPLE
-      privateKey: /etc/istio/ingressgateway-certs/tls.key
-      serverCertificate: /etc/istio/ingressgateway-certs/tls.crt
-EOF
-) | kubectl apply -f -
-    IFS="$OLDIFS"
-
-  else
-    echo "Error: TLS key or cert specified but not found"
-  fi
-fi
-
-
-
-echo "================================================================================"
-echo "Configuring service account..."
-echo "================================================================================"
-
-if [ -z $SA_KEY_PATH ]
-then
-
-    export SA_NAME="sa-${CLUSTER_NAME}"
-    export SA_EMAIL="${SA_NAME}@${PROJECT_ID}.iam.gserviceaccount.com"
-    export SA_KEY_PATH="./${SA_NAME}-build.json"
-
-    echo "Creating build service account..."
-    gcloud iam service-accounts create $SA_NAME \
-      --display-name="${SA_NAME} buil service account"
-
-    echo "Downloading build service account key..."
-    gcloud iam service-accounts keys create $SA_KEY_PATH --iam-account=$SA_EMAIL
-
-    echo "Binding build service account policy..."
-    gcloud projects add-iam-policy-binding $PROJECT_ID \
-      --member "serviceAccount:${SA_EMAIL}" \
-      --role roles/storage.admin
-
-fi
-
-  if [ -f $SA_KEY_PATH ]
-  then
-
-    echo "Creating build secret..."
-    export SA_KEY_TXT=$(cat ${SA_KEY_PATH} | tr -d '\n')
-
-    OLDIFS="$IFS"
-    IFS=
-    echo $(cat << EOF
-apiVersion: v1
-kind: Secret
-metadata:
-  name: build-secret
-  annotations:
-    build.knative.dev/docker-0: https://us.gcr.io
-type: kubernetes.io/basic-auth
-stringData:
-  username: _json_key
-  password: |
-    $SA_KEY_TXT
-EOF
-) | kubectl apply -f -
-    IFS="$OLDIFS"
-
-  else
-    echo "Error: Service Account key specified but not found"
-  fi
-
-
-echo "Configuring build service account in cluster..."
-kubectl patch serviceaccount default -p \
-  "{\"secrets\":[{\"name\":\"build-secret\"}]}"
-
-
-# Cleanup keys
-echo "Removing created Service Account key [${SA_KEY_PATH}]?"
-rm $SA_KEY_PATH
-
-
-
-
-
-echo "================================================================================"
-echo "DONE"
-echo "================================================================================"
-echo ""
-echo "Next:"
-echo " * Create a A entry in your DNS service to point"
-echo "   [default.${CLUSTER_DOMAIN}] to [${IP_ADDRESS}]"
-echo ""
-echo "================================================================================"
+# Add builder sa
+kubectl patch serviceaccount default -p "{\"secrets\":[{\"name\":\"build-secret\"}]}"
