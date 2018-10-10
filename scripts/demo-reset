@@ -15,3 +15,9 @@ kubectl delete -f image-deploy/app.yaml --ignore-not-found=true
 
 # src to url
 kubectl delete -f src-to-url/app.yaml --ignore-not-found=true
+
+# reset autoscaler back
+kubectl patch cm config-autoscaler -n knative-serving \
+  -p "{\"data\":{\"scale-to-zero-grace-period\":\"2m\"}}"
+
+
