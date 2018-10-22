@@ -6,6 +6,14 @@ of an application to a new version by changing the routing configuration.
 
 > Using custom domain with wildcard SSL cert configured for `default.project-serverless.com`. The `route-demo` application will be demo'd over HTTPS but the named routes like `v1` and `v2` will be accessed over HTTP.
 
+## Load Generation
+
+Use [fortio](https://github.com/fortio/fortio)
+
+```shell
+fortio load -t 10m -c 8 http://blue-green.default.project-serverless.com/
+```
+
 ## Deploying Version 1 (Blue)
 
 Deploy the first version of the app to your cluster:
