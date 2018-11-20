@@ -52,8 +52,6 @@ watch kubectl get pods -n knative-build
 
 # Knative Events
 kubectl apply -f https://storage.googleapis.com/knative-releases/eventing/latest/release.yaml
-kubectl apply -f https://storage.googleapis.com/knative-releases/eventing/latest/release-bus-gcppubsub.yaml
-kubectl apply -f https://storage.googleapis.com/knative-releases/eventing/latest/release-clusterbus-gcppubsub.yaml
 
 
 # Static IP configured in ingress
