@@ -83,8 +83,9 @@ kubectl create -n istio-system secret tls istio-ingressgateway-certs \
 # Gateway
 kubectl apply -f tls-gateway-patch.yaml
 
+# Seems like the follwoing steps are no longer required in 0.2.2
 # Build secret and service account
-kubectl apply -f build-secret.yaml
+# kubectl apply -f build-secret.yaml
 
 # Add builder sa
-kubectl patch serviceaccount default -p "{\"secrets\":[{\"name\":\"build-secret\"}]}"
+# kubectl patch serviceaccount default -p "{\"secrets\":[{\"name\":\"build-secret\"}]}"
