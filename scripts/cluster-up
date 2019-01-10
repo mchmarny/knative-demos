@@ -51,14 +51,14 @@ kubectl get pods --namespace istio-system
 kubectl apply -f https://github.com/knative/serving/releases/download/v0.3.0/serving.yaml
 kubectl apply -f https://github.com/knative/build/releases/download/v0.3.0/release.yaml
 kubectl apply -f https://github.com/knative/eventing/releases/download/v0.3.0/release.yaml
+kubectl apply -f https://github.com/knative/eventing-sources/releases/download/v0.3.0/release.yaml
 
-kubectl get pods --namespace knative-serving
-kubectl get pods --namespace knative-build
-kubectl get pods --namespace knative-eventing
-kubectl get pods --namespace knative-sources
-kubectl get pods --namespace knative-monitoring
-
-
+kubectl get pods --n knative-serving
+kubectl get pods --n knative-build
+kubectl get pods --n knative-eventing
+kubectl get pods --n knative-sources
+kubectl get pods --n knative-monitoring
+kubectl get pods --n gcssource-system
 
 
 
