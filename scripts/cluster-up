@@ -1,18 +1,23 @@
 #!/bin/bash
 
-export PROJECT_ID="marek-demo"
-export CLUSTER_NAME="knative"
+# Meta
+export PROJECT_ID="s9-demo"
+export CLUSTER_NAME="kn03"
 export CLUSTER_REGION="us-west1"
 export CLUSTER_ZONE="${CLUSTER_REGION}-c"
-export CLUSTER_DOMAIN="knative.tech"
-# gcloud beta compute addresses create knative-v022-ip --region=us-west1
-export STATIC_IP="35.197.82.104" # gcloud beta compute addresses list
 export START_CLUSTER_NODE_SIZE=3
 export MAX_CLUSTER_NODE_SIZE=10
+
+# Domain
+export CLUSTER_DOMAIN="knative.tech"
+# gcloud beta compute addresses create "${CLUSTER_NAME}-ip" --region=$CLUSTER_REGION
+# gcloud beta compute addresses list
+export STATIC_IP="35.199.160.136" 
+
+# Certs
 # certbot certonly --manual --preferred-challenges dns -d '*.default.knative.tech'
 export TLS_CERT_PATH="/Users/mchmarny/.gcp-keys/knative.tech/ca.pem"
 export TLS_KEY_PATH="/Users/mchmarny/.gcp-keys/knative.tech/pk.pem"
-# export SA_KEY_PATH="/home/mchmarny/knative/certs/build-sa.json" # edit in sa.yaml
 
 # API
 gcloud services enable \
