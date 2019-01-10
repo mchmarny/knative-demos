@@ -42,25 +42,28 @@ kubectl create clusterrolebinding cluster-admin-binding \
 --user=$(gcloud config get-value core/account)
 
 # Istio
-kubectl apply -f https://storage.googleapis.com/knative-releases/serving/latest/istio.yaml
+kubectl apply -f https://github.com/knative/serving/releases/download/v0.2.3/istio-crds.yaml
+kubectl apply -f https://github.com/knative/serving/releases/download/v0.2.3/istio.yaml
 kubectl label namespace default istio-injection=enabled
-watch kubectl get pods -n istio-system
+kubectl get pods --namespace istio-system
 
 # Knative
-kubectl apply -f https://storage.googleapis.com/knative-releases/serving/latest/release.yaml
-watch kubectl get pods -n knative-serving
+kubectl apply -f https://github.com/knative/serving/releases/download/v0.3.0/serving.yaml
+kubectl apply -f https://github.com/knative/build/releases/download/v0.3.0/release.yaml
+kubectl apply -f https://github.com/knative/eventing/releases/download/v0.3.0/release.yaml
 
-# Knative Build
-kubectl apply -f https://raw.githubusercontent.com/knative/build-templates/master/kaniko/kaniko.yaml
-kubectl apply -f https://raw.githubusercontent.com/knative/build-templates/master/jib/jib-maven.yaml
-watch kubectl get pods -n knative-build
+kubectl get pods --namespace knative-serving
+kubectl get pods --namespace knative-build
+kubectl get pods --namespace knative-eventing
+kubectl get pods --namespace knative-sources
+kubectl get pods --namespace knative-monitoring
 
-# Knative Events
-kubectl apply -f https://storage.googleapis.com/knative-releases/eventing/latest/release.yaml
+
+
 
 
 # Static IP configured in ingress
-kubectl patch svc knative-ingressgateway --namespace istio-system \
+kubectl patch svc knative-ingress-gateway --namespace istio-ingressgateway \
   -p "{\"spec\":{\"loadBalancerIP\":\"${STATIC_IP}\"}}"
 kubectl get svc knative-ingressgateway --namespace istio-system -oyaml
 
@@ -86,11 +89,5 @@ kubectl create -n istio-system secret tls istio-ingressgateway-certs \
   --key $TLS_KEY_PATH --cert $TLS_CERT_PATH
 
 # Gateway
-kubectl apply -f tls-gateway-patch.yaml
+kubectl apply -f https://raw.githubusercontent.com/mchmarny/knative-demos/master/scripts/tls-gateway-patch.yaml
 
-# Seems like the follwoing steps are no longer required in 0.2.2
-# Build secret and service account
-# kubectl apply -f build-secret.yaml
-
-# Add builder sa
-# kubectl patch serviceaccount default -p "{\"secrets\":[{\"name\":\"build-secret\"}]}"
