@@ -35,6 +35,10 @@ gcloud container clusters create $CLUSTER_NAME \
   --enable-autorepair \
   --scopes=cloud-platform,service-control,service-management,compute-rw,storage-ro,logging-write,monitoring-write,pubsub,datastore \
   --num-nodes=$START_CLUSTER_NODE_SIZE
+  
+# GPI
+# https://cloud.google.com/kubernetes-engine/docs/how-to/gpus
+  --accelerator type=nvidia-tesla-v100
 
 # Binding
 kubectl create clusterrolebinding cluster-admin-binding \
