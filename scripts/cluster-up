@@ -38,7 +38,10 @@ gcloud container clusters create $CLUSTER_NAME \
   
 # GPI
 # https://cloud.google.com/kubernetes-engine/docs/how-to/gpus
-  --accelerator type=nvidia-tesla-v100
+# --accelerator type=nvidia-tesla-v100
+# https://raw.githubusercontent.com/GoogleCloudPlatform/container-engine-accelerators/stable/nvidia-driver-installer/cos/daemonset-preloaded.yaml
+
+
 
 # Binding
 kubectl create clusterrolebinding cluster-admin-binding \
