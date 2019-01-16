@@ -26,4 +26,4 @@ spec:
             imagePullPolicy: Always
             env:
             - name: SIMPLE_MSG
-              value: "Hello London"
+              value: "Hello World"

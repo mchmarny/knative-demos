@@ -2,9 +2,9 @@
 
 # Meta
 export PROJECT_ID="s9-demo"
-export CLUSTER_NAME="kn03"
+export CLUSTER_NAME="knative-v03-head"
 export CLUSTER_REGION="us-west1"
-export CLUSTER_ZONE="${CLUSTER_REGION}-c"
+export CLUSTER_ZONE="${CLUSTER_REGION}-a"
 export START_CLUSTER_NODE_SIZE=3
 export MAX_CLUSTER_NODE_SIZE=10
 
@@ -12,7 +12,8 @@ export MAX_CLUSTER_NODE_SIZE=10
 export CLUSTER_DOMAIN="knative.tech"
 # gcloud beta compute addresses create "${CLUSTER_NAME}-ip" --region=$CLUSTER_REGION
 # gcloud beta compute addresses list
-export STATIC_IP="35.199.160.136" 
+export STATIC_IP="35.247.117.150"
+export KNATIVE_GATEWAY="istio-ingressgateway"
 
 # Certs
 # certbot certonly --manual --preferred-challenges dns -d '*.default.knative.tech'
@@ -35,44 +36,39 @@ gcloud container clusters create $CLUSTER_NAME \
   --enable-autorepair \
   --scopes=cloud-platform,service-control,service-management,compute-rw,storage-ro,logging-write,monitoring-write,pubsub,datastore \
   --num-nodes=$START_CLUSTER_NODE_SIZE
-  
-# GPI
-# https://cloud.google.com/kubernetes-engine/docs/how-to/gpus
-# --accelerator type=nvidia-tesla-v100
-# https://raw.githubusercontent.com/GoogleCloudPlatform/container-engine-accelerators/stable/nvidia-driver-installer/cos/daemonset-preloaded.yaml
 
-
+# TODO: Add GPU Pool provisioning
 
 # Binding
 kubectl create clusterrolebinding cluster-admin-binding \
 --clusterrole=cluster-admin \
 --user=$(gcloud config get-value core/account)
 
-# Istio
-kubectl apply -f https://github.com/knative/serving/releases/download/v0.2.3/istio-crds.yaml
-kubectl apply -f https://github.com/knative/serving/releases/download/v0.2.3/istio.yaml
+# Istio 0.3
+kubectl apply -f https://github.com/knative/serving/releases/download/v0.3.0/istio-crds.yaml
+kubectl apply -f https://github.com/knative/serving/releases/download/v0.3.0/istio.yaml
 kubectl label namespace default istio-injection=enabled
-kubectl get pods --namespace istio-system
+kubectl get pods -n istio-system
 
 # Knative
-kubectl apply -f https://github.com/knative/serving/releases/download/v0.3.0/serving.yaml
-kubectl apply -f https://github.com/knative/build/releases/download/v0.3.0/release.yaml
-kubectl apply -f https://github.com/knative/eventing/releases/download/v0.3.0/release.yaml
-kubectl apply -f https://github.com/knative/eventing-sources/releases/download/v0.3.0/release.yaml
+kubectl apply -f https://storage.googleapis.com/knative-nightly/serving/latest/serving.yaml
+kubectl apply -f https://storage.googleapis.com/knative-nightly/build/latest/build.yaml
+kubectl apply -f https://storage.googleapis.com/knative-nightly/build-pipeline/latest/release.yaml
+kubectl apply -f https://storage.googleapis.com/knative-nightly/eventing/latest/eventing.yaml
+kubectl apply -f https://storage.googleapis.com/knative-nightly/eventing/latest/in-memory-channel.yaml
+kubectl apply -f https://storage.googleapis.com/knative-nightly/eventing-sources/latest/message-dumper.yaml
+kubectl apply -f https://storage.googleapis.com/knative-nightly/eventing-sources/latest/release-with-gcppubsub.yaml
 
-kubectl get pods --n knative-serving
-kubectl get pods --n knative-build
-kubectl get pods --n knative-eventing
-kubectl get pods --n knative-sources
-kubectl get pods --n knative-monitoring
-kubectl get pods --n gcssource-system
-
-
+kubectl get pods -n knative-serving
+kubectl get pods -n knative-build
+kubectl get pods -n knative-eventing
+kubectl get pods -n knative-sources
+kubectl get pods -n knative-monitoring
 
 # Static IP configured in ingress
-kubectl patch svc knative-ingress-gateway --namespace istio-ingressgateway \
+kubectl patch svc $KNATIVE_GATEWAY -n istio-system \
   -p "{\"spec\":{\"loadBalancerIP\":\"${STATIC_IP}\"}}"
-kubectl get svc knative-ingressgateway --namespace istio-system -oyaml
+kubectl get svc $KNATIVE_GATEWAY --namespace istio-system
 
 
 # Outbound network
@@ -96,5 +92,7 @@ kubectl create -n istio-system secret tls istio-ingressgateway-certs \
   --key $TLS_KEY_PATH --cert $TLS_CERT_PATH
 
 # Gateway
+# kubectl edit gateway knative-ingress-gateway -n knative-serving
+# kubectl apply -f scripts/tls-gateway-patch.yaml
 kubectl apply -f https://raw.githubusercontent.com/mchmarny/knative-demos/master/scripts/tls-gateway-patch.yaml
 

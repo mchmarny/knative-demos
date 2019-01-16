@@ -1,11 +1,11 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
-  # ... skipped ...
+  name: knative-ingress-gateway
+  namespace: knative-serving
 spec:
   selector:
-    name: knative-ingress-gateway
-    namespace: knative-serving
+    istio: ingressgateway
   servers:
   - hosts:
     - '*'
