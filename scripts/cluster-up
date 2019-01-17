@@ -17,8 +17,8 @@ export KNATIVE_GATEWAY="istio-ingressgateway"
 
 # Certs
 # certbot certonly --manual --preferred-challenges dns -d '*.default.knative.tech'
-export TLS_CERT_PATH="/Users/mchmarny/.gcp-keys/knative.tech/ca.pem"
-export TLS_KEY_PATH="/Users/mchmarny/.gcp-keys/knative.tech/pk.pem"
+export TLS_CERT_PATH="/Users/mchmarny/.gcp-keys/demo.knative.tech/ca.pem"
+export TLS_KEY_PATH="/Users/mchmarny/.gcp-keys/demo.knative.tech/pk.pem"
 
 # API
 gcloud services enable \
@@ -48,6 +48,7 @@ kubectl create clusterrolebinding cluster-admin-binding \
 kubectl apply -f https://github.com/knative/serving/releases/download/v0.3.0/istio-crds.yaml
 kubectl apply -f https://github.com/knative/serving/releases/download/v0.3.0/istio.yaml
 kubectl label namespace default istio-injection=enabled
+kubectl label namespace demo istio-injection=enabled
 kubectl get pods -n istio-system
 
 # Knative
@@ -88,9 +89,12 @@ kubectl get configmap config-domain -n knative-serving -oyaml | \
 
 
 # Custom domain TLS
+# kubectl delete -n istio-system secret istio-ingressgateway-certs
+# kubectl get -n istio-system secret
 kubectl create -n istio-system secret tls istio-ingressgateway-certs \
   --key $TLS_KEY_PATH --cert $TLS_CERT_PATH
 
+``
 # Gateway
 # kubectl edit gateway knative-ingress-gateway -n knative-serving
 # kubectl apply -f scripts/tls-gateway-patch.yaml
