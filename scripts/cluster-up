@@ -2,7 +2,7 @@
 
 # Meta
 export PROJECT_ID="s9-demo"
-export CLUSTER_NAME="knative-v03-head"
+export CLUSTER_NAME="kn-v3-head"
 export CLUSTER_REGION="us-west1"
 export CLUSTER_ZONE="${CLUSTER_REGION}-a"
 export START_CLUSTER_NODE_SIZE=3
@@ -37,7 +37,20 @@ gcloud container clusters create $CLUSTER_NAME \
   --scopes=cloud-platform,service-control,service-management,compute-rw,storage-ro,logging-write,monitoring-write,pubsub,datastore \
   --num-nodes=$START_CLUSTER_NODE_SIZE
 
-# TODO: Add GPU Pool provisioning
+# gcloud container clusters get-credentials $CLUSTER_NAME
+
+# GPU POOL
+# gcloud compute accelerator-types list
+gcloud container node-pools create gpu-node-pool \
+  --machine-type=n1-standard-4 \
+  --accelerator type=nvidia-tesla-p100,count=1 \
+  --zone $CLUSTER_ZONE --cluster $CLUSTER_NAME \
+  --num-nodes 1 --min-nodes 1 --max-nodes 1 \
+  --enable-autoscaling
+
+# GPU Drivers
+kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/container-engine-accelerators/master/nvidia-driver-installer/ubuntu/daemonset-preloaded.yaml
+
 
 # Binding
 kubectl create clusterrolebinding cluster-admin-binding \
@@ -97,6 +110,7 @@ kubectl create -n istio-system secret tls istio-ingressgateway-certs \
 ``
 # Gateway
 # kubectl edit gateway knative-ingress-gateway -n knative-serving
+# kubectl delete gateway knative-shared-gateway -n knative-serving
 # kubectl apply -f scripts/tls-gateway-patch.yaml
 kubectl apply -f https://raw.githubusercontent.com/mchmarny/knative-demos/master/scripts/tls-gateway-patch.yaml
 
