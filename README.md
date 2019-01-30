@@ -1,8 +1,7 @@
 # Knative demos
 
-<img src ="./images/logo.png" align="left" />
-
-This repository contains a collection of Knative demos used in the [Knative](https://github.com/knative) technical session called "One platform for your functions, apps, and containers" ([slides](slides/knative-gcp-next18-one-platform-for-your-functions-applications-containers.pdf),[video](https://www.youtube.com/watch?v=F4_2gxTtLaQ)).
+<img src ="./images/logo.png" align="left" /> This repository contains a collection of demos used in the different Knative technical sessions (e.g. [One platform for your functions, apps, and containers](https://www.youtube.com/watch?v=F4_2gxTtLaQ). For list of official Knative samples see the [docs](https://github.com/knative/docs/tree/master/eventing/samples) repository.
+<br />
 
 ## Setup
 
