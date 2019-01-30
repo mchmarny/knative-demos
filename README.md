@@ -1,7 +1,9 @@
 # Knative demos
 
-<img src ="./images/logo.png" align="left" /> This repository contains a collection of demos used in the different Knative technical sessions (e.g. [One platform for your functions, apps, and containers](https://www.youtube.com/watch?v=F4_2gxTtLaQ). For list of official Knative samples see the [docs](https://github.com/knative/docs/tree/master/eventing/samples) repository.
-<br />
+<img src ="./images/logo.png" align="left" />
+<br /><br />
+This repository contains a collection of demos used in the different Knative technical sessions (e.g. [One platform for your functions, apps, and containers](https://www.youtube.com/watch?v=F4_2gxTtLaQ). For list of official Knative samples see the [docs](https://github.com/knative/docs/tree/master/eventing/samples) repository.
+<br style="word-break: break-all;" />
 
 ## Setup
 
