@@ -1,0 +1,15 @@
+apiVersion: sources.eventing.knative.dev/v1alpha1
+kind: GcpPubSubSource
+metadata:
+  name: iot-demo-pubsub-topic-source
+  namespace: demo
+spec:
+  googleCloudProject: s9-demo
+  topic: iot-demo-pubsub-topic
+  gcpCredsSecret:
+    name: google-cloud-key
+    key: key.json
+  sink:
+    apiVersion: eventing.knative.dev/v1alpha1
+    kind: Channel
+    name: iot-demo
