@@ -10,7 +10,7 @@ To run these samples you need to follow Knative [install](https://github.com/kna
 
 Follow these instructions to run the demos in the presentation:
 
-* [Deploying an image](image-deploy/README.md)
+* [Deploying an image](simple/README.md)
 * [Routing and managing traffic with blue/green deployment](blue-green-deploy/README.md)
 * [Orchestrating source-to-URL workflows](src-to-url/README.md)
 * [On-cluster Java/Kotlin/Groovy/Scala build and deploy using Jib](jib-build/README.md)

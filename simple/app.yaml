@@ -1,0 +1,16 @@
+apiVersion: serving.knative.dev/v1alpha1
+kind: Service
+metadata:
+  name: simple
+  namespace: demo
+spec:
+  runLatest:
+    configuration:
+      revisionTemplate:
+        spec:
+          container:
+            image: gcr.io/knative-samples/simple-app:latest
+            imagePullPolicy: Always
+            env:
+            - name: SIMPLE_MSG
+              value: "Hello World"
