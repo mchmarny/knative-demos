@@ -17,7 +17,7 @@ kubectl apply -f https://raw.githubusercontent.com/knative/build-templates/maste
 
 
 ```shell
-kubectl apply -f jib-build/app.yaml
+kubectl apply -f app.yaml
 ```
 
 ### Wait for the build to complete:
@@ -36,12 +36,12 @@ kubectl logs POD_NAME -c build-step-build-and-push -f
 
 ### Run the deployed app
 
-Navigate to the `vision` URL (https://vision.default.project-serverless.com/) to see the results.
+Navigate to the `vision` URL (https://vision.demo.knative.tech/) to see the results.
 
 ## Cleanup
 
 To remove the sample app from your cluster, delete the service record:
 
 ```bash
-kubectl delete -f jib-build/app.yaml
+kubectl delete -f app.yaml
 ```

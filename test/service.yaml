@@ -1,0 +1,29 @@
+apiVersion: serving.knative.dev/v1alpha1
+kind: Service
+metadata:
+  name: ktest
+  namespace: demo
+spec:
+  runLatest:
+    configuration:
+      revisionTemplate:
+        metadata:
+          labels:
+            demo: ktest
+        spec:
+          container:
+            image: gcr.io/knative-samples/ktest:latest
+            imagePullPolicy: Always
+            resources:
+              requests:
+                memory: "128Mi"
+                cpu: "0.5"
+                # nvidia.com/gpu: 1
+              limits:
+                memory: "256Mi"
+                cpu: "1"
+            env:
+            - name: RELEASE
+              value: "v0.6.1"
+            - name: LOG_TO_FILE
+              value: "yes"

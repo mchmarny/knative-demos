@@ -4,7 +4,7 @@ This repository contains a collection of Knative demos used in the [Knative](htt
 
 ## Setup
 
-To run these samples you need to follow Knative [install](https://github.com/knative/docs/tree/master/install) steps and post-install cluster configuration instructions for both [assigning a static IP](https://github.com/knative/docs/blob/master/serving/gke-assigning-static-ip-address.md) and [setting up a custom domain](https://github.com/knative/docs/blob/master/serving/using-a-custom-domain.md). 
+To run these samples you need to follow Knative [install](https://github.com/knative/docs/tree/master/install) steps and post-install cluster configuration instructions for both [assigning a static IP](https://github.com/knative/docs/blob/master/serving/gke-assigning-static-ip-address.md) and [setting up a custom domain](https://github.com/knative/docs/blob/master/serving/using-a-custom-domain.md).
 
 ## Demos
 
@@ -12,13 +12,14 @@ Follow these instructions to run the demos in the presentation:
 
 * [Deploying an image](image-deploy/README.md)
 * [Routing and managing traffic with blue/green deployment](blue-green-deploy/README.md)
-* [Automatic scaling and sizing workloads](auto-scaling/README.md)
 * [Orchestrating source-to-URL workflows](src-to-url/README.md)
 * [On-cluster Java/Kotlin/Groovy/Scala build and deploy using Jib](jib-build/README.md)
-* [Binding running services to an IoT core](event-flow/README.md)
-
+* [Binding running services to an IoT core](iot-events/README.md)
+* [Knative Serverless Contract Test](test/README.md)
 
 ## Monitoring
+
+> Note, the monitoring/observability components require [additional install](https://github.com/knative/docs/blob/master/serving/installing-logging-metrics-traces.md)
 
 Run the following command to watch your Kubernetes pods while running the demos:
 

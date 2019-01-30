@@ -15,7 +15,7 @@ apiVersion: serving.knative.dev/v1alpha1
 kind: Service
 metadata:
   name: simple
-  namespace: default
+  namespace: demo
 spec:
   runLatest:
     configuration:

@@ -2,19 +2,19 @@
 
 In this demo we will deploy a pre-built docker image of a [simple-app](https://github.com/mchmarny/simple-app) to a Knative cluster.
 
-> Assuming you already configured static IP and custom domain. In this demo we will use `project-serverless.com`
+> Assuming you already configured static IP and custom domain. In this demo we will use `knative.tech`
 
-1. Apply the configuration: 
-   
+1. Apply the configuration:
+
 ```bash
-kubectl apply -f image-deploy/app.yaml
+kubectl apply -f app.yaml
 ```
 
 Outputs:
 
 ```shell
 service "simple" created
-```   
+```
 
 1. Wait for the created ingress to obtain a public IP:
 
@@ -30,14 +30,14 @@ simple-00001-deployment-6d4966dc7c-mz4x2                    3/3       Running   
 ```
 
 
-1. Navigate to https://simple.default.project-serverless.com/ to see the results.
+1. Navigate to https://simple.demo.knative.tech/ to see the results.
 
 ## Cleanup
 
 To remove the sample app from your cluster, delete the `.yaml` file:
 
 ```bash
-kubectl delete -f image-deploy/app.yaml
+kubectl delete -f app.yaml
 ```
 
 Outputs:

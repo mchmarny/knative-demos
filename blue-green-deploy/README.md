@@ -18,7 +18,7 @@ fortio load -t 10m -c 8 http://blue-green.demo.knative.tech/
 
 Deploy regular Knative service:
 
-`kubectl apply -f blue-green-deploy/stage1.yaml`
+`kubectl apply -f stage1.yaml`
 
 The result will look like this
 ![Stage 1](../images/bg1.png)
@@ -29,7 +29,7 @@ When the service is created, you can navigate to https://blue-green.demo.knative
 
 To stop Knative from reconciling our changes during the rest of the demo, switch the deployed service from `runLatest` to `manual`.
 
-`kubectl apply -f blue-green-deploy/stage1-manual.yaml`
+`kubectl apply -f stage1-manual.yaml`
 
 Now we can edit the `route` and `configuration` objects manually
 
@@ -37,7 +37,7 @@ Now we can edit the `route` and `configuration` objects manually
 
 Version 2 of the sample application displays the text "App v2" on a green background:
 
-`kubectl apply -f blue-green-deploy/stage2.yaml`
+`kubectl apply -f stage2.yaml`
 
 Version 2 of the app is staged at this point. That means:
 
@@ -55,7 +55,7 @@ to view the new `v2` named route.
 
 Deploy the updated routing configuration to your cluster:
 
-`kubectl apply -f blue-green-deploy/stage3.yaml`
+`kubectl apply -f stage3.yaml`
 
 The result will look like this
 ![Stage 3](../images/bg3.png)
@@ -70,7 +70,7 @@ that some traffic now goes to version 2 of the app.
 
 Deploy the updated routing configuration to your cluster:
 
-`kubectl apply -f blue-green-deploy/stage4.yaml`
+`kubectl apply -f stage4.yaml`
 
 This will complete the deployment by sending all traffic to the new (green) version.
 
@@ -94,8 +94,8 @@ is accessible via the `v1` named route.
 To delete the demo app, enter the following commands:
 
 ```
-kubectl delete -f blue-green-deploy/stage4.yaml --ignore-not-found=true
-kubectl delete -f blue-green-deploy/stage3.yaml --ignore-not-found=true
-kubectl delete -f blue-green-deploy/stage2.yaml --ignore-not-found=true
-kubectl delete -f blue-green-deploy/stage1.yaml --ignore-not-found=true
+kubectl delete -f stage4.yaml --ignore-not-found=true
+kubectl delete -f stage3.yaml --ignore-not-found=true
+kubectl delete -f stage2.yaml --ignore-not-found=true
+kubectl delete -f stage1.yaml --ignore-not-found=true
 ```
