@@ -1,27 +1,16 @@
 apiVersion: serving.knative.dev/v1alpha1
-kind: Configuration
+kind: Service
 metadata:
   name: blue-green
-  namespace: default
+  namespace: demo
 spec:
-  revisionTemplate:
-    metadata:
-      labels:
-        knative.dev/type: container
-    spec:
-      container:
-        image: gcr.io/knative-samples/knative-route-demo:blue # The URL to the sample image
-        imagePullPolicy: Always
-        env:
-          - name: T_VERSION
+  runLatest:
+    configuration:
+      revisionTemplate:
+        spec:
+          container:
+            image: gcr.io/knative-samples/knative-route-demo:blue
+            imagePullPolicy: Always
+            env:
+            - name: T_VERSION
             value: "blue"
----
-apiVersion: serving.knative.dev/v1alpha1
-kind: Route
-metadata:
-  name: blue-green # The name of our route; appears in the URL to access the app
-  namespace: default # The namespace we're working in; also appears in the URL to access the app
-spec:
-  traffic:
-  - revisionName: blue-green-00001
-    percent: 100 # All traffic goes to this revision

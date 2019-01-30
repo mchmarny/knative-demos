@@ -4,27 +4,34 @@ This demo shows how to update an application to a new version using a blue/green
 traffic routing pattern. With Knative, you can safely reroute traffic from a live version
 of an application to a new version by changing the routing configuration.
 
-> Using custom domain with wildcard SSL cert configured for `default.project-serverless.com`. The `route-demo` application will be demo'd over HTTPS but the named routes like `v1` and `v2` will be accessed over HTTP.
+> Using custom domain with wildcard SSL cert configured for `demo.knative.tech`. The `route-demo` application will be demo'd over HTTPS but the named routes like `v1` and `v2` will be accessed over HTTP.
 
 ## Load Generation
 
 Use [fortio](https://github.com/fortio/fortio)
 
 ```shell
-fortio load -t 10m -c 8 http://blue-green.default.project-serverless.com/
+fortio load -t 10m -c 8 http://blue-green.demo.knative.tech/
 ```
 
 ## Deploying Version 1 (Blue)
 
-Deploy the first version of the app to your cluster:
+Deploy regular Knative service:
 
 `kubectl apply -f blue-green-deploy/stage1.yaml`
 
 The result will look like this
 ![Stage 1](../images/bg1.png)
 
-When the route is created and IP is assigned, navigate to https://blue-green.default.project-serverless.com
-to view the deployed app.
+When the service is created, you can navigate to https://blue-green.demo.knative.tech to view the deployed app.
+
+## Switch Version 1 (Blue) to Manual
+
+To stop Knative from reconciling our changes during the rest of the demo, switch the deployed service from `runLatest` to `manual`.
+
+`kubectl apply -f blue-green-deploy/stage1-manual.yaml`
+
+Now we can edit the `route` and `configuration` objects manually
 
 ## Deploying Version 2 (Green)
 
@@ -40,8 +47,8 @@ Version 2 of the app is staged at this point. That means:
 The result will look like this
 ![Stage 2](../images/bg2.png)
 
-You can refresh the app URL (https://blue-green.default.project-serverless.com) to see that
-the v2 app takes no traffic, but you can navigate directly to http://v2.blue-green.default.project-serverless.com
+You can refresh the app URL (https://blue-green.demo.knative.tech) to see that
+the v2 app takes no traffic, but you can navigate directly to http://v2.blue-green.demo.knative.tech
 to view the new `v2` named route.
 
 ## Migrating traffic to the new version
@@ -53,7 +60,7 @@ Deploy the updated routing configuration to your cluster:
 The result will look like this
 ![Stage 3](../images/bg3.png)
 
-Now, refresh the original route https://blue-green.default.project-serverless.com a few times to see
+Now, refresh the original route https://blue-green.demo.knative.tech a few times to see
 that some traffic now goes to version 2 of the app.
 
 > This sample shows a 50/50 split to assure that you don't have to refresh too much, but it's recommended
@@ -70,7 +77,7 @@ This will complete the deployment by sending all traffic to the new (green) vers
 The result will look like this
 ![Stage 4](../images/bg4.png)
 
-Refresh original route https://blue-green.default.project-serverless.com a few times to verify that
+Refresh original route https://blue-green.demo.knative.tech a few times to verify that
 no traffic is being routed to v1 of the app.
 
 Note that:
@@ -78,7 +85,7 @@ Note that:
 * We kept the v1 (blue) entry with 0% traffic for the sake of speedy reverting, if that is ever necessary.
 * We added the named route `v1` to the old (blue) version of the app to allow access for comparison reasons.
 
-Now you can navigate to http://v1.blue-green.default.project-serverless.com to show that the old version
+Now you can navigate to http://v1.blue-green.demo.knative.tech to show that the old version
 is accessible via the `v1` named route.
 
 

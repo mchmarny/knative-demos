@@ -2,7 +2,7 @@ apiVersion: serving.knative.dev/v1alpha1
 kind: Route
 metadata:
   name: blue-green # Updating our existing route
-  namespace: default
+  namespace: demo
 spec:
   traffic:
   - revisionName: blue-green-00001

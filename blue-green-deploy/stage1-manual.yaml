@@ -1,0 +1,7 @@
+apiVersion: serving.knative.dev/v1alpha1
+kind: Service
+metadata:
+  name: blue-green
+  namespace: demo
+spec:
+  manual: {}

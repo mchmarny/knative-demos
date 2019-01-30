@@ -2,7 +2,7 @@ apiVersion: serving.knative.dev/v1alpha1
 kind: Configuration
 metadata:
   name: blue-green # Configuration name is unchanged, since we're updating an existing Configuration
-  namespace: default
+  namespace: demo
 spec:
   revisionTemplate:
     metadata:
@@ -20,7 +20,7 @@ apiVersion: serving.knative.dev/v1alpha1
 kind: Route
 metadata:
   name: blue-green # Route name is unchanged, since we're updating an existing Route
-  namespace: default
+  namespace: demo
 spec:
   traffic:
   - revisionName: blue-green-00001
