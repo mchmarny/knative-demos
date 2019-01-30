@@ -3,6 +3,8 @@ kind: Service
 metadata:
   name: iot-message-dumper
   namespace: demo
+  labels:
+    serving.knative.dev/visibility: cluster-local # note use of cluster-local label
 spec:
   runLatest:
     configuration:
