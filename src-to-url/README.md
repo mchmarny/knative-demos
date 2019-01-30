@@ -10,32 +10,32 @@ to a Knative cluster.
 This sample leverages the kaniko build template to perform a source-to-container build on the
 Kubernetes cluster.
 
-1. Install the kaniko manifest and deploy the app:
+1. Install the kaniko manifest:
 
    ```bash
-   kubectl apply -f https://raw.githubusercontent.com/knative/build-templates/master/kaniko/kaniko.yaml
+   kubectl -n demo apply -f https://raw.githubusercontent.com/knative/build-templates/master/kaniko/kaniko.yaml
+   ```
+
+2. Install the app:
+
+   ```bash
    kubectl apply -f src-to-url/app.yaml
    ```
 
-1. Add `- name: build-secret` to the bottom of the service account:
 
-   ```shell
-   kubectl edit serviceaccount default
-   ```
-
-1. To find the URL for your service, use:
+3. To find the URL for your service, use:
 
    ```shell
    kubectl get services.serving.knative.dev src-to-url -o yaml
    ```
 
-1. Wait for the created ingress to obtain a public IP:
+4. Wait for the created ingress to obtain a public IP:
 
    ```bash
    watch kubectl get pods
    ```
 
-1. Navigate to the `src-to-url` URL (http://src-to-url.default.project-serverless.com/) to see the results.
+5. Navigate to the `src-to-url` URL (http://src-to-url.demo.project-serverless.com/) to see the results.
 
 
 ## Cleanup
