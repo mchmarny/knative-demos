@@ -2,7 +2,7 @@ apiVersion: serving.knative.dev/v1alpha1
 kind: Service
 metadata:
   name: vision
-  namespace: default
+  namespace: demo
 spec:
   runLatest:
     configuration:
@@ -17,13 +17,13 @@ spec:
           - name: DIRECTORY
             value: spring-cloud-gcp-samples/spring-cloud-gcp-vision-api-sample
           - name: IMAGE
-            value: &image gcr.io/s9-demo/vision:2.0.0
+            value: &image gcr.io/s9-demo/vision:3.2.5
           - name: CACHE
             value: persistent-cache
         volumes:
         - name: persistent-cache
           persistentVolumeClaim:
-            claimName: jib-build-cache
+            claimName: jib-build-cache-new
       revisionTemplate:
         spec:
           container:

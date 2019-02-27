@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# Meta
+export PROJECT_ID="s9-demo"
+export CLUSTER_NAME="kn-v04"
+export CLUSTER_REGION="us-west1"
+export CLUSTER_ZONE="${CLUSTER_REGION}-a"
+
+
+# GPU POOL
+# gcloud compute accelerator-types list
+gcloud container node-pools create gpu-node-pool \
+  --zone $CLUSTER_ZONE --cluster $CLUSTER_NAME \
+  --machine-type=n1-standard-4 \
+  --accelerator type=nvidia-tesla-p100,count=1 \
+  --num-nodes 1 --min-nodes 1 --max-nodes 1 \
+  --enable-autoscaling
+
+# GPU Drivers
+kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/container-engine-accelerators/master/nvidia-driver-installer/ubuntu/daemonset-preloaded.yaml
+

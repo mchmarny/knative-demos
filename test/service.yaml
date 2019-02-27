@@ -24,6 +24,6 @@ spec:
                 cpu: "1"
             env:
             - name: RELEASE
-              value: "v0.6.1"
+              value: "v0.6.3"
             - name: LOG_TO_FILE
               value: "yes"

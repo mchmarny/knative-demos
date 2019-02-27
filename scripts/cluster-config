@@ -1,0 +1,66 @@
+#!/bin/bash
+
+# Use this script to configure cluster provisined using the Knative install instractions
+
+# Meta
+export PROJECT_ID="s9-demo"
+export CLUSTER_NAME="kn-v04"
+export CLUSTER_REGION="us-west1"
+export CLUSTER_ZONE="${CLUSTER_REGION}-a"
+
+# Domain
+export CUSTOM_DOMAIN="knative.tech"
+
+# Gatewat
+export KNATIVE_GATEWAY="istio-ingressgateway"
+
+# Certs
+# certbot certonly --manual --preferred-challenges dns -d '*.default.knative.tech'
+export TLS_CERT_PATH="/Users/mchmarny/.gcp-keys/demo.knative.tech/ca.pem"
+export TLS_KEY_PATH="/Users/mchmarny/.gcp-keys/demo.knative.tech/pk.pem"
+
+
+
+
+# Create Static IP
+echo "Creating static IP: ${CLUSTER_NAME}-ip"
+gcloud beta compute addresses create "${CLUSTER_NAME}-ip" --region=$CLUSTER_REGION
+export EXTERNAL_IP=$(gcloud beta compute addresses describe ${CLUSTER_NAME}-ip --region=$CLUSTER_REGION --format="value(address)")
+echo "Static IP ${CLUSTER_NAME}-ip: ${EXTERNAL_IP}"
+
+
+# Assign Static IP configured in ingress
+echo "Setting Istio ingress gateway to: ${EXTERNAL_IP}"
+kubectl patch svc istio-ingressgateway -n istio-system \
+  -p "{\"spec\":{\"loadBalancerIP\":\"${EXTERNAL_IP}\"}}"
+
+
+
+# Outbound network
+export NET_SCOPE=$(gcloud container clusters describe ${CLUSTER_NAME} --zone=${CLUSTER_ZONE} \
+                  | grep -e clusterIpv4Cidr -e servicesIpv4Cidr \
+                  | sed -e "s/clusterIpv4Cidr://" -e "s/servicesIpv4Cidr://" \
+                  | xargs echo | sed -e "s/ /,/")
+kubectl patch configmap config-network -n knative-serving -p \
+    "{\"data\":{\"istio.sidecar.includeOutboundIPRanges\":\"${NET_SCOPE}\"}}"
+
+
+# Custom domain
+kubectl get configmap config-domain -n knative-serving -oyaml | \
+  sed "s/example.com/${CUSTOM_DOMAIN}/" | \
+  kubectl replace -f -
+
+
+# Custom domain TLS
+# kubectl delete -n istio-system secret istio-ingressgateway-certs
+# kubectl get -n istio-system secret
+kubectl create -n istio-system secret tls istio-ingressgateway-certs \
+  --key $TLS_KEY_PATH --cert $TLS_CERT_PATH
+
+``
+# Gateway
+# kubectl edit gateway knative-ingress-gateway -n knative-serving
+# kubectl delete gateway knative-shared-gateway -n knative-serving
+# kubectl apply -f scripts/tls-gateway-patch.yaml
+kubectl apply -f https://raw.githubusercontent.com/mchmarny/knative-demos/master/scripts/tls-gateway-patch.yaml
+

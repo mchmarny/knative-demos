@@ -14,7 +14,7 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: jib-build-cache
+  name: jib-build-cache-new
 spec:
   accessModes:
     - ReadWriteOnce

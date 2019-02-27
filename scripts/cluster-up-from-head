@@ -1,24 +1,14 @@
 #!/bin/bash
 
 # Meta
+export TODAY=`date +%Y-%m-%d`
 export PROJECT_ID="s9-demo"
-export CLUSTER_NAME="kn-v3-head"
+export CLUSTER_NAME="kn-head-${TODAY}"
 export CLUSTER_REGION="us-west1"
 export CLUSTER_ZONE="${CLUSTER_REGION}-a"
 export START_CLUSTER_NODE_SIZE=3
 export MAX_CLUSTER_NODE_SIZE=10
-
-# Domain
-export CLUSTER_DOMAIN="knative.tech"
-# gcloud beta compute addresses create "${CLUSTER_NAME}-ip" --region=$CLUSTER_REGION
-# gcloud beta compute addresses list
-export STATIC_IP="35.247.117.150"
 export KNATIVE_GATEWAY="istio-ingressgateway"
-
-# Certs
-# certbot certonly --manual --preferred-challenges dns -d '*.default.knative.tech'
-export TLS_CERT_PATH="/Users/mchmarny/.gcp-keys/demo.knative.tech/ca.pem"
-export TLS_KEY_PATH="/Users/mchmarny/.gcp-keys/demo.knative.tech/pk.pem"
 
 # API
 gcloud services enable \
@@ -61,6 +51,7 @@ kubectl create clusterrolebinding cluster-admin-binding \
 kubectl apply -f https://github.com/knative/serving/releases/download/v0.3.0/istio-crds.yaml
 kubectl apply -f https://github.com/knative/serving/releases/download/v0.3.0/istio.yaml
 kubectl label namespace default istio-injection=enabled
+kubectl create namespace demo
 kubectl label namespace demo istio-injection=enabled
 kubectl get pods -n istio-system
 
@@ -79,38 +70,5 @@ kubectl get pods -n knative-eventing
 kubectl get pods -n knative-sources
 kubectl get pods -n knative-monitoring
 
-# Static IP configured in ingress
-kubectl patch svc $KNATIVE_GATEWAY -n istio-system \
-  -p "{\"spec\":{\"loadBalancerIP\":\"${STATIC_IP}\"}}"
-kubectl get svc $KNATIVE_GATEWAY --namespace istio-system
 
-
-# Outbound network
-export NET_SCOPE=$(gcloud container clusters describe ${CLUSTER_NAME} --zone=${CLUSTER_ZONE} \
-                  | grep -e clusterIpv4Cidr -e servicesIpv4Cidr \
-                  | sed -e "s/clusterIpv4Cidr://" -e "s/servicesIpv4Cidr://" \
-                  | xargs echo | sed -e "s/ /,/")
-kubectl patch configmap config-network -n knative-serving -p \
-    "{\"data\":{\"istio.sidecar.includeOutboundIPRanges\":\"${NET_SCOPE}\"}}"
-kubectl get configmap config-network -n knative-serving -oyaml
-
-
-# Custom domain
-kubectl get configmap config-domain -n knative-serving -oyaml | \
-  sed "s/example.com/${CLUSTER_DOMAIN}/" | \
-  kubectl replace -f -
-
-
-# Custom domain TLS
-# kubectl delete -n istio-system secret istio-ingressgateway-certs
-# kubectl get -n istio-system secret
-kubectl create -n istio-system secret tls istio-ingressgateway-certs \
-  --key $TLS_KEY_PATH --cert $TLS_CERT_PATH
-
-``
-# Gateway
-# kubectl edit gateway knative-ingress-gateway -n knative-serving
-# kubectl delete gateway knative-shared-gateway -n knative-serving
-# kubectl apply -f scripts/tls-gateway-patch.yaml
-kubectl apply -f https://raw.githubusercontent.com/mchmarny/knative-demos/master/scripts/tls-gateway-patch.yaml
-
+echo "Use cluster-config to finish setting up this cluster"
