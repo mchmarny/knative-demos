@@ -1,0 +1,16 @@
+apiVersion: serving.knative.dev/v1alpha1
+kind: Service
+metadata:
+  name: scale
+  namespace: demo
+spec:
+  runLatest:
+    configuration:
+      revisionTemplate:
+        spec:
+          containerConcurrency: 1
+          container:
+            image: gcr.io/knative-samples/rester-tester:latest
+            env:
+            - name: T_VERSION
+              value: "1.1.2"
