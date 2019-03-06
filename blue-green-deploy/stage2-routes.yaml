@@ -1,14 +1,14 @@
 apiVersion: serving.knative.dev/v1alpha1
 kind: Route
 metadata:
-  name: blue-green # Updating our existing route
+  name: blue-green # Route name is unchanged, since we're updating an existing Route
   namespace: demo
 spec:
   traffic:
   # Find revision names
   # kubectl get revisions -n demo | grep blue-green
   - revisionName: blue-green-8lr5p
-    percent: 50 # Updating the percentage from 100 to 50
+    percent: 100 # All traffic still going to the first revision
   - revisionName: blue-green-w4nf7
-    percent: 50 # Updating the percentage from 0 to 50
-    name: v2
+    percent: 0 # 0% of traffic routed to the second revision
+    name: v2 # A named route

@@ -5,6 +5,8 @@ metadata:
   namespace: demo
 spec:
   traffic:
+  # Find revision names
+  # kubectl get revisions -n demo | grep blue-green
   - revisionName: blue-green-00001
     percent: 0
     name: v1 # Adding a new named route for v1
