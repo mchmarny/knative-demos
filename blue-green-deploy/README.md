@@ -6,6 +6,7 @@ of an application to a new version by changing the routing configuration.
 
 > Using custom domain with wildcard SSL cert configured for `demo.knative.tech`. The `route-demo` application will be demo'd over HTTPS but the named routes like `v1` and `v2` will be accessed over HTTP.
 
+> Note, starting with v0.4 release of Knative, the revision names are no longer predictable (fix in flight) so you will have to discover the revision names before modifying routes.
 
 ## Deploying Version 1 (Blue)
 

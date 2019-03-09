@@ -7,9 +7,9 @@ spec:
   traffic:
   # Find revision names
   # kubectl get revisions -n demo | grep blue-green
-  - revisionName: blue-green-00001
+  - revisionName: blue-green-8lr5p
     percent: 0
     name: v1 # Adding a new named route for v1
-  - revisionName: blue-green-00002
+  - revisionName: blue-green-w4nf7
     percent: 100
     # Named route for v2 has been removed, since we don't need it anymore
