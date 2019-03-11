@@ -9,8 +9,7 @@ spec:
       revisionTemplate:
         spec:
           container:
-            image: gcr.io/knative-samples/simple-app:latest
-            imagePullPolicy: Always
+            image: gcr.io/knative-samples/rester-tester:latest
             env:
             - name: SIMPLE_MSG
               value: "Hello World"

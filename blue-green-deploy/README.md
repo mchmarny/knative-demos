@@ -90,6 +90,7 @@ To delete the demo app, enter the following commands:
 ```
 kubectl delete -f stage4.yaml --ignore-not-found=true
 kubectl delete -f stage3.yaml --ignore-not-found=true
+kubectl delete -f stage2-routes.yaml --ignore-not-found=true
 kubectl delete -f stage2.yaml --ignore-not-found=true
 kubectl delete -f stage1.yaml --ignore-not-found=true
 ```

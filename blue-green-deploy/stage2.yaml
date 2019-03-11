@@ -11,7 +11,6 @@ spec:
     spec:
       container:
         image: gcr.io/knative-samples/knative-route-demo:green # URL to the new version of the sample app docker image
-        imagePullPolicy: Always
         env:
           - name: T_VERSION
             value: "green" # Updated value for the T_VERSION environment variable

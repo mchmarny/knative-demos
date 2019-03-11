@@ -10,7 +10,6 @@ spec:
         spec:
           container:
             image: gcr.io/knative-samples/knative-route-demo:blue
-            imagePullPolicy: Always
             env:
             - name: T_VERSION
             value: "blue"
