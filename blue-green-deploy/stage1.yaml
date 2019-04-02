@@ -1,15 +1,23 @@
 apiVersion: serving.knative.dev/v1alpha1
-kind: Service
+kind: Configuration
 metadata:
-  name: bg
+  name: bg1
   namespace: next
 spec:
-  runLatest:
-    configuration:
-      revisionTemplate:
-        spec:
-          container:
-            image: gcr.io/knative-samples/knative-route-demo:blue
-            env:
-            - name: T_VERSION
+  revisionTemplate:
+    spec:
+      container:
+        image: gcr.io/knative-samples/knative-route-demo:blue # The URL to the sample image
+        env:
+          - name: T_VERSION
             value: "blue"
+---
+apiVersion: serving.knative.dev/v1alpha1
+kind: Route
+metadata:
+  name: bg # The name of our route; appears in the URL to access the app
+  namespace: next # The namespace we're working in; also appears in the URL to access the app
+spec:
+  traffic:
+  - configurationName: bg1
+    percent: 100 # All traffic goes to this revision

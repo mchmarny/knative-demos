@@ -1,7 +1,0 @@
-apiVersion: serving.knative.dev/v1alpha1
-kind: Service
-metadata:
-  name: bg
-  namespace: next
-spec:
-  manual: {}

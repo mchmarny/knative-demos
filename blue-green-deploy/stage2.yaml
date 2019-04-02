@@ -1,16 +1,27 @@
 apiVersion: serving.knative.dev/v1alpha1
 kind: Configuration
 metadata:
-  name: bg # Configuration name is unchanged, since we're updating an existing Configuration
+  name: bg2
   namespace: next
 spec:
   revisionTemplate:
-    metadata:
-      labels:
-        knative.dev/type: container
     spec:
       container:
-        image: gcr.io/knative-samples/knative-route-demo:green # URL to the new version of the sample app docker image
+        image: gcr.io/knative-samples/knative-route-demo:green # The URL to the sample image
         env:
           - name: T_VERSION
-            value: "green" # Updated value for the T_VERSION environment variable
+            value: "green"
+---
+apiVersion: serving.knative.dev/v1alpha1
+kind: Route
+metadata:
+  name: bg # Route name is unchanged, since we're updating an existing Route
+  namespace: next
+spec:
+  traffic:
+  # kubectl get revisions -n next | grep bg-
+  - configurationName: bg1
+    percent: 100 # All traffic still going to the first revision
+  - configurationName: bg2
+    percent: 0 # 0% of traffic routed to the second revision
+    name: v2 # A named route

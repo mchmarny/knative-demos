@@ -1,14 +1,12 @@
 apiVersion: serving.knative.dev/v1alpha1
 kind: Route
 metadata:
-  name: bg # Updating our existing route
+  name: bg # Route name is unchanged, since we're updating an existing Route
   namespace: next
 spec:
   traffic:
-  # Find revision names
-  # kubectl get revisions -n demo | grep blue-green
-  - revisionName: bg-8lr5p
-    percent: 50 # Updating the percentage from 100 to 50
-  - revisionName: bg-w4nf7
-    percent: 50 # Updating the percentage from 0 to 50
-    name: v2
+  - configurationName: bg1
+    percent: 50 # All traffic still going to the first revision
+  - configurationName: bg2
+    percent: 50 # 0% of traffic routed to the second revision
+    name: v2 # A named route
