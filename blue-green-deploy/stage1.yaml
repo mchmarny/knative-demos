@@ -1,8 +1,8 @@
 apiVersion: serving.knative.dev/v1alpha1
 kind: Service
 metadata:
-  name: blue-green
-  namespace: demo
+  name: bg
+  namespace: next
 spec:
   runLatest:
     configuration:

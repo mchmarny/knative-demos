@@ -1,8 +1,8 @@
 apiVersion: serving.knative.dev/v1alpha1
 kind: Configuration
 metadata:
-  name: blue-green # Configuration name is unchanged, since we're updating an existing Configuration
-  namespace: demo
+  name: bg # Configuration name is unchanged, since we're updating an existing Configuration
+  namespace: next
 spec:
   revisionTemplate:
     metadata:
