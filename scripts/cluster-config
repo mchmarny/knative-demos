@@ -15,7 +15,7 @@ export CUSTOM_DOMAIN="knative.tech"
 export KNATIVE_GATEWAY="istio-ingressgateway"
 
 # Certs
-# certbot certonly --manual --preferred-challenges dns -d '*.default.knative.tech'
+# certbot certonly --manual --preferred-challenges dns -d '*.demo.knative.tech'
 export TLS_CERT_PATH="/Users/mchmarny/.gcp-keys/demo.knative.tech/ca.pem"
 export TLS_KEY_PATH="/Users/mchmarny/.gcp-keys/demo.knative.tech/pk.pem"
 
