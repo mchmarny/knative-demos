@@ -6,7 +6,7 @@ metadata:
   name: twitter-source
 spec:
   args:
-  - --query=EarthDay
+  - --query=knative
   env:
   - name: T_CONSUMER_KEY
     valueFrom:
