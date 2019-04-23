@@ -1,0 +1,16 @@
+apiVersion: serving.knative.dev/v1alpha1
+kind: Service
+metadata:
+  name: scored-eventstore
+spec:
+  runLatest:
+    configuration:
+      revisionTemplate:
+        spec:
+          container:
+            image: gcr.io/knative-samples/myevents:0.1.3
+            env:
+            - name: GCP_PROJECT_ID
+              value: "s9-demo"
+            - name: COLLECTION_NAME
+              value: "knative-tweets-scored"

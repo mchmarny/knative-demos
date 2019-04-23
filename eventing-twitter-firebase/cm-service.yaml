@@ -1,0 +1,15 @@
+apiVersion: serving.knative.dev/v1alpha1
+kind: Service
+metadata:
+  name: kcm
+spec:
+  runLatest:
+    configuration:
+      revisionTemplate:
+        spec:
+          container:
+            image: gcr.io/knative-samples/kcm:0.1.1
+            env:
+            - name: TEXT_PATH
+              # in this case, tweet text field
+              value: "text"
