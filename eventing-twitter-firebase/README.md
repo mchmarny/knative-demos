@@ -5,11 +5,19 @@ Simple pipeline of Twitter search event source using cluster local Knative servi
 
 ## Setup
 
-* Cloud Firestore
-* Twitter API and Secrets
-* Event Source
-* Service
-* Trigger
+* Dependencies
+  * Cloud Firestore
+  * Twitter API and Secrets
+* Twitter Event Source
+* Raw Event Store
+  * Service
+  * Trigger
+* Event Scoring
+  * Service
+  * Trigger
+* Scored Event Store
+  * Service
+  * Trigger
 
 ### Cloud Firestore
 
@@ -32,7 +40,7 @@ kubectl create secret generic ktweet-secrets -n demo \
 
 ### Event Source
 
-The search term used by Twitter Event Source is defined in the `source.yaml` under `--query=YourSearchTermHere`.
+The search term used by Twitter Event Source is defined in the `config/twitter-source.yaml` under `--query=YourSearchTermHere`.
 
 > Note, until Istio 1.1, you'll need to annotate the source with your luster's IP scope to ensure the source can emit events into the mesh.
 
@@ -54,11 +62,11 @@ metadata:
     ...
 ```
 
-Once you are done editing the `source.yaml` that, save it and apply to your Knative cluster:
+Once you are done editing the `config/twitter-source.yaml` that, save it and apply to your Knative cluster:
 
 
 ```shell
-kubectl apply -f source.yaml -n demo
+kubectl apply -f config/twitter-source.yaml -n demo
 ```
 
 Should return
@@ -83,7 +91,7 @@ containersource.sources.eventing.knative.dev/twitter-source   1m
 
 ### Service
 
-The only think in deploying the Knative service which will persist tweets returned by event source is the `GCP_PROJECT_ID` variable in `service.yaml`. While the use of project ID has generally been deprecated, the Firestore client still requires it to create client.
+The only think in deploying the Knative service which will persist tweets returned by event source is the `GCP_PROJECT_ID` variable in `config/store-service.yaml`. While the use of project ID has generally been deprecated, the Firestore client still requires it to create client.
 
 ```yaml
 env:
@@ -91,11 +99,11 @@ env:
     value: "s9-demo"
 ```
 
-Once you are done editing `service.yaml` file, you can apply it to your Knative cluster the same way you configured the above event source.
+Once you are done editing `config/store-service.yaml` file, you can apply it to your Knative cluster the same way you configured the above event source.
 
 
 ```shell
-kubectl apply -f service.yaml -n demo
+kubectl apply -f config/store-service.yaml -n demo
 ```
 
 The response should be
@@ -114,7 +122,7 @@ eventstore-0000n-deployment-5645f48b4d-mb24j  3/3       Running   0          10s
 
 ### Trigger
 
-Now that you have both the event source and service configured you can wire these two with simple `trigger`. You should not have to edit the `trigger.yaml` file unless you made some naming changes above.
+Now that you have both the event source and service configured you can wire these two with simple trigger. You should not have to edit the `config/store-trigger.yaml` file unless you made some naming changes above.
 
 Two things to point here, were are using `type: com.twitter` filter to send to our `eventstore` service only the events of twitter type. We also define the target service here by defiing its reference in the `subscriber` portion of trigger.
 
@@ -137,7 +145,7 @@ spec:
 To create a trigger run:
 
 ```shell
-kubectl apply -f trigger.yaml -n demo
+kubectl apply -f config/store-trigger.yaml -n demo
 ```
 
 Should return
@@ -163,13 +171,13 @@ twitter-events-trigger   True              default   http://twitter-events-trigg
 
 You should be able to see the Cloud Events being saved in your Firestore console under the `cloudevents` collection.
 
-You can also monitor the logs for both `source`
+You can also monitor the logs for both `twitter-source`
 
 ```shell
 kubectl logs -l eventing.knative.dev/source=twitter-source -n demo -c source
 ```
 
-and `service`
+and `store-service`
 
 ```shell
 kubectl logs -l serving.knative.dev/service=eventstore -n demo -c user-container
@@ -209,9 +217,7 @@ kubectl delete pod in-memory-channel-dispatcher-****** -n knative-eventing
 Run this before each demo to set known state
 
 ```shell
-kubectl delete -f source.yaml -n demo --ignore-not-found=true
-kubectl delete -f trigger.yaml -n demo --ignore-not-found=true
-kubectl delete -f service.yaml -n demo --ignore-not-found=true
+kubectl delete -f config/ -n demo --ignore-not-found=true
 ```
 
 
