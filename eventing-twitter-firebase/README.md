@@ -9,13 +9,16 @@ Simple pipeline of Twitter search event source using cluster local Knative servi
   * Cloud Firestore
   * Twitter API and Secrets
 * Twitter Event Source
-* Raw Event Store
+* Raw [Event Store](https://github.com/mchmarny/eventstore)
   * Service
   * Trigger
-* Event Scoring
+* [Event Scoring](https://github.com/mchmarny/kcm)
   * Service
   * Trigger
-* Scored Event Store
+* [Event Image Labeling](https://github.com/mchmarny/kimage)
+  * Service
+  * Trigger
+* [Scored Event Store](https://github.com/mchmarny/eventstore)
   * Service
   * Trigger
 
