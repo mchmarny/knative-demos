@@ -8,8 +8,11 @@ spec:
       revisionTemplate:
         spec:
           container:
-            image: gcr.io/knative-samples/kcm:0.1.1
+            image: gcr.io/knative-samples/kcm:0.1.4
             env:
+            # https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/tweet-object
             - name: TEXT_PATH
-              # in this case, tweet text field
               value: "text"
+            # Magnitude indicates the overall strength of emotion (both positive and negative
+            - name: MIN_MAGNITUDE
+              value: "0.9"
