@@ -4,7 +4,6 @@ Simple pipeline of Twitter search event source using cluster local Knative servi
 
 ![alt text](image/overview.png "Overview")
 
-
 ### Cloud Firestore
 
 To enable Firestore in your GCP project, [create Cloud Firestore project](https://console.cloud.google.com/projectselector/apis/api/firestore.googleapis.com/overview), which will also enables your API in the Cloud API Manager.
@@ -22,7 +21,6 @@ kubectl create secret generic ktweet-secrets -n demo \
     --from-literal=T_ACCESS_TOKEN=${T_ACCESS_TOKEN} \
     --from-literal=T_ACCESS_SECRET=${T_ACCESS_SECRET}
 ```
-
 
 ### Event Source
 
@@ -74,7 +72,6 @@ NAME                                                          AGE
 containersource.sources.eventing.knative.dev/twitter-source   1m
 ```
 
-
 ### Service
 
 The only think in deploying the Knative service which will persist tweets returned by event source is the `GCP_PROJECT_ID` variable in `config/store-service.yaml`. While the use of project ID has generally been deprecated, the Firestore client still requires it to create client.
@@ -104,7 +101,6 @@ To check if the service was deployed successfully you can check the status using
 NAME                                          READY     STATUS    RESTARTS   AGE
 eventstore-0000n-deployment-5645f48b4d-mb24j  3/3       Running   0          10s
 ```
-
 
 ### Trigger
 
@@ -205,7 +201,3 @@ Run this before each demo to set known state
 ```shell
 kubectl delete -f config/ -n demo --ignore-not-found=true
 ```
-
-
-
-
