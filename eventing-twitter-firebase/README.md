@@ -2,22 +2,8 @@
 
 Simple pipeline of Twitter search event source using cluster local Knative service to persisting tweets to Cloud Firestore collection.
 
+![alt text](image/overview.png "Overview")
 
-## Setup
-
-* Dependencies
-  * Cloud Firestore
-  * Twitter API and Secrets
-* Twitter Event Source
-* Raw Event Store
-  * Service
-  * Trigger
-* Event Scoring
-  * Service
-  * Trigger
-* Scored Event Store
-  * Service
-  * Trigger
 
 ### Cloud Firestore
 
