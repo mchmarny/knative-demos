@@ -26,26 +26,6 @@ kubectl create secret generic ktweet-secrets -n demo \
 
 The search term used by Twitter Event Source is defined in the `config/twitter-source.yaml` under `--query=YourSearchTermHere`.
 
-> Note, until Istio 1.1, you'll need to annotate the source with your luster's IP scope to ensure the source can emit events into the mesh.
-
-To find your cluster IP scope run the following `glcoud` command
-
-```shell
-gcloud container clusters describe ${CLUSTER_NAME} --zone=${CLUSTER_ZONE} \
-    | grep -e clusterIpv4Cidr -e servicesIpv4Cidr \
-    | sed -e "s/clusterIpv4Cidr://" -e "s/servicesIpv4Cidr://" \
-    | xargs echo | sed -e "s/ /,/"
-```
-
-Then paste the resulting string (`eg 10.12.0.0/14,10.15.240.0/20`) into `source.yaml` under `traffic.sidecar.istio.io/includeOutboundIPRanges`
-
-```yaml
-metadata:
-  annotations:
-    traffic.sidecar.istio.io/includeOutboundIPRanges: "10.12.0.0/14,10.15.240.0/20"
-    ...
-```
-
 Once you are done editing the `config/twitter-source.yaml` that, save it and apply to your Knative cluster:
 
 

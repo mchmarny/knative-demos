@@ -1,38 +1,35 @@
 apiVersion: sources.eventing.knative.dev/v1alpha1
 kind: ContainerSource
 metadata:
-  annotations:
-    traffic.sidecar.istio.io/includeOutboundIPRanges: "10.12.0.0/14,10.15.240.0/20"
   name: twitter-source
 spec:
   args:
-  - --query=knative
+    - --query=google
   env:
-  - name: T_CONSUMER_KEY
-    valueFrom:
-      secretKeyRef:
-        key: T_CONSUMER_KEY
-        name: ktweet-secrets
-  - name: T_CONSUMER_SECRET
-    valueFrom:
-      secretKeyRef:
-        key: T_CONSUMER_SECRET
-        name: ktweet-secrets
-  - name: T_ACCESS_TOKEN
-    valueFrom:
-      secretKeyRef:
-        key: T_ACCESS_TOKEN
-        name: ktweet-secrets
-  - name: T_ACCESS_SECRET
-    valueFrom:
-      secretKeyRef:
-        key: T_ACCESS_SECRET
-        name: ktweet-secrets
-  image: gcr.io/knative-samples/ktweet:0.1.8
+    - name: RELEASE
+      value: "v0.1.9"
+    - name: T_CONSUMER_KEY
+      valueFrom:
+        secretKeyRef:
+          key: T_CONSUMER_KEY
+          name: ktweet-secrets
+    - name: T_CONSUMER_SECRET
+      valueFrom:
+        secretKeyRef:
+          key: T_CONSUMER_SECRET
+          name: ktweet-secrets
+    - name: T_ACCESS_TOKEN
+      valueFrom:
+        secretKeyRef:
+          key: T_ACCESS_TOKEN
+          name: ktweet-secrets
+    - name: T_ACCESS_SECRET
+      valueFrom:
+        secretKeyRef:
+          key: T_ACCESS_SECRET
+          name: ktweet-secrets
+  image: gcr.io/cloudylabs-public/ktweet:0.1.10
   sink:
     apiVersion: eventing.knative.dev/v1alpha1
     kind: Broker
     name: default
-    # apiVersion: serving.knative.dev/v1alpha1
-    # kind: Service
-    # name: eventstore
