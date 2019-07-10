@@ -24,40 +24,13 @@ When the service is created, you can navigate to https://bg.demo.knative.tech to
 
 You can inspect the created resources with the following `kubectl` commands:
 
-View the created Service resource:
-
 ```shell
-kubectl get ksvc bg -o yaml -n demo
-```
-
-View the created Route resource:
-
-```shell
-kubectl get route -l "serving.knative.dev/service=bg" -o yaml -n demo
-```
-
-View the Kubernetes Service created by the Route
-
-```shell
-kubectl get service -l "serving.knative.dev/service=bg" -o yaml -n demo
-```
-
-View the created Configuration resource:
-
-```shell
-kubectl get configuration -l "serving.knative.dev/service=bg" -o yaml -n demo
-```
-
-View the Revision that was created by our Configuration:
-
-```shell
-kubectl get revision -l "serving.knative.dev/service=bg" -o yaml -n demo
-```
-
-View the Deployment created by our Revision
-
-```shell
-kubectl get deployment -l "serving.knative.dev/service=bg" -o yaml -n demo
+kubectl get ksvc bg -n demo
+kubectl get route -l "serving.knative.dev/service=bg" -n demo
+kubectl get service -l "serving.knative.dev/service=bg" -n demo
+kubectl get configuration -l "serving.knative.dev/service=bg" -n demo
+kubectl get revision -l "serving.knative.dev/service=bg" -n demo
+kubectl get deployment -l "serving.knative.dev/service=bg" -n demo
 ```
 
 ## Deploying Version 2 (Green)
