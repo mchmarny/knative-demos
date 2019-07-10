@@ -4,7 +4,7 @@ metadata:
   name: twitter-source
 spec:
   args:
-    - --query=google
+    - --query=knative
   env:
     - name: RELEASE
       value: "v0.1.9"
