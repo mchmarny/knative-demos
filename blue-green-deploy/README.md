@@ -78,6 +78,15 @@ Note that:
 Now you can navigate to https://bg-previous.demo.knative.tech to show that the old version
 is accessible via the `v1` named route.
 
+## Rall-back to initial release
+
+If needed, you can rall back to the last know to be good revision
+
+`kubectl apply -f stage5.yaml`
+
+This will complete reroute all traffic to the initial revision. Refresh https://bg.demo.knative.tech to see all traffic being sent to the original revision.
+
+
 ## Cleanup
 
 To delete the demo app, enter the following command:
