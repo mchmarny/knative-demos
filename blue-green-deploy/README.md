@@ -46,7 +46,7 @@ Version 2 of the app is staged at this point. That means:
 
 
 You can refresh the app URL (https://bg.demo.knative.tech) to see that
-the v2 app takes no traffic, but you can navigate there directly https://bg-candidate.demo.demome.tech
+the v2 app takes no traffic, but you can navigate there directly https://bg-candidate.demo.knative.tech
 
 ## Migrating traffic to the new version
 
