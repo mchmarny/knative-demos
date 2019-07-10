@@ -13,3 +13,13 @@ spec:
           env:
             - name: T_VERSION
               value: blue
+  traffic:
+    - tag: previous
+      revisionName: bg-1
+      percent: 100
+    - tag: current
+      revisionName: bg-2
+      percent: 0
+    - tag: latest
+      latestRevision: true
+      percent: 0

@@ -1,12 +1,25 @@
 apiVersion: serving.knative.dev/v1alpha1
-kind: Route
+kind: Service
 metadata:
-  name: bg # Route name is unchanged, since we're updating an existing Route
-  namespace: next
+  name: bg
+  namespace: demo
 spec:
+  template:
+    metadata:
+      name: bg-2
+    spec:
+      containers:
+        - image: gcr.io/knative-samples/knative-route-demo:green
+          env:
+            - name: T_VERSION
+              value: green
   traffic:
-  - configurationName: bg1
-    percent: 50 # All traffic still going to the first revision
-  - configurationName: bg2
-    percent: 50 # 0% of traffic routed to the second revision
-    name: v2 # A named route
+    - tag: current
+      revisionName: bg-1
+      percent: 50
+    - tag: candidate
+      revisionName: bg-2
+      percent: 50
+    - tag: latest
+      latestRevision: true
+      percent: 0
