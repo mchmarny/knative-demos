@@ -52,17 +52,24 @@ NAME                                                          AGE
 containersource.sources.eventing.knative.dev/twitter-source   1m
 ```
 
-### Service
+You can also right away see if the there are some tweets matching your search
 
-The only think in deploying the Knative service which will persist tweets returned by event source is the `GCP_PROJECT_ID` variable in `config/store-service.yaml`. While the use of project ID has generally been deprecated, the Firestore client still requires it to create client.
-
-```yaml
-env:
-  - name: GCP_PROJECT_ID
-    value: "s9-demo"
+```shell
+kubectl logs -l eventing.knative.dev/source=twitter-source -n demo -c source
 ```
 
-Once you are done editing `config/store-service.yaml` file, you can apply it to your Knative cluster the same way you configured the above event source.
+Should return
+
+```shell
+2019/07/11 13:23:14 Got tweet:     1149308143958134784
+2019/07/11 13:23:14 Posting tweet: 1149308143958134784
+2019/07/11 13:23:14 Got tweet:     1149308145359118336
+2019/07/11 13:23:14 Posting tweet: 1149308145359118336
+```
+
+### Store Service
+
+The store service will persist tweets into collection defined in the `config/store-service.yaml` (`knative-tweets` by default). To deploy this service apply it to your Knative cluster the same way you configured the above event source.
 
 
 ```shell
@@ -82,27 +89,9 @@ NAME                                          READY     STATUS    RESTARTS   AGE
 eventstore-0000n-deployment-5645f48b4d-mb24j  3/3       Running   0          10s
 ```
 
-### Trigger
-
 Now that you have both the event source and service configured you can wire these two with simple trigger. You should not have to edit the `config/store-trigger.yaml` file unless you made some naming changes above.
 
 Two things to point here, were are using `type: com.twitter` filter to send to our `eventstore` service only the events of twitter type. We also define the target service here by defiing its reference in the `subscriber` portion of trigger.
-
-```yaml
-apiVersion: eventing.knative.dev/v1alpha1
-kind: Trigger
-metadata:
-  name: twitter-events-trigger
-spec:
-  filter:
-    sourceAndType:
-      type: com.twitter
-  subscriber:
-    ref:
-      apiVersion: serving.knative.dev/v1alpha1
-      kind: Service
-      name: eventstore
-```
 
 To create a trigger run:
 

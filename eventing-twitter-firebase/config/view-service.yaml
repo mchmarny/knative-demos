@@ -1,0 +1,16 @@
+apiVersion: serving.knative.dev/v1alpha1
+kind: Service
+metadata:
+  name: tweets
+spec:
+  runLatest:
+    configuration:
+      revisionTemplate:
+        spec:
+          container:
+            image: gcr.io/cloudylabs-public/tevents:0.1.1
+            env:
+              - name: RELEASE
+                value: "v0.0.14-manual"
+              - name: SEARCH
+                value: "knative"

@@ -1,0 +1,24 @@
+apiVersion: serving.knative.dev/v1alpha1
+kind: Service
+metadata:
+  name: build-notif
+spec:
+  runLatest:
+    configuration:
+      revisionTemplate:
+        spec:
+          container:
+            image: gcr.io/cloudylabs-public/build-notif:0.4.1
+            env:
+              - name: RELEASE
+                value: "v0.4.1"
+              - name: NOTIFS_FOR_APP
+                value: "maxprime" # name of the app to send notifications for
+              - name: SLACK_API_TOKEN
+                valueFrom:
+                  secretKeyRef:
+                    name: build-notif-secrets
+                    key: SLACK_API_TOKEN
+              - name: SLACK_BUILD_STATUS_CHANNEL
+                value: CGUKV76EA #channel ID, not the name
+
