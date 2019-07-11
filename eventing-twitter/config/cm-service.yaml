@@ -8,7 +8,7 @@ spec:
       revisionTemplate:
         spec:
           container:
-            image: gcr.io/cloudylabs-public/sentiment-classifier:0.2.2
+            image: gcr.io/cloudylabs-public/sentiment-classifier:0.2.3
             env:
               # https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/tweet-object
               - name: TEXT_PATH

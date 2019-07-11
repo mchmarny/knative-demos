@@ -245,8 +245,6 @@ twitter-events-viewer   True    default   http://tweetviewer.demo.svc.cluster.lo
 ```
 
 
-
-
 ## Issues
 
 ### Stalled in-memory channel dispatcher
