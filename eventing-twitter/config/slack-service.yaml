@@ -8,17 +8,15 @@ spec:
       revisionTemplate:
         spec:
           container:
-            image: gcr.io/cloudylabs-public/build-notif:0.4.1
+            image: gcr.io/cloudylabs-public/slackevents:0.1.2
             env:
-              - name: RELEASE
-                value: "v0.4.1"
-              - name: NOTIFS_FOR_APP
-                value: "maxprime" # name of the app to send notifications for
-              - name: SLACK_API_TOKEN
+              - name: SLACK_CHANNEL
                 valueFrom:
                   secretKeyRef:
-                    name: build-notif-secrets
-                    key: SLACK_API_TOKEN
-              - name: SLACK_BUILD_STATUS_CHANNEL
-                value: CGUKV76EA #channel ID, not the name
-
+                    name: slack-notif-secrets
+                    key: SLACK_CHANNEL
+              - name: SLACK_TOKEN
+                valueFrom:
+                  secretKeyRef:
+                    name: slack-notif-secrets
+                    key: SLACK_TOKEN
