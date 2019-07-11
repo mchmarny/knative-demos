@@ -228,10 +228,10 @@ kubectl apply -f config/view-trigger.yaml -n demo
 Should return
 
 ```shell
-trigger.eventing.knative.dev/kcm-trigger created
+trigger.eventing.knative.dev/twitter-events-viewer created
 ```
 
-Verity that `kcm-trigger` trigger was created
+Verity that `twitter-events-viewer` trigger was created
 
 ```shell
 kubectl get triggers -n demo
@@ -240,8 +240,8 @@ kubectl get triggers -n demo
 Should return
 
 ```shell
-NAME          READY   REASON    BROKER    SUBSCRIBER_URI                       AGE
-kcm-trigger   True              default   http://kcm.demo.svc.cluster.local    17h
+NAME                    READY   BROKER    SUBSCRIBER_URI                               AGE
+twitter-events-viewer   True    default   http://tweetviewer.demo.svc.cluster.local    17h
 ```
 
 
