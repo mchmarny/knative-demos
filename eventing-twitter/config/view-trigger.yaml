@@ -1,13 +1,13 @@
 apiVersion: eventing.knative.dev/v1alpha1
 kind: Trigger
 metadata:
-  name: sentiment-classifier-trigger
+  name: twitter-events-viewer
 spec:
   filter:
     sourceAndType:
-      type: com.twitter
+      type: com.twitter.positive
   subscriber:
     ref:
       apiVersion: serving.knative.dev/v1alpha1
       kind: Service
-      name: sentclass
+      name: tweetviewer
