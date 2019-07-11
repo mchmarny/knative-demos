@@ -16,7 +16,7 @@ Follow these instructions to run the demos in the presentation:
 * [On-cluster Java/Kotlin/Groovy/Scala build and deploy using Jib](jib-build/)
 * [Binding running services to an IoT core](iot-events/)
 * [Knative Serverless Contract Test](test/)
-* [Knative Eventing Twitter/Service/Firestore](eventing-twitter-firebase/)
+* [Knative Eventing using Firestore, Sentiment API, and WebSocket viewer](eventing-twitter/)
 
 ## Monitoring
 
