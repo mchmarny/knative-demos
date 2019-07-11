@@ -245,6 +245,66 @@ twitter-events-viewer   True    default   http://tweetviewer.demo.svc.cluster.lo
 ```
 
 
+
+## Slack Publish (Step #3)
+
+The classification service defined in step #2 identifies tweets that appear to be negative and posts them back to the default broker with the `com.twitter.negative` type. Let's create the Slack publish service now that will post these tweets to a channel.
+
+To do that let's deploy the viewer app. To deploy this service apply:
+
+
+```shell
+kubectl apply -f config/view-service.yaml -n demo
+```
+
+The response should be
+
+```shell
+service.serving.knative.dev/kcm configured
+```
+
+To check if the service was deployed successfully you can check the status using `kubectl get pods -n demo` command. The response should look something like this (e.g. Ready `3/3` and Status `Running`).
+
+```shell
+NAME                                           READY     STATUS    RESTARTS   AGE
+tweetviewer-wkmmn-deployment-5b8d5f8c7c-tm87l  2/2       Running   0          53m
+```
+
+Now that you have both the viewer service configured, you can wire it to the broker with a trigger. You should not have to edit the `config/view-trigger.yaml` file unless you made some naming changes above. The only thing to point out here is that we are now filtering only the events that have been clasified as psitive (type: `com.twitter.positive`).
+
+```yaml
+filter:
+  sourceAndType:
+    type: com.twitter.positive
+```
+
+To create a trigger run:
+
+```shell
+kubectl apply -f config/view-trigger.yaml -n demo
+```
+
+Should return
+
+```shell
+trigger.eventing.knative.dev/twitter-events-viewer created
+```
+
+Verity that `twitter-events-viewer` trigger was created
+
+```shell
+kubectl get triggers -n demo
+```
+
+Should return
+
+```shell
+NAME                    READY   BROKER    SUBSCRIBER_URI                               AGE
+twitter-events-viewer   True    default   http://tweetviewer.demo.svc.cluster.local    17h
+```
+
+
+
 ## Issues
 
 ### Stalled in-memory channel dispatcher

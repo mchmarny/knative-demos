@@ -1,7 +1,7 @@
 apiVersion: serving.knative.dev/v1alpha1
 kind: Service
 metadata:
-  name: build-notif
+  name: slack-publisher
 spec:
   runLatest:
     configuration:
