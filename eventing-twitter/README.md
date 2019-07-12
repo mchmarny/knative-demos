@@ -136,11 +136,11 @@ kubectl logs -l serving.knative.dev/service=eventstore -n demo -c user-container
 
 ## Classification Service (Step #2)
 
-Now that the tweets are being published by our source to the default broker, we can create the trigger and service that will classify these tweets. The service exposes variable in `config/cm-service.yaml` for the level of magnitude that will be required (`MIN_MAGNITUDE`) for a tweet text to be considered either positive or negative. To deploy this service apply:
+Now that the tweets are being published by our source to the default broker, we can create the trigger and service that will classify these tweets. The service exposes variable in `config/classifier-service.yaml` for the level of magnitude that will be required (`MIN_MAGNITUDE`) for a tweet text to be considered either positive or negative. To deploy this service apply:
 
 
 ```shell
-kubectl apply -f config/cm-service.yaml -n demo
+kubectl apply -f config/classifier-service.yaml -n demo
 ```
 
 The response should be
@@ -156,14 +156,14 @@ NAME                                          READY     STATUS    RESTARTS   AGE
 sentclass-gmhd2-deployment-ff6ccfc45-nkwdj    2/2       Running   0          53m
 ```
 
-Now that you have both the classification service configured you can wire these two with a trigger. You should not have to edit the `config/cm-trigger.yaml` file unless you made some naming changes above.
+Now that you have both the classification service configured you can wire these two with a trigger. You should not have to edit the `config/classifier-trigger.yaml` file unless you made some naming changes above.
 
 Just like in the event store service, were are using `type: com.twitter` filter to send to our `sentclass` service only the events of twitter type. We also define the target service here by defiling its reference in the `subscriber` portion of trigger.
 
 To create a trigger run:
 
 ```shell
-kubectl apply -f config/cm-trigger.yaml -n demo
+kubectl apply -f config/classifier-trigger.yaml -n demo
 ```
 
 Should return
@@ -248,9 +248,11 @@ twitter-events-viewer   True    default   http://tweetviewer.demo.svc.cluster.lo
 
 ## Slack Publish (Step #3)
 
-The classification service defined in step #2 identifies tweets that appear to be negative and posts them back to the default broker with the `com.twitter.negative` type. Let's create the Slack publish service now that will post these tweets to a channel.
+The classification service defined in step #2 identifies also tweets that appear to be negative and posts them back to the default broker with the `com.twitter.negative` type. Let's create the Slack publish service now that will post these tweets to a Slack channel.
 
-First, create a secret with the pushover tokens
+First, create a secret with the Slack token and channel details:
+
+> Note, Slack channel is not the name of the channel but rather it's ID
 
 ```shell
 kubectl create secret generic slack-notif-secrets -n demo \
@@ -258,8 +260,7 @@ kubectl create secret generic slack-notif-secrets -n demo \
   --from-literal=SLACK_TOKEN=$SLACK_KNTWEETS_API_TOKEN
 ```
 
-
-To do that let's deploy the viewer app. To deploy this service apply:
+Now, lets' install the Slack publishing service:
 
 
 ```shell
@@ -279,7 +280,7 @@ NAME                                           READY     STATUS    RESTARTS   AG
 slack-publisher-wkmmn-deployment-5b8d5f8c7c    2/2       Running   0          53m
 ```
 
-Now that you have both the viewer service configured, you can wire it to the broker with a trigger. You should not have to edit the `config/slack-trigger.yaml` file unless you made some naming changes above. The only thing to point out here is that we are now filtering only the events that have been clasified as psitive (type: `com.twitter.negative`).
+Now that you have both the viewer service configured, you can wire it to the broker with a trigger. You should not have to edit the `config/slack-trigger.yaml` file unless you made some naming changes above. The only thing to point out here is that we are now filtering only the events that have been classified as positive (type: `com.twitter.negative`).
 
 ```yaml
 filter:
@@ -313,38 +314,9 @@ slack-tweet-notifier   True    default   http://slack-publisher.demo.svc.cluster
 ```
 
 
-## Issues
-
-### Stalled in-memory channel dispatcher
-
-If your source generates tweets but no events arrive in `eventstore` you may have to bounce the `in-memory-channel-dispatcher-******`. First, list the pods in `knative-eventing` namespace
-
-```shell
-# list pods in eventing namespace
-kubectl get pods -n knative-eventing
-```
-
-That will return something like this
-
-```shell
-NAME                                             READY   STATUS    RESTARTS   AGE
-eventing-controller-774f79f989-bz4xl             1/1     Running   0          20d
-gcp-pubsub-channel-controller-7868cd487c-sk7pd   1/1     Running   0          20d
-gcp-pubsub-channel-dispatcher-7756c787dc-4vssf   2/2     Running   2          20d
-in-memory-channel-controller-5c686c86c7-dpf2g    1/1     Running   0          20d
-in-memory-channel-dispatcher-7bcd7f556-v7xx7     2/2     Running   2          13m
-webhook-5b689bfcc4-52tlz                         1/1     Running   0          4d20h
-```
-
-Find the name of your `in-memory-channel-dispatcher-******` on your cluster and delete it
-
-```shell
-kubectl delete pod in-memory-channel-dispatcher-****** -n knative-eventing
-```
-
 ## Reset
 
-Run this before each demo to set known state
+Run this before each demo to set known state:
 
 ```shell
 kubectl delete -f config/ -n demo --ignore-not-found=true

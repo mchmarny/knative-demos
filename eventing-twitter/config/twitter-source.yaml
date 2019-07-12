@@ -7,7 +7,7 @@ spec:
     - --query=google
   env:
     - name: RELEASE
-      value: "v0.1.9"
+      value: "v0.1.10"
     - name: T_CONSUMER_KEY
       valueFrom:
         secretKeyRef:
