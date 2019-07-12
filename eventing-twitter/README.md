@@ -252,7 +252,7 @@ First, create a secret with the Slack token and channel details:
 
 ```shell
 kubectl create secret generic slack-notif-secrets -n demo \
-	--from-literal=SLACK_CHANNEL=$SLACK_KN_TWEETS_CHANNEL \
+  --from-literal=SLACK_CHANNEL=$SLACK_KN_TWEETS_CHANNEL \
   --from-literal=SLACK_TOKEN=$SLACK_KNTWEETS_API_TOKEN
 ```
 
