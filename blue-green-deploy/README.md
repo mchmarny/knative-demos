@@ -12,7 +12,7 @@ of an application to a new version by changing the routing configuration. And, i
 
 Deploy regular Knative service using `Configuration` and `Route`:
 
-`kubectl apply -f stage1.yaml`
+`kubectl apply -f config/stage1.yaml`
 
 Deploying Knative Service creates the following child resources:
 
@@ -41,7 +41,7 @@ kubectl get deployment -l "serving.knative.dev/service=bg" -n demo
 
 Version 2 of the sample application displays the text "App v2" on a green background:
 
-`kubectl apply -f stage2.yaml`
+`kubectl apply -f config/stage2.yaml`
 
 Version 2 of the app is staged at this point. That means:
 
@@ -57,7 +57,7 @@ You can refresh the app URL (https://bg.demo.knative.tech) to see that the `v2` 
 
 Deploy the updated routing configuration to your cluster:
 
-`kubectl apply -f stage3.yaml`
+`kubectl apply -f config/stage3.yaml`
 
 Now, refresh the original route https://bg.demo.knative.tech a few times to see
 that some traffic now goes to version 2 of the app.
@@ -68,7 +68,7 @@ that some traffic now goes to version 2 of the app.
 
 Deploy the updated routing configuration to your cluster:
 
-`kubectl apply -f stage4.yaml`
+`kubectl apply -f config/stage4.yaml`
 
 This will complete the deployment by sending all traffic to the new (green) version.
 
@@ -89,7 +89,7 @@ is accessible via the `v1` named route.
 
 If needed, you can rall back to the last know to be good revision
 
-`kubectl apply -f stage5.yaml`
+`kubectl apply -f config/stage5.yaml`
 
 This will complete reroute all traffic to the initial revision. Refresh https://bg.demo.knative.tech to see all traffic being sent to the original revision.
 
@@ -99,5 +99,5 @@ This will complete reroute all traffic to the initial revision. Refresh https://
 To delete the demo app, enter the following command:
 
 ```
-kubectl delete -f stage1.yaml
+kubectl delete -f config/ --ignore-not-found=true
 ```
