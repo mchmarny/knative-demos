@@ -49,8 +49,7 @@ Version 2 of the app is staged at this point. That means:
 * Knative creates a named v2 route for testing the newly deployed version
 
 
-You can refresh the app URL (https://bg.demo.knative.tech) to see that
-the v2 app takes no traffic, but you can navigate there directly https://bg-candidate.demo.knative.tech
+You can refresh the app URL (https://bg.demo.knative.tech) to see that the `v2` app takes no traffic, but you can navigate there directly https://bg-candidate.demo.knative.tech
 
 ## Migrating traffic to the new version
 
@@ -74,11 +73,11 @@ Deploy the updated routing configuration to your cluster:
 This will complete the deployment by sending all traffic to the new (green) version.
 
 Refresh original route https://bg.demo.knative.tech a few times to verify that
-no traffic is being routed to v1 of the app.
+no traffic is being routed to `v1` of the app.
 
 Note that:
 
-* We kept the v1 (blue) entry with 0% traffic for the sake of speedy reverting, if that is ever necessary.
+* We kept the `v1` (blue) entry with 0% traffic for the sake of speedy reverting, if that is ever necessary.
 * We added the named route `v1` to the old (blue) version of the app to allow access for comparison reasons.
 
 Now you can navigate to https://bg-previous.demo.knative.tech to show that the old version
