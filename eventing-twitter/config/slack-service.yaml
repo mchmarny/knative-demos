@@ -8,7 +8,7 @@ spec:
       revisionTemplate:
         spec:
           container:
-            image: gcr.io/cloudylabs-public/slackevents:0.1.2
+            image: gcr.io/cloudylabs-public/slackevents:0.1.3
             env:
               - name: SLACK_CHANNEL
                 valueFrom:

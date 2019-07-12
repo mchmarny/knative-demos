@@ -8,6 +8,8 @@ of an application to a new version by changing the routing configuration. And, i
 
 ## Deploying Initial Version (Blue)
 
+![alt text](image/stage1.png "Deploying Initial Version")
+
 Deploy regular Knative service using `Configuration` and `Route`:
 
 `kubectl apply -f stage1.yaml`
@@ -35,6 +37,8 @@ kubectl get deployment -l "serving.knative.dev/service=bg" -n demo
 
 ## Deploying Version 2 (Green)
 
+![alt text](image/stage2.png "Deploying Version 2")
+
 Version 2 of the sample application displays the text "App v2" on a green background:
 
 `kubectl apply -f stage2.yaml`
@@ -49,6 +53,8 @@ You can refresh the app URL (https://bg.demo.knative.tech) to see that
 the v2 app takes no traffic, but you can navigate there directly https://bg-candidate.demo.knative.tech
 
 ## Migrating traffic to the new version
+
+![alt text](image/stage3.png "Migrating traffic to the new version")
 
 Deploy the updated routing configuration to your cluster:
 
@@ -79,6 +85,8 @@ Now you can navigate to https://bg-previous.demo.knative.tech to show that the o
 is accessible via the `v1` named route.
 
 ## Rall-back to initial release
+
+![alt text](image/stage5.png "Rall-back to initial release")
 
 If needed, you can rall back to the last know to be good revision
 

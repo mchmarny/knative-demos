@@ -316,4 +316,7 @@ Run this before each demo to set known state:
 
 ```shell
 kubectl delete -f config/ -n demo --ignore-not-found=true
+kubectl delete secret ktweet-secrets -n demo
+kubectl delete secret slack-notif-secrets -n demo
+
 ```
