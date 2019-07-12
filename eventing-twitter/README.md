@@ -1,18 +1,16 @@
-# Twitter, Knative Service, Cloud Firestore
+# Knative Events using Twitter, Cloud Firestore, Slack, and WebSockets Viewer
 
-Simple pipeline of Twitter search event source using cluster local Knative service to persisting tweets to Cloud Firestore collection.
+Simple pipeline combining Twitter search results and Knative Events to store, classify and display events
 
 ![alt text](image/overview.png "Overview")
 
-### Cloud Firestore
+## Setup
 
-To enable Firestore in your GCP project, [create Cloud Firestore project](https://console.cloud.google.com/projectselector/apis/api/firestore.googleapis.com/overview), which will also enables your API in the Cloud API Manager.
+### Event Source
 
-### Twitter API/Secrets
+To configure the Twitter event source you will need Twitter API access keys. [Good instructions on how to get them](https://iag.me/socialmedia/how-to-create-a-twitter-app-in-8-easy-steps/)
 
-To configure this event source you will need Twitter API access keys. [Good instructions on how to get them](https://iag.me/socialmedia/how-to-create-a-twitter-app-in-8-easy-steps/)
-
-Once you have the Twitter API keys configured, create a Knative secret:
+Once you get the four keys, you will need to create Twitter API keys secret:
 
 ```shell
 kubectl create secret generic ktweet-secrets -n demo \
@@ -22,11 +20,7 @@ kubectl create secret generic ktweet-secrets -n demo \
     --from-literal=T_ACCESS_SECRET=${T_ACCESS_SECRET}
 ```
 
-### Event Source
-
-The search term used by Twitter Event Source is defined in the `config/twitter-source.yaml` under `--query=YourSearchTermHere`.
-
-Once you are done editing the `config/twitter-source.yaml` that, save it and apply to your Knative cluster:
+Additionally, you will need to define the search term for which you want the source to search Twitter (`--query=YourSearchTermHere`) in `config/twitter-source.yaml`. Once you are done editing, save the file and apply to your Knative cluster:
 
 
 ```shell
@@ -68,6 +62,8 @@ Should return
 ```
 
 ### Store Service (Step #1)
+
+If you haven't done so already, you will need to enable Firestore in your GCP project, [create Cloud Firestore project](https://console.cloud.google.com/projectselector/apis/api/firestore.googleapis.com/overview), which will also enables your API in the Cloud API Manager.
 
 The store service will persist tweets into collection defined in the `config/store-service.yaml` (`knative-tweets` by default). To deploy this service apply it to your Knative cluster the same way you configured the above event source.
 
