@@ -11,4 +11,4 @@ spec:
             image: gcr.io/cloudylabs-public/eventstore:0.2.2
             env:
               - name: FIRESTORE_COLL_NAME
-                value: knative-tweets
+                value: oscon-tweets
