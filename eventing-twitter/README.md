@@ -24,7 +24,7 @@ Additionally, you will need to define the search term for which you want the sou
 
 
 ```shell
-kubectl apply -f config/twitter-source.yaml -n demo
+kubectl apply -f config/source.yaml -n demo
 ```
 
 Should return
@@ -65,17 +65,18 @@ Should return
 
 If you haven't done so already, you will need to enable Firestore in your GCP project, [create Cloud Firestore project](https://console.cloud.google.com/projectselector/apis/api/firestore.googleapis.com/overview), which will also enables your API in the Cloud API Manager.
 
-The store service will persist tweets into collection defined in the `config/store-service.yaml` (`knative-tweets` by default). To deploy this service apply it to your Knative cluster the same way you configured the above event source.
+The store service will persist tweets into collection defined in the `config/store-service.yaml` (`knative-tweets` by default). To deploy this service and corresponding trigger apply:
 
 
 ```shell
-kubectl apply -f config/store-service.yaml -n demo
+kubectl apply -f config/store.yaml -n demo
 ```
 
 The response should be
 
 ```shell
 service.serving.knative.dev/eventstore created
+trigger.eventing.knative.dev/twitter-events-trigger created
 ```
 
 To check if the service was deployed successfully you can check the status using `kubectl get pods -n demo` command. The response should look something like this (e.g. Ready `3/3` and Status `Running`).
@@ -85,23 +86,7 @@ NAME                                          READY     STATUS    RESTARTS   AGE
 eventstore-0000n-deployment-5645f48b4d-mb24j  3/3       Running   0          10s
 ```
 
-Now that you have both the event source and service configured you can wire these two with simple trigger. You should not have to edit the `config/store-trigger.yaml` file unless you made some naming changes above.
-
-Two things to point here, were are using `type: com.twitter` filter to send to our `eventstore` service only the events of twitter type. We also define the target service here by defiing its reference in the `subscriber` portion of trigger.
-
-To create a trigger run:
-
-```shell
-kubectl apply -f config/store-trigger.yaml -n demo
-```
-
-Should return
-
-```shell
-trigger.eventing.knative.dev/twitter-events-trigger created
-```
-
-Verity that `twitter-events-trigger` trigger was created
+The above command has also created a trigger. Two things to point here, were are using `type: com.twitter` filter to send to our `eventstore` service only the events of twitter type. We also define the target service here by its reference in the `subscriber` portion of trigger. You can verity that `twitter-events-trigger` trigger was created
 
 ```shell
 kubectl get triggers -n demo
@@ -132,17 +117,17 @@ kubectl logs -l serving.knative.dev/service=eventstore -n demo -c user-container
 
 ## Classification Service (Step #2)
 
-Now that the tweets are being published by our source to the default broker, we can create the trigger and service that will classify these tweets. The service exposes variable in `config/classifier-service.yaml` for the level of magnitude that will be required (`MIN_MAGNITUDE`) for a tweet text to be considered either positive or negative. To deploy this service apply:
-
+Now that the tweets are being published by our source to the default broker, we can create the trigger and service that will classify these tweets. The service exposes variable in `config/classifier.yaml` for the level of magnitude that will be required (`MIN_MAGNITUDE`) for a tweet text to be considered either positive or negative. To deploy this service apply:
 
 ```shell
-kubectl apply -f config/classifier-service.yaml -n demo
+kubectl apply -f config/classifier.yaml -n demo
 ```
 
 The response should be
 
 ```shell
-service.serving.knative.dev/sentclass configured
+service.serving.knative.dev/sentclass created
+trigger.eventing.knative.dev/sentiment-classifier-trigger created
 ```
 
 To check if the service was deployed successfully you can check the status using `kubectl get pods -n demo` command. The response should look something like this (e.g. Ready `3/3` and Status `Running`).
@@ -152,23 +137,7 @@ NAME                                          READY     STATUS    RESTARTS   AGE
 sentclass-gmhd2-deployment-ff6ccfc45-nkwdj    2/2       Running   0          53m
 ```
 
-Now that you have both the classification service configured you can wire these two with a trigger. You should not have to edit the `config/classifier-trigger.yaml` file unless you made some naming changes above.
-
-Just like in the event store service, were are using `type: com.twitter` filter to send to our `sentclass` service only the events of twitter type. We also define the target service here by defiling its reference in the `subscriber` portion of trigger.
-
-To create a trigger run:
-
-```shell
-kubectl apply -f config/classifier-trigger.yaml -n demo
-```
-
-Should return
-
-```shell
-trigger.eventing.knative.dev/sentiment-classifier-trigger created
-```
-
-Verity that `sentiment-classifier-trigger` trigger was created
+The above command also has crated classification service trigger. Just like in the event store service, were are using `type: com.twitter` filter to send to our `sentclass` service only the events of twitter type. We also define the target service here by its reference in the `subscriber` portion of trigger. To verity that `sentiment-classifier-trigger` trigger was created
 
 ```shell
 kubectl get triggers -n demo
@@ -182,22 +151,56 @@ sentiment-classifier-trigger  True    default   http://sentclass.demo.svc.cluste
 ```
 
 
+## Translation Service (Step #3)
 
-## View Service (Step #4)
-
-The classification service defined in step #2 will publish results to the default broker. The the negative tweets with type `com.twitter.negative` and positive with type `com.twitter.positive`. Let's create the viewing service now so we can see the positive tweets and come back to the negative tweets that will be published to slack later.
-
-To do that let's deploy the viewer app. To deploy this service apply:
-
+In case when the tweets are in language not supported by the backing API, the Classification Service will fail and publish the offending tweet to the broker with `com.twitter.noneng` type. We will configure the translation trigger filter with that type so the offending tweets can be translated and re-publish back to the broker with the original type `com.twitter`. To deploy this service apply:
 
 ```shell
-kubectl apply -f config/view-service.yaml -n demo
+kubectl apply -f config/translation.yaml -n demo
 ```
 
 The response should be
 
 ```shell
-service.serving.knative.dev/kcm configured
+service.serving.knative.dev/tranlator created
+trigger.eventing.knative.dev/translator-trigger created
+```
+
+To check if the service was deployed successfully you can check the status using `kubectl get pods -n demo` command. The response should look something like this (e.g. Ready `3/3` and Status `Running`).
+
+```shell
+NAME                                          READY     STATUS    RESTARTS   AGE
+tranlator-gmhd2-deployment-ff6ccfc45-nkwdj    2/2       Running   0          12s
+```
+
+The above command also has crated translation service trigger. Just like in the event store service. To verity that `translator-trigger` trigger was created
+
+```shell
+kubectl get triggers -n demo
+```
+
+Should return
+
+```shell
+NAME                READY   BROKER    SUBSCRIBER_URI                                     AGE
+translator-trigger  True    default   http://translator-trigger.demo.svc.cluster.local   10m
+```
+
+## View Service (Step #5)
+
+The classification service defined in step #2 will publish results to the default broker. The the negative tweets with type `com.twitter.negative` and positive with type `com.twitter.positive`. Let's create the viewing service now so we can see the positive tweets and come back to the negative tweets that will be published to slack later.
+
+To do that let's deploy the viewer app and it's trigger by applying:
+
+```shell
+kubectl apply -f config/view.yaml -n demo
+```
+
+The response should be
+
+```shell
+service.serving.knative.dev/kcm created
+trigger.eventing.knative.dev/twitter-events-viewer created
 ```
 
 To check if the service was deployed successfully you can check the status using `kubectl get pods -n demo` command. The response should look something like this (e.g. Ready `3/3` and Status `Running`).
@@ -207,7 +210,7 @@ NAME                                           READY     STATUS    RESTARTS   AG
 tweetviewer-wkmmn-deployment-5b8d5f8c7c-tm87l  2/2       Running   0          53m
 ```
 
-Now that you have both the viewer service configured, you can wire it to the broker with a trigger. You should not have to edit the `config/view-trigger.yaml` file unless you made some naming changes above. The only thing to point out here is that we are now filtering only the events that have been clasified as psitive (type: `com.twitter.positive`).
+Again, the above command created a service trigger. The only thing to point out here is that we are now filtering only the events that have been classified as positive (type: `com.twitter.positive`).
 
 ```yaml
 filter:
@@ -215,19 +218,7 @@ filter:
     type: com.twitter.positive
 ```
 
-To create a trigger run:
-
-```shell
-kubectl apply -f config/view-trigger.yaml -n demo
-```
-
-Should return
-
-```shell
-trigger.eventing.knative.dev/twitter-events-viewer created
-```
-
-Verity that `twitter-events-viewer` trigger was created
+You can verity that `twitter-events-viewer` trigger was created
 
 ```shell
 kubectl get triggers -n demo
@@ -240,9 +231,7 @@ NAME                    READY   BROKER    SUBSCRIBER_URI                        
 twitter-events-viewer   True    default   http://tweetviewer.demo.svc.cluster.local    17h
 ```
 
-
-
-## Slack Publish (Step #3)
+## Slack Publish (Step #6)
 
 The classification service defined in step #2 identifies also tweets that appear to be negative and posts them back to the default broker with the `com.twitter.negative` type. Let's create the Slack publish service now that will post these tweets to a Slack channel.
 
@@ -256,17 +245,18 @@ kubectl create secret generic slack-notif-secrets -n demo \
   --from-literal=SLACK_TOKEN=$SLACK_KNTWEETS_API_TOKEN
 ```
 
-Now, lets' install the Slack publishing service:
+Now, lets' install the Slack publishing service and corresponding trigger:
 
 
 ```shell
-kubectl apply -f config/slack-service.yaml -n demo
+kubectl apply -f config/slack.yaml -n demo
 ```
 
 The response should be
 
 ```shell
 service.serving.knative.dev/slack-publisher configured
+trigger.eventing.knative.dev/slack-tweet-notifier created
 ```
 
 To check if the service was deployed successfully you can check the status using `kubectl get pods -n demo` command. The response should look something like this (e.g. Ready `3/3` and Status `Running`).
@@ -276,7 +266,7 @@ NAME                                           READY     STATUS    RESTARTS   AG
 slack-publisher-wkmmn-deployment-5b8d5f8c7c    2/2       Running   0          53m
 ```
 
-Now that you have both the viewer service configured, you can wire it to the broker with a trigger. You should not have to edit the `config/slack-trigger.yaml` file unless you made some naming changes above. The only thing to point out here is that we are now filtering only the events that have been classified as positive (type: `com.twitter.negative`).
+Again, the only thing to point out here is that we are now filtering only the events that have been classified as positive (type: `com.twitter.negative`).
 
 ```yaml
 filter:
@@ -284,19 +274,7 @@ filter:
     type: com.twitter.negative
 ```
 
-To create a trigger run:
-
-```shell
-kubectl apply -f config/slack-trigger.yaml -n demo
-```
-
-Should return
-
-```shell
-trigger.eventing.knative.dev/slack-tweet-notifier created
-```
-
-Verity that `twitter-events-viewer` trigger was created
+You can verity that `twitter-events-viewer` trigger was created
 
 ```shell
 kubectl get triggers -n demo
@@ -309,7 +287,6 @@ NAME                  READY   BROKER    SUBSCRIBER_URI                          
 slack-tweet-notifier   True    default   http://slack-publisher.demo.svc.cluster.local    17h
 ```
 
-
 ## Reset
 
 Run this before each demo to set known state:
@@ -318,5 +295,4 @@ Run this before each demo to set known state:
 kubectl delete -f config/ -n demo --ignore-not-found=true
 kubectl delete secret ktweet-secrets -n demo
 kubectl delete secret slack-notif-secrets -n demo
-
 ```

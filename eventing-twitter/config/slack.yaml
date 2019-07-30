@@ -20,3 +20,14 @@ spec:
                   secretKeyRef:
                     name: slack-notif-secrets
                     key: SLACK_TOKEN
+---
+apiVersion: eventing.knative.dev/v1alpha1
+kind: Trigger
+metadata:
+  name: slack-tweet-notifier
+spec:
+  subscriber:
+    ref:
+      apiVersion: serving.knative.dev/v1alpha1
+      kind: Service
+      name: slack-publisher

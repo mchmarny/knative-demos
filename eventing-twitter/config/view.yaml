@@ -14,3 +14,17 @@ spec:
                 value: "v0.0.14-manual"
               - name: SEARCH
                 value: "knative"
+---
+apiVersion: eventing.knative.dev/v1alpha1
+kind: Trigger
+metadata:
+  name: twitter-events-viewer
+spec:
+  filter:
+    sourceAndType:
+      type: com.twitter.positive
+  subscriber:
+    ref:
+      apiVersion: serving.knative.dev/v1alpha1
+      kind: Service
+      name: tweetviewer

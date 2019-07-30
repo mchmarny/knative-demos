@@ -12,3 +12,17 @@ spec:
             env:
               - name: FIRESTORE_COLL_NAME
                 value: oscon-tweets
+---
+apiVersion: eventing.knative.dev/v1alpha1
+kind: Trigger
+metadata:
+  name: twitter-events-trigger
+spec:
+  filter:
+    sourceAndType:
+      type: com.twitter
+  subscriber:
+    ref:
+      apiVersion: serving.knative.dev/v1alpha1
+      kind: Service
+      name: eventstore

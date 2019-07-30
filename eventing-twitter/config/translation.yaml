@@ -8,8 +8,22 @@ spec:
       revisionTemplate:
         spec:
           container:
-            image: gcr.io/cloudylabs-public/tranlator:0.1.1
+            image: gcr.io/cloudylabs-public/tranlator:0.3.2
             env:
               # https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/tweet-object
               - name: TEXT_PATH
                 value: "text"
+---
+apiVersion: eventing.knative.dev/v1alpha1
+kind: Trigger
+metadata:
+  name: translator-trigger
+spec:
+  filter:
+    sourceAndType:
+      type: com.twitter.noneng
+  subscriber:
+    ref:
+      apiVersion: serving.knative.dev/v1alpha1
+      kind: Service
+      name: tranlator
