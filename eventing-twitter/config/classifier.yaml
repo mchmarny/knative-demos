@@ -8,14 +8,11 @@ spec:
       revisionTemplate:
         spec:
           container:
-            image: gcr.io/cloudylabs-public/sentiment-classifier:0.3.2
+            image: gcr.io/cloudylabs-public/sentiment-classifier:0.3.3
             env:
               # https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/tweet-object
               - name: TEXT_PATH
                 value: "text"
-              # Magnitude indicates the overall strength of emotion (both positive and negative
-              - name: MIN_MAGNITUDE
-                value: "0.3"
 ---
 apiVersion: eventing.knative.dev/v1alpha1
 kind: Trigger

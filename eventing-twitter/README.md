@@ -43,7 +43,7 @@ Should return
 
 ```shell
 NAME                                                          AGE
-containersource.sources.eventing.knative.dev/twitter-source   1m
+containersource.sources.eventing.knative.dev/twitter-source   33s
 ```
 
 You can also right away see if the there are some tweets matching your search
@@ -82,8 +82,8 @@ trigger.eventing.knative.dev/twitter-events-trigger created
 To check if the service was deployed successfully you can check the status using `kubectl get pods -n demo` command. The response should look something like this (e.g. Ready `3/3` and Status `Running`).
 
 ```shell
-NAME                                          READY     STATUS    RESTARTS   AGE
-eventstore-0000n-deployment-5645f48b4d-mb24j  3/3       Running   0          10s
+NAME                                          READY    STATUS    RESTARTS   AGE
+eventstore-qp2vz-deployment-7f458744dc-bltqz  2/2      Running   0          33s
 ```
 
 The above command has also created a trigger. Two things to point here, were are using `type: com.twitter` filter to send to our `eventstore` service only the events of twitter type. We also define the target service here by its reference in the `subscriber` portion of trigger. You can verity that `twitter-events-trigger` trigger was created
@@ -95,21 +95,15 @@ kubectl get triggers -n demo
 Should return
 
 ```shell
-NAME                     READY   REASON    BROKER    SUBSCRIBER_URI                                          AGE
-twitter-events-trigger   True              default   http://twitter-events-trigger.demo.svc.cluster.local/   12s
+NAME                     READY   BROKER    SUBSCRIBER_URI                            AGE
+twitter-events-trigger   True    default   http://eventstore.demo.svc.cluster.local  1m
 ```
 
 ## Quick Test
 
 You should be able now see the Cloud Events being saved in your Firestore console under the `knative-tweets` collection (unless you changed the name during store service deployment)
 
-You can also monitor the logs for both `twitter-source`
-
-```shell
-kubectl logs -l eventing.knative.dev/source=twitter-source -n demo -c source
-```
-
-and `store-service`
+You can also monitor the logs for `store-service`
 
 ```shell
 kubectl logs -l serving.knative.dev/service=eventstore -n demo -c user-container
@@ -117,7 +111,7 @@ kubectl logs -l serving.knative.dev/service=eventstore -n demo -c user-container
 
 ## Classification Service (Step #2)
 
-Now that the tweets are being published by our source to the default broker, we can create the trigger and service that will classify these tweets. The service exposes variable in `config/classifier.yaml` for the level of magnitude that will be required (`MIN_MAGNITUDE`) for a tweet text to be considered either positive or negative. To deploy this service apply:
+Now that the tweets are being published by our source to the default broker, we can create the trigger and service that will classify these tweets. To deploy this service apply:
 
 ```shell
 kubectl apply -f config/classifier.yaml -n demo
@@ -133,8 +127,8 @@ trigger.eventing.knative.dev/sentiment-classifier-trigger created
 To check if the service was deployed successfully you can check the status using `kubectl get pods -n demo` command. The response should look something like this (e.g. Ready `3/3` and Status `Running`).
 
 ```shell
-NAME                                          READY     STATUS    RESTARTS   AGE
-sentclass-gmhd2-deployment-ff6ccfc45-nkwdj    2/2       Running   0          53m
+NAME                                          READY   STATUS    RESTARTS   AGE
+sentclass-9ndr7-deployment-55cbd7cdcc-lt5gz   2/2     Running   0          18s
 ```
 
 The above command also has crated classification service trigger. Just like in the event store service, were are using `type: com.twitter` filter to send to our `sentclass` service only the events of twitter type. We also define the target service here by its reference in the `subscriber` portion of trigger. To verity that `sentiment-classifier-trigger` trigger was created
@@ -147,9 +141,8 @@ Should return
 
 ```shell
 NAME                         READY   BROKER    SUBSCRIBER_URI                            AGE
-sentiment-classifier-trigger  True    default   http://sentclass.demo.svc.cluster.local   17h
+sentiment-classifier-trigger  True    default   http://sentclass.demo.svc.cluster.local   43s
 ```
-
 
 ## Translation Service (Step #3)
 
@@ -169,8 +162,8 @@ trigger.eventing.knative.dev/translator-trigger created
 To check if the service was deployed successfully you can check the status using `kubectl get pods -n demo` command. The response should look something like this (e.g. Ready `3/3` and Status `Running`).
 
 ```shell
-NAME                                          READY     STATUS    RESTARTS   AGE
-tranlator-gmhd2-deployment-ff6ccfc45-nkwdj    2/2       Running   0          12s
+NAME                                          READY   STATUS    RESTARTS   AGE
+tranlator-qd9px-deployment-6dffb6b986-znz94   2/2     Running   0          21s
 ```
 
 The above command also has crated translation service trigger. Just like in the event store service. To verity that `translator-trigger` trigger was created
@@ -182,8 +175,8 @@ kubectl get triggers -n demo
 Should return
 
 ```shell
-NAME                READY   BROKER    SUBSCRIBER_URI                                     AGE
-translator-trigger  True    default   http://translator-trigger.demo.svc.cluster.local   10m
+NAME                READY   BROKER    SUBSCRIBER_URI                            AGE
+translator-trigger  True    default   http://tranlator.demo.svc.cluster.local   1m
 ```
 
 ## View Service (Step #5)
@@ -199,15 +192,15 @@ kubectl apply -f config/view.yaml -n demo
 The response should be
 
 ```shell
-service.serving.knative.dev/kcm created
+service.serving.knative.dev/tweetviewer created
 trigger.eventing.knative.dev/twitter-events-viewer created
 ```
 
 To check if the service was deployed successfully you can check the status using `kubectl get pods -n demo` command. The response should look something like this (e.g. Ready `3/3` and Status `Running`).
 
 ```shell
-NAME                                           READY     STATUS    RESTARTS   AGE
-tweetviewer-wkmmn-deployment-5b8d5f8c7c-tm87l  2/2       Running   0          53m
+NAME                    READY     STATUS    RESTARTS                                    AGE
+twitter-events-viewer   True      default   http://tweetviewer.demo.svc.cluster.local   24s
 ```
 
 Again, the above command created a service trigger. The only thing to point out here is that we are now filtering only the events that have been classified as positive (type: `com.twitter.positive`).
@@ -255,15 +248,15 @@ kubectl apply -f config/slack.yaml -n demo
 The response should be
 
 ```shell
-service.serving.knative.dev/slack-publisher configured
+service.serving.knative.dev/slack-publisher created
 trigger.eventing.knative.dev/slack-tweet-notifier created
 ```
 
 To check if the service was deployed successfully you can check the status using `kubectl get pods -n demo` command. The response should look something like this (e.g. Ready `3/3` and Status `Running`).
 
 ```shell
-NAME                                           READY     STATUS    RESTARTS   AGE
-slack-publisher-wkmmn-deployment-5b8d5f8c7c    2/2       Running   0          53m
+NAME                                                 READY   STATUS    RESTARTS   AGE
+slack-publisher-5rx2l-deployment-6d4fc5b5bd-cfwcr    2/2     Running   0          22s
 ```
 
 Again, the only thing to point out here is that we are now filtering only the events that have been classified as positive (type: `com.twitter.negative`).
@@ -274,7 +267,7 @@ filter:
     type: com.twitter.negative
 ```
 
-You can verity that `twitter-events-viewer` trigger was created
+You can verity that `slack-tweet-notifier` trigger was created
 
 ```shell
 kubectl get triggers -n demo
@@ -284,7 +277,7 @@ Should return
 
 ```shell
 NAME                  READY   BROKER    SUBSCRIBER_URI                                   AGE
-slack-tweet-notifier   True    default   http://slack-publisher.demo.svc.cluster.local    17h
+slack-tweet-notifier   True    default   http://slack-publisher.demo.svc.cluster.local    1m
 ```
 
 ## Reset
