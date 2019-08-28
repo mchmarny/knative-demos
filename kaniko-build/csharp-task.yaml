@@ -1,0 +1,28 @@
+apiVersion: tekton.dev/v1alpha1
+kind: TaskRun
+metadata:
+  name: csharp-kaniko-build-to-gcr
+spec:
+  taskRef:
+    name: kaniko
+  inputs:
+    resources:
+      - name: source
+        resourceSpec:
+          type: git
+          params:
+            - name: url
+              value: https://github.com/mchmarny/knative-tutorial
+    params:
+      - name: DOCKERFILE
+        value: Dockerfile
+      - name: CONTEXT
+        value: serving/helloworld/csharp
+  outputs:
+    resources:
+      - name: image
+        resourceSpec:
+          type: image
+          params:
+            - name: url
+              value: gcr.io/cloudylabs/csharp-kaniko-build-sample:tekton

@@ -28,7 +28,7 @@ spec:
         secretKeyRef:
           key: T_ACCESS_SECRET
           name: ktweet-secrets
-  image: gcr.io/cloudylabs-public/ktweet:0.1.10
+  image: gcr.io/cloudylabs-public/ktweet:0.1.11
   sink:
     apiVersion: eventing.knative.dev/v1alpha1
     kind: Broker
