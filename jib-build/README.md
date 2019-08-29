@@ -1,5 +1,8 @@
 # Demo: Jib-based Build Pipeline
 
+> Update: https://github.com/tektoncd/catalog/tree/master/jib-maven
+
+
 
 This demo shows how to use Knative to build java code from source code in a git repository to a
 running application. In this demo we will build a sample [Spring app using Google Cloud Vision API](https://github.com/mchmarny/spring-cloud-gcp/tree/master/spring-cloud-gcp-samples/spring-cloud-gcp-vision-api-sample)
@@ -10,8 +13,15 @@ and deploy it to a Knative cluster.
 The Jib template builds Java/Kotlin/Groovy/Scala source into a container image using Google's Jib tool.
 
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/knative/build-templates/master/jib/jib-maven.yaml
+kubectl apply -f task-jdk-8.yaml
 ```
+
+### Install Secret
+
+```shell
+kubectl create secret generic gcr-registry-config --from-file=./secret.yaml
+```
+
 
 ### Deploy your app:
 

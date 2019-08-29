@@ -1,0 +1,42 @@
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineResource
+metadata:
+  name: vision-image-build
+spec:
+  type: image
+  params:
+    - name: url
+      value: gcr.io/cloudylabs/vision:3.2.8
+---
+apiVersion: tekton.dev/v1alpha1
+kind: TaskRun
+metadata:
+  name: jib-maven-vision-image-build
+spec:
+  taskRef:
+    name: jib-maven
+  podTemplate:
+    volumes:
+      - name: jib-build-cache
+        persistentVolumeClaim:
+          claimName: jib-build-cache
+  inputs:
+    params:
+      - name: DIRECTORY
+        value: ./spring-cloud-gcp-samples/spring-cloud-gcp-vision-api-sample
+      - name: CACHE
+        value: jib-build-cache
+    resources:
+      - name: source
+        resourceSpec:
+          type: git
+          params:
+            - name: url
+              value: https://github.com/mchmarny/spring-cloud-gcp
+            - name: revision
+              value: s1p-demo
+  outputs:
+    resources:
+      - name: image
+        resourceRef:
+          name: vision-image-build
