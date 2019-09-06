@@ -80,7 +80,7 @@ Note that:
 * We kept the `v1` (blue) entry with 0% traffic for the sake of speedy reverting, if that is ever necessary.
 * We added the named route `v1` to the old (blue) version of the app to allow access for comparison reasons.
 
-Now you can navigate to https://bg-previous.demo.knative.tech to show that the old version
+Now you can navigate to https://previous-bg.demo.knative.tech to show that the old version
 is accessible via the `v1` named route.
 
 ## Rall-back to initial release
