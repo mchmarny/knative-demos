@@ -224,6 +224,8 @@ NAME                    READY   BROKER    SUBSCRIBER_URI                        
 twitter-events-viewer   True    default   http://tweetviewer.demo.svc.cluster.local    17h
 ```
 
+> Navigate to https://tweetviewer.demo.knative.tech/ now and leave the viewer open
+
 ## Slack Publish (Step #6)
 
 The classification service defined in step #2 identifies also tweets that appear to be negative and posts them back to the default broker with the `com.twitter.negative` type. Let's create the Slack publish service now that will post these tweets to a Slack channel.
@@ -279,6 +281,10 @@ Should return
 NAME                  READY   BROKER    SUBSCRIBER_URI                                   AGE
 slack-tweet-notifier   True    default   http://slack-publisher.demo.svc.cluster.local    1m
 ```
+
+## Demo
+
+Ask audience to tweet about `knative` (doesn't have to be a `#knative` tag). Also ask for non-English tweets to show the translation service.
 
 ## Reset
 
