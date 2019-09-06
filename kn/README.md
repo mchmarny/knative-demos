@@ -5,7 +5,7 @@ In this simple demo we will use Knative Client CLI called `kn` to deploy a pre-b
 ## Deploy Service
 
 ```shell
-kn service create maxprime \
+kn service create prime \
     --image gcr.io/knative-samples/maxprime \
     --namespace demo
 ```
@@ -15,17 +15,17 @@ kn service create maxprime \
 The domain will be different but when done, the `kn` utility will return:
 
 ```shell
-Service 'maxprime' successfully created in namespace 'demo'.
-Waiting for service 'maxprime' to become ready ... OK
+Service 'prime' successfully created in namespace 'demo'.
+Waiting for service 'prime' to become ready ... OK
 
 Service URL:
-http://maxprime.demo.knative.tech
+http://prime.demo.knative.tech
 ```
 
 ## Cleanup
 
-To remove the `maxprime` app from your cluster
+To remove the `prime` app from your cluster
 
 ```shell
-    kn service delete maxprime --namespace demo
+    kn service delete prime --namespace demo
 ```
