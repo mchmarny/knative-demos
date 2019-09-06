@@ -49,7 +49,7 @@ Version 2 of the app is staged at this point. That means:
 * Knative creates a named v2 route for testing the newly deployed version
 
 
-You can refresh the app URL (https://bg.demo.knative.tech) to see that the `v2` app takes no traffic, but you can navigate there directly https://bg-candidate.demo.knative.tech
+You can refresh the app URL (https://bg.demo.knative.tech) to see that the `v2` app takes no traffic, but you can navigate there directly https://candidate-bg.demo.knative.tech
 
 ## Migrating traffic to the new version
 
