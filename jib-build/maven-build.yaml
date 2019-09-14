@@ -6,13 +6,14 @@ spec:
   type: image
   params:
     - name: url
-      value: gcr.io/cloudylabs/vision:3.2.8
+      value: gcr.io/cloudylabs/vision:3.2.10
 ---
 apiVersion: tekton.dev/v1alpha1
 kind: TaskRun
 metadata:
   name: jib-maven-vision-image-build
 spec:
+  serviceAccount: build-bot
   taskRef:
     name: jib-maven
   podTemplate:
