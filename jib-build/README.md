@@ -1,6 +1,6 @@
 # Demo: Jib-based Tekton Pipeline
 
-This demo shows how to use Knative Pipelines to build java code from source code in a git repository to a
+This demo shows how to use [Tekton Pipelines](https://github.com/tektoncd/pipeline) to build java code from source code in a git repository to a
 running application. In this demo we will build a sample [Spring app using Google Cloud Vision API](https://github.com/mchmarny/spring-cloud-gcp/tree/master/spring-cloud-gcp-samples/spring-cloud-gcp-vision-api-sample)
 and deploy it to a Knative cluster.
 
