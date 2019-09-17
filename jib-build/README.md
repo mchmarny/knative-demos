@@ -1,12 +1,11 @@
 # Demo: Jib-based Tekton Pipeline
 
-This demo shows how to use [Tekton Pipelines](https://github.com/tektoncd/pipeline) to build java code from source code in a git repository to a
-running application. In this demo we will build a sample [Spring app using Google Cloud Vision API](https://github.com/mchmarny/spring-cloud-gcp/tree/master/spring-cloud-gcp-samples/spring-cloud-gcp-vision-api-sample)
+This demo shows how to use [Tekton Pipelines](https://github.com/tektoncd/pipeline) to build java code from source code in a su-directory of git repository. In this demo I will build a sample [Spring app using Google Cloud Vision API](https://github.com/mchmarny/spring-cloud-gcp/tree/master/spring-cloud-gcp-samples/spring-cloud-gcp-vision-api-sample)
 and deploy it to a Knative cluster.
 
 ### Configure Dependance Cache
 
-Maven will be downloading a lot of dependencies, to ensure the subsequent build run faster, define a `PersistentVolumeClaim` on your cluster
+Maven will be downloading a lot of dependencies, to ensure the subsequent build run faster, first define a `PersistentVolumeClaim` on your cluster
 
 ```bash
 kubectl apply -f cache.yaml
