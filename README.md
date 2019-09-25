@@ -4,13 +4,17 @@
 
 This repository contains a collection of demos used in the different Knative technical sessions (e.g. [One platform for your functions, apps, and containers](https://www.youtube.com/watch?v=F4_2gxTtLaQ)). For list of official Knative samples see the [docs](https://github.com/knative/docs/tree/master/eventing/samples) repository.
 
-To run these samples you need to follow Knative [install](https://github.com/knative/docs/tree/master/install) steps and post-install cluster configuration instructions for both [assigning a static IP](https://github.com/knative/docs/blob/master/serving/gke-assigning-static-ip-address.md) and [setting up a custom domain](https://github.com/knative/docs/blob/master/serving/using-a-custom-domain.md).
+To run these samples you need to follow Knative [install](https://github.com/knative/docs/tree/master/install) steps and post-install cluster configuration instructions for both [assigning a static IP](https://github.com/knative/docs/blob/master/serving/gke-assigning-static-ip-address.md), [setting up a custom domain](https://github.com/knative/docs/blob/master/serving/using-a-custom-domain.md), and [configuring outbound network access](https://github.com/knative/docs/blob/master/docs/serving/outbound-network-access.md)
 
 ## Demos
 
 Follow these instructions to run the demos in the presentation:
 
-* [Deploying an image](simple/)
+* Deploying a pre-build image
+  * [Using kubectl](simple-kubectl-deploy/)
+  * [Using kn CLI](kn-cli-deploy/)
+* Configuring Knative application
+  * [Routing and managing traffic with blue/green deployment](blue-green-deploy/)
 * [Routing and managing traffic with blue/green deployment](blue-green-deploy/)
 * [Orchestrating source-to-URL workflows](src-to-url/)
 * [On-cluster Java/Kotlin/Groovy/Scala build and deploy using Jib](jib-build/)
