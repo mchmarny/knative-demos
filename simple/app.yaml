@@ -1,15 +1,12 @@
-apiVersion: serving.knative.dev/v1alpha1
+apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
   name: simple
-  namespace: demo
 spec:
-  runLatest:
-    configuration:
-      revisionTemplate:
-        spec:
-          container:
-            image: gcr.io/knative-samples/rester-tester:latest
-            env:
-            - name: SIMPLE_MSG
-              value: "Hello World"
+  template:
+    spec:
+      containers:
+        - image: gcr.io/cloudylabs-public/maxprime:0.2.1
+          env:
+            - name: RELEASE
+              value: "v0.2.1-simple"

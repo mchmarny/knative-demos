@@ -6,7 +6,7 @@ In this simple demo we will use Knative Client CLI called `kn` to deploy a pre-b
 
 ```shell
 kn service create prime \
-    --image gcr.io/knative-samples/maxprime \
+    --image gcr.io/cloudylabs-public/maxprime \
     --namespace demo
 ```
 

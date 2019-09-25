@@ -3,6 +3,8 @@
 This demo shows how to use [Tekton Pipelines](https://github.com/tektoncd/pipeline) to build java code from source code in a su-directory of git repository. In this demo I will build a sample [Spring app using Google Cloud Vision API](https://github.com/mchmarny/spring-cloud-gcp/tree/master/spring-cloud-gcp-samples/spring-cloud-gcp-vision-api-sample)
 and deploy it to a Knative cluster.
 
+> Assumes you already installed Tekton Pipelines and its dependencies `kubectl apply -f https://storage.googleapis.com/tekton-releases/latest/release.yaml`
+
 ### Configure Dependance Cache
 
 Maven will be downloading a lot of dependencies, to ensure the subsequent build run faster, first define a `PersistentVolumeClaim` on your cluster
