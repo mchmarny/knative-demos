@@ -20,8 +20,8 @@ Follow these instructions to run the demos in the presentation:
 * On-cluster build using Tekton
   * [Csharp build using Kaniko](tekton-kaniko-build/)
   * [Java/Kotlin/Groovy/Scala build using Jib](tekton-jib-build/)
-* [Automatic scaling](autoscaling/)
 * Configuring Knative application
+  * [Automatic scaling](autoscaling/)
   * [Limit RAM/CPU resources or require GPU](container-resource/)
 * Operations (Day 2)
   * [Traffic splitting, blue/green updates](traffic-splitting/)
