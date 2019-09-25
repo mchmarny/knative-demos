@@ -1,4 +1,4 @@
-apiVersion: serving.knative.dev/v1alpha1
+apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
   name: bg
@@ -6,20 +6,20 @@ metadata:
 spec:
   template:
     metadata:
-      name: bg-2
+      name: bg-1
     spec:
       containers:
-        - image: gcr.io/knative-samples/knative-route-demo:green
+        - image: gcr.io/knative-samples/knative-route-demo:blue
           env:
             - name: T_VERSION
-              value: green
+              value: blue
   traffic:
     - tag: previous
       revisionName: bg-1
-      percent: 0
+      percent: 100
     - tag: current
       revisionName: bg-2
-      percent: 100
+      percent: 0
     - tag: latest
       latestRevision: true
       percent: 0

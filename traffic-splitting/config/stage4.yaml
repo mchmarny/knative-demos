@@ -1,4 +1,4 @@
-apiVersion: serving.knative.dev/v1alpha1
+apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
   name: bg
@@ -14,12 +14,12 @@ spec:
             - name: T_VERSION
               value: green
   traffic:
-    - tag: current
+    - tag: previous
       revisionName: bg-1
-      percent: 100
-    - tag: candidate
-      revisionName: bg-2
       percent: 0
+    - tag: current
+      revisionName: bg-2
+      percent: 100
     - tag: latest
       latestRevision: true
       percent: 0

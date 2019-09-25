@@ -1,4 +1,4 @@
-apiVersion: serving.knative.dev/v1alpha1
+apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
   name: bg
@@ -16,10 +16,10 @@ spec:
   traffic:
     - tag: current
       revisionName: bg-1
-      percent: 50
+      percent: 100
     - tag: candidate
       revisionName: bg-2
-      percent: 50
+      percent: 0
     - tag: latest
       latestRevision: true
       percent: 0
