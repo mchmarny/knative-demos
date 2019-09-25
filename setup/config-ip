@@ -1,0 +1,24 @@
+#!/bin/bash
+
+DIR="$(dirname "$0")"
+. "${DIR}/config"
+
+echo "currently reserved by not used IPs in ${CLUSTER_REGION} region "
+gcloud beta compute addresses list --filter="status:RESERVED AND region:${CLUSTER_REGION}"
+
+# TODO: Prompt to choose one from the list or use exisitng
+
+
+echo "creating static IP: ${CLUSTER_NAME}-ip"
+gcloud beta compute addresses create "${CLUSTER_NAME}-ip" --region=$CLUSTER_REGION
+export EXTERNAL_IP=$(gcloud beta compute addresses describe ${CLUSTER_NAME}-ip --region=$CLUSTER_REGION --format="value(address)")
+echo "static IP ${CLUSTER_NAME}-ip: ${EXTERNAL_IP}"
+echo "setting ingress gateway to: ${EXTERNAL_IP}"
+kubectl patch svc istio-ingressgateway -n istio-system \
+  -p "{\"spec\":{\"loadBalancerIP\":\"${EXTERNAL_IP}\"}}"
+echo "ingress gateway set to: ${EXTERNAL_IP}"
+
+# TODO: Add script to wait on IP being available
+kubectl get svc istio-ingressgateway -n istio-system --output=json \
+  | jq ".status.loadBalancer.ingress[0].ip"
+

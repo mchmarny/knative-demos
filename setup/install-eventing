@@ -1,0 +1,20 @@
+#!/bin/bash
+
+DIR="$(dirname "$0")"
+. "${DIR}/config"
+
+# eventing
+kubectl apply \
+-f "https://github.com/knative/eventing/releases/download/${KN_VERSION}/release.yaml"
+
+# eventing GCP
+kubectl apply \
+-f "https://github.com/knative/eventing/releases/download/${KN_VERSION}/in-memory-channel.yaml" \
+-f "https://github.com/google/knative-gcp/releases/download/${KN_VERSION}/cloud-run-events.yaml"
+
+# create demo namespace and label for eventing brokers
+kubectl create ns $DEMO_NAMESPACE
+kubectl label namespace $DEMO_NAMESPACE knative-eventing-injection=enabled
+
+# watch until all good eventing
+watch kubectl get pods -n knative-eventing

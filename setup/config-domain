@@ -1,0 +1,8 @@
+#!/bin/bash
+
+DIR="$(dirname "$0")"
+. "${DIR}/config"
+
+
+kubectl patch configmap config-domain -n knative-serving \
+  -p "{\"data\":{\"${CUSTOM_DOMAIN}\":\"\"}}"

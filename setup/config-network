@@ -1,0 +1,14 @@
+#!/bin/bash
+
+DIR="$(dirname "$0")"
+. "${DIR}/config"
+
+
+export NET_SCOPE=$(gcloud container clusters describe ${CLUSTER_NAME} --zone=${CLUSTER_ZONE} \
+    | grep -e clusterIpv4CidrBlock -e servicesIpv4CidrBlock \
+    | sed -e "s/clusterIpv4CidrBlock://" -e "s/servicesIpv4CidrBlock://" \
+    | xargs echo | sed -e "s/ /,/")
+
+kubectl patch configmap config-network -n knative-serving -p \
+    "{\"data\":{\"istio.sidecar.includeOutboundIPRanges\":\"${NET_SCOPE}\"}}"
+

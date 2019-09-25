@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# cluster
+export CLUSTER_NAME="kn"
+export CLUSTER_REGION="us-west1"
+export CLUSTER_ZONE="${CLUSTER_REGION}-a"
+export CLUSTER_START_NODE_SIZE=3
+export CLUSTER_MAX_NODE_SIZE=10
+export CLUSTER_NODE_MACHINE_TYPE="n1-standard-4"
+export CLUSTER_MASTER_VERSION="latest" # beta == 1.14.3-gke.11
+
+# knative
+export KN_VERSION="v0.9.0"
+
+# istio (needed in addition to addon for cluster local gateway)
+export ISTIO_SRC="https://raw.githubusercontent.com/knative/serving/master/third_party/istio-1.3.0/istio-knative-extras.yaml"
+
+# domain
+export CUSTOM_DOMAIN="knative.tech"
+
+# static ip, leave empty to prompt to create
+export CLUSTER_IP="35.233.251.160"
+
+# demo namespace, used for evneting broker injection
+export DEMO_NAMESPACE="demo"
+
+# certs, leave empty to prompt to create
+export TLS_CERT_PATH="/Users/mchmarny/.gcp-keys/demo.knative.tech/ca.pem"
+export TLS_KEY_PATH="/Users/mchmarny/.gcp-keys/demo.knative.tech/pk.pem"
+

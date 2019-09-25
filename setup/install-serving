@@ -1,0 +1,20 @@
+#!/bin/bash
+
+DIR="$(dirname "$0")"
+. "${DIR}/config"
+
+# serving crds
+kubectl apply -l knative.dev/crd-install=true \
+-f "https://github.com/knative/serving/releases/download/${KN_VERSION}/serving-post-1.14.yaml" \
+-f "https://github.com/knative/serving/releases/download/${KN_VERSION}/monitoring.yaml"
+
+# serving
+kubectl apply \
+-f "https://github.com/knative/serving/releases/download/${KN_VERSION}/serving-post-1.14.yaml" \
+-f "https://github.com/knative/serving/releases/download/${KN_VERSION}/monitoring.yaml"
+
+# watch until all good serving
+watch kubectl get pods -n knative-serving
+
+# watch until all good monitoring
+watch kubectl get pods -n knative-monitoring
