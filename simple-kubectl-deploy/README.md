@@ -24,7 +24,7 @@ spec:
 To deploy, simply apply that manifest to your cluster
 
 ```shell
-kubectl apply -f app.yaml -n demo
+kubectl apply -f app.yaml
 ```
 
 The deployed app should be available under the same URL (https://simple.demo.knative.tech/)
@@ -35,5 +35,5 @@ The deployed app should be available under the same URL (https://simple.demo.kna
 To remove the sample app from your cluster
 
 ```shell
-kubectl delete -f app.yaml -n demo
+kubectl delete -f app.yaml
 ```
