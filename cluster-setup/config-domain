@@ -6,3 +6,10 @@ DIR="$(dirname "$0")"
 
 kubectl patch configmap config-domain -n knative-serving \
   -p "{\"data\":{\"${CUSTOM_DOMAIN}\":\"\"}}"
+
+
+export NEW_STATIC_IP=$(kubectl get svc istio-ingressgateway -n istio-system --output=json | jq ".status.loadBalancer.ingress[0].ip")
+
+echo "Set ${CUSTOM_DOMAIN} DNS A record to 1m TTL for:"
+echo " *.default: ${NEW_STATIC_IP}"
+echo " *.demo: ${NEW_STATIC_IP}"

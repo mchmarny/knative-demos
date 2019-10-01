@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # cluster
-export CLUSTER_NAME="kn"
+export CLUSTER_NAME="cr"
 export CLUSTER_REGION="us-west1"
 export CLUSTER_ZONE="${CLUSTER_REGION}-a"
 export CLUSTER_START_NODE_SIZE=3
@@ -16,15 +16,17 @@ export KN_VERSION="v0.9.0"
 export ISTIO_SRC="https://raw.githubusercontent.com/knative/serving/master/third_party/istio-1.3.0/istio-knative-extras.yaml"
 
 # domain
-export CUSTOM_DOMAIN="knative.tech"
+# export CUSTOM_DOMAIN="knative.tech"
+export CUSTOM_DOMAIN="cloudylabs.dev"
 
 # static ip, leave empty to prompt to create
-export CLUSTER_IP="35.233.251.160"
+export CLUSTER_IP=""
 
 # demo namespace, used for evneting broker injection
 export DEMO_NAMESPACE="demo"
 
 # certs, leave empty to prompt to create
-export TLS_CERT_PATH="/Users/mchmarny/.gcp-keys/demo.knative.tech/ca.pem"
-export TLS_KEY_PATH="/Users/mchmarny/.gcp-keys/demo.knative.tech/pk.pem"
+# knative.tech
+export TLS_CERT_PATH="/Users/mchmarny/.gcp-keys/${CUSTOM_DOMAIN}/ca.pem"
+export TLS_KEY_PATH="/Users/mchmarny/.gcp-keys/${CUSTOM_DOMAIN}/pk.pem"
 

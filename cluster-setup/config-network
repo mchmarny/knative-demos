@@ -3,11 +3,21 @@
 DIR="$(dirname "$0")"
 . "${DIR}/config"
 
+# TODO: parse out cluster version and exec appropiate one
 
+# 1.14
 export NET_SCOPE=$(gcloud container clusters describe ${CLUSTER_NAME} --zone=${CLUSTER_ZONE} \
     | grep -e clusterIpv4CidrBlock -e servicesIpv4CidrBlock \
     | sed -e "s/clusterIpv4CidrBlock://" -e "s/servicesIpv4CidrBlock://" \
     | xargs echo | sed -e "s/ /,/")
+
+# 1.13
+# export NET_SCOPE=$(gcloud container clusters describe ${CLUSTER_NAME} --zone=${CLUSTER_ZONE} \
+#     | grep -e clusterIpv4Cidr -e servicesIpv4Cidr \
+#     | sed -e "s/clusterIpv4Cidr://" -e "s/servicesIpv4Cidr://" \
+#     | xargs echo | sed -e "s/ /,/")
+
+
 
 kubectl patch configmap config-network -n knative-serving -p \
     "{\"data\":{\"istio.sidecar.includeOutboundIPRanges\":\"${NET_SCOPE}\"}}"

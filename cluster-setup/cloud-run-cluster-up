@@ -3,6 +3,11 @@
 DIR="$(dirname "$0")"
 . "${DIR}/config"
 
+# TODO: CloudRun add-on provisions older cluster
+#       comment/uncomment cluster version specific things
+#       in individual scripts
+
+
 # API
 gcloud services enable \
   cloudapis.googleapis.com \
@@ -11,18 +16,11 @@ gcloud services enable \
 
 # Cluster
 gcloud beta container clusters create $CLUSTER_NAME \
-  --addons HorizontalPodAutoscaling,HttpLoadBalancing,Istio \
-  --zone $CLUSTER_ZONE \
-  --cluster-version $CLUSTER_MASTER_VERSION \
-  --machine-type $CLUSTER_NODE_MACHINE_TYPE \
-  --num-nodes $CLUSTER_START_NODE_SIZE \
-  --min-nodes 1 \
-  --max-nodes $CLUSTER_MAX_NODE_SIZE \
-  --enable-ip-alias \
-  --enable-stackdriver-kubernetes \
-  --enable-autoscaling \
-  --enable-autorepair \
-  --scopes cloud-platform
+--addons=HorizontalPodAutoscaling,HttpLoadBalancing,Istio,CloudRun \
+--machine-type $CLUSTER_NODE_MACHINE_TYPE \
+--zone $CLUSTER_ZONE \
+--enable-stackdriver-kubernetes \
+--scopes cloud-platform
 
 # credentials and binding
 gcloud container clusters get-credentials $CLUSTER_NAME \
@@ -33,5 +31,5 @@ kubectl create clusterrolebinding cluster-admin-binding \
     --user=$(gcloud config get-value core/account)
 
 
-# istio
+# istio cluster local gateway support
 kubectl apply -f $ISTIO_SRC
