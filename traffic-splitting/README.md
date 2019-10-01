@@ -14,6 +14,7 @@ Deploy regular Knative service using `Configuration` and `Route`:
 
 `kubectl apply -f config/stage1.yaml`
 
+
 Deploying Knative Service creates the following child resources:
 
 * Knative Route
