@@ -7,7 +7,7 @@ export CLUSTER_NAME="kn"
 export CLUSTER_REGION="us-west1"
 
 # cluster zone
-export CLUSTER_ZONE="${CLUSTER_REGION}-c"
+export CLUSTER_ZONE="${CLUSTER_REGION}-a"
 
 # initial cluster size
 export CLUSTER_START_NODE_SIZE=3
