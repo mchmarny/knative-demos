@@ -50,6 +50,8 @@ Install the Knative serving components
 
 ### Outbound Network
 
+> With the recent version of Knative (v0.9 or better) this may no longer be required
+
 This captures your cluster IPv4 scope and tells Istio to ignore all outbound traffic except within that scope
 
 ```shell
