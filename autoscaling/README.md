@@ -4,7 +4,9 @@
 
 Deploy Knative service:
 
-`kubectl apply -f app.yaml`
+```shell
+kubectl apply -f app.yaml
+```
 
 
 ## Load Generation

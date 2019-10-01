@@ -1,20 +1,18 @@
-apiVersion: serving.knative.dev/v1alpha1
+apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
   name: scale
   namespace: demo
 spec:
-  runLatest:
-    configuration:
-      revisionTemplate:
-        spec:
-          containerConcurrency: 1
-          container:
-            image: gcr.io/cloudylabs-public/maxprime:0.2.1
-            resources:
-              limits:
-                memory: "256Mi"
-                cpu: "1"
-            env:
-              - name: T_VERSION
-                value: "0.2.1"
+  template:
+    spec:
+      containerConcurrency: 1
+      containers:
+        - image: gcr.io/cloudylabs-public/maxprime:0.2.1
+          resources:
+            limits:
+              memory: "256Mi"
+              cpu: "1"
+          env:
+            - name: RELEASE
+              value: "v0.2.1-scale"
