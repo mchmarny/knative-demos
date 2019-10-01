@@ -3,17 +3,15 @@ kind: Service
 metadata:
   name: tweetviewer
 spec:
-  runLatest:
-    configuration:
-      revisionTemplate:
-        spec:
-          container:
-            image: gcr.io/cloudylabs-public/tweetviewer:0.2.1
-            env:
-              - name: RELEASE
-                value: "v0.0.14-manual"
-              - name: SEARCH
-                value: "knative"
+  template:
+    spec:
+      containers:
+        image: gcr.io/cloudylabs-public/tweetviewer:0.2.1
+        env:
+          - name: RELEASE
+            value: "v0.0.14-manual"
+          - name: SEARCH
+            value: "knative"
 ---
 apiVersion: eventing.knative.dev/v1alpha1
 kind: Trigger

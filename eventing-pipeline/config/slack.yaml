@@ -3,23 +3,21 @@ kind: Service
 metadata:
   name: slack-publisher
 spec:
-  runLatest:
-    configuration:
-      revisionTemplate:
-        spec:
-          container:
-            image: gcr.io/cloudylabs-public/slackevents:0.1.3
-            env:
-              - name: SLACK_CHANNEL
-                valueFrom:
-                  secretKeyRef:
-                    name: slack-notif-secrets
-                    key: SLACK_CHANNEL
-              - name: SLACK_TOKEN
-                valueFrom:
-                  secretKeyRef:
-                    name: slack-notif-secrets
-                    key: SLACK_TOKEN
+  template:
+    spec:
+      containers:
+        image: gcr.io/cloudylabs-public/slackevents:0.1.3
+        env:
+          - name: SLACK_CHANNEL
+            valueFrom:
+              secretKeyRef:
+                name: slack-notif-secrets
+                key: SLACK_CHANNEL
+          - name: SLACK_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: slack-notif-secrets
+                key: SLACK_TOKEN
 ---
 apiVersion: eventing.knative.dev/v1alpha1
 kind: Trigger

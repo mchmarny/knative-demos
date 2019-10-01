@@ -3,15 +3,13 @@ kind: Service
 metadata:
   name: eventstore
 spec:
-  runLatest:
-    configuration:
-      revisionTemplate:
-        spec:
-          container:
-            image: gcr.io/cloudylabs-public/eventstore:0.2.2
-            env:
-              - name: FIRESTORE_COLL_NAME
-                value: knative-tweets
+  template:
+    spec:
+      containers:
+        image: gcr.io/cloudylabs-public/eventstore:0.2.2
+        env:
+          - name: FIRESTORE_COLL_NAME
+            value: knative-tweets
 ---
 apiVersion: eventing.knative.dev/v1alpha1
 kind: Trigger
