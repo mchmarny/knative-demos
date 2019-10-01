@@ -2,6 +2,8 @@
 
 Series of scripts to make deploying Knative simpler
 
+> I'm toying with the idea of wrapping this into a simple CLI that would walk you through the entire process. Let me know if this sounds interesting and what areas the individual scripts below do not cover.
+
 ## Setup
 
 Edit the [config](./config) file. The configuration values are documented (WIP). Once you update that file you should not have to edit any other scripts
@@ -80,11 +82,11 @@ If you plan on deploying services that require GPU, this will create the pool fo
 
 ## Test
 
-To test your deployment I've provided a simple demo app. In this demo we will deploy a pre-built docker image of a [maxprime](https://github.com/mchmarny/maxprime) to the demo name space in your new cluster
+To test your deployment I've provided a simple test script. This script will deploy a demo app using a pre-built docker image ([maxprime](https://github.com/mchmarny/maxprime)) to the demo name space in your new cluster then run a pods health check and service readiness status check before finally navigating to the app itself in your default browser.
 
 
 ```shell
-kubectl apply -f app.yaml
+./test
 ```
 
 ## Disclaimer

@@ -1,0 +1,18 @@
+#!/bin/bash
+
+DIR="$(dirname "$0")"
+. "${DIR}/config"
+
+# deploy sample app
+kubectl apply -f app.yaml
+
+echo "Check that the pod STATUS is 'Running' (CTRL-C when done)"
+watch kubectl get pods -n demo
+
+echo "Check that the service READY status is 'True' (CTRL-C when done)"
+watch kubectl get ksvc -n demo
+
+echo "Check the deployed service:"
+open "https://test.${DEMO_NAMESPACE}.${CUSTOM_DOMAIN}"
+
+
