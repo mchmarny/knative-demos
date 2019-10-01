@@ -8,7 +8,7 @@ Series of scripts to make deploying Knative simpler
 
 Edit the [config](./config) file. The configuration values are documented (WIP). Once you update that file you should not have to edit any other scripts
 
-## Cluster
+## GKE
 
 Setup a new GKE cluster
 
@@ -18,7 +18,17 @@ Setup a new GKE cluster
 
 > To provision cluster with the Cloud Run add-on use the `./cloud-run-cluster-up` script
 
-## Install
+### GPU Node Pool (optional)
+
+If you plan on deploying services that require GPU, this will create a node pool for you with GPUs and apply the necessary drivers to make that pool available to your cluster
+
+> Note, this script by default creates 1 node with 1 GPU. If you need more edit the number in the script itself
+
+```shell
+./pool-gpu
+```
+
+## Knative
 
 ### Serving
 
@@ -36,7 +46,7 @@ Install the Knative serving components
 ./install-eventing
 ```
 
-## Config
+## Knative Config
 
 ### Outbound Network
 
@@ -68,16 +78,6 @@ This will use the TLS certificates you defined in [config](./config) file to cre
 
 ```shell
 ./config-tls
-```
-
-## GPU Node Pool (optional)
-
-If you plan on deploying services that require GPU, this will create the pool for you and apply the necessary drivers to make it available to your cluster
-
-> Note, this script provides 1 node with 1 GPU, if you need more edit the number in the script itself
-
-```shell
-./pool-gpu
 ```
 
 ## Test
