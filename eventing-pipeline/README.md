@@ -13,14 +13,15 @@ To configure the Twitter event source you will need Twitter API access keys. [Go
 Once you get the four keys, you will need to create Twitter API keys secret:
 
 ```shell
+# kubectl delete secret ktweet-secrets -n demo
 kubectl create secret generic ktweet-secrets -n demo \
-    --from-literal=T_CONSUMER_KEY=${T_CONSUMER_KEY} \
-    --from-literal=T_CONSUMER_SECRET=${T_CONSUMER_SECRET} \
-    --from-literal=T_ACCESS_TOKEN=${T_ACCESS_TOKEN} \
-    --from-literal=T_ACCESS_SECRET=${T_ACCESS_SECRET}
+    --from-literal=T_CONSUMER_KEY=$P_CONSUMER_KEY \
+    --from-literal=T_CONSUMER_SECRET=$P_CONSUMER_SECRET \
+    --from-literal=T_ACCESS_TOKEN=$P_ACCESS_TOKEN \
+    --from-literal=T_ACCESS_SECRET=$P_ACCESS_SECRET
 ```
 
-Additionally, you will need to define the search term for which you want the source to search Twitter (`--query=YourSearchTermHere`) in `config/twitter-source.yaml`. Once you are done editing, save the file and apply to your Knative cluster:
+Additionally, you will need to define the search term for which you want the source to search Twitter (`--query=YourSearchTermHere`) in `config/source.yaml`. Once you are done editing, save the file and apply to your Knative cluster:
 
 
 ```shell
@@ -65,7 +66,7 @@ Should return
 
 If you haven't done so already, you will need to enable Firestore in your GCP project, [create Cloud Firestore project](https://console.cloud.google.com/projectselector/apis/api/firestore.googleapis.com/overview), which will also enables your API in the Cloud API Manager.
 
-The store service will persist tweets into collection defined in the `config/store-service.yaml` (`knative-tweets` by default). To deploy this service and corresponding trigger apply:
+The store service will persist tweets into collection defined in the `config/store.yaml` (`knative-tweets` by default). To deploy this service and corresponding trigger apply:
 
 
 ```shell

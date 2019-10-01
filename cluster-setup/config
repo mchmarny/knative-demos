@@ -1,12 +1,24 @@
 #!/bin/bash
 
-# cluster
-export CLUSTER_NAME="cr"
+# cluster name
+export CLUSTER_NAME="kn"
+
+# cluster region
 export CLUSTER_REGION="us-west1"
-export CLUSTER_ZONE="${CLUSTER_REGION}-a"
+
+# cluster zone
+export CLUSTER_ZONE="${CLUSTER_REGION}-c"
+
+# initial cluster size
 export CLUSTER_START_NODE_SIZE=3
+
+# max cluster size
 export CLUSTER_MAX_NODE_SIZE=10
+
+# the type of VM used for worker nodes
 export CLUSTER_NODE_MACHINE_TYPE="n1-standard-4"
+
+# version of k8s
 export CLUSTER_MASTER_VERSION="latest" # beta == 1.14.3-gke.11
 
 # knative
@@ -16,17 +28,21 @@ export KN_VERSION="v0.9.0"
 export ISTIO_SRC="https://raw.githubusercontent.com/knative/serving/master/third_party/istio-1.3.0/istio-knative-extras.yaml"
 
 # domain
-# export CUSTOM_DOMAIN="knative.tech"
-export CUSTOM_DOMAIN="cloudylabs.dev"
+export CUSTOM_DOMAIN="knative.tech"
+# export CUSTOM_DOMAIN="cloudylabs.dev"
 
-# static ip, leave empty to prompt to create
+# static ip, leave empty to create
 export CLUSTER_IP=""
 
 # demo namespace, used for evneting broker injection
 export DEMO_NAMESPACE="demo"
 
-# certs, leave empty to prompt to create
-# knative.tech
+# certs
+# to create new ones:
+#    sudo certbot certonly --manual --preferred-challenges dns -d '*.demo.knative.tech'
+#    sudo cp /etc/letsencrypt/live/demo.knative.tech/fullchain.pem ./ca.pem
+#    sudo cp /etc/letsencrypt/live/demo.knative.tech/privkey.pem ./pk.pem
+#    sudo chmod 644 *.pem
 export TLS_CERT_PATH="/Users/mchmarny/.gcp-keys/${CUSTOM_DOMAIN}/ca.pem"
 export TLS_KEY_PATH="/Users/mchmarny/.gcp-keys/${CUSTOM_DOMAIN}/pk.pem"
 

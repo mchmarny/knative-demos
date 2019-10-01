@@ -1,0 +1,13 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: test
+  namespace: demo
+spec:
+  template:
+    spec:
+      containers:
+        - image: gcr.io/cloudylabs-public/maxprime:0.2.1
+          env:
+            - name: RELEASE
+              value: "v0.2.1-simple"

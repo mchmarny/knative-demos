@@ -13,6 +13,10 @@ kubectl apply \
 -f "https://github.com/knative/serving/releases/download/${KN_VERSION}/serving-post-1.14.yaml" \
 -f "https://github.com/knative/serving/releases/download/${KN_VERSION}/monitoring.yaml"
 
+# istio
+kubectl apply \
+-f "https://github.com/knative/serving/releases/download/${KN_VERSION}/serving-istio.yaml"
+
 # watch until all good serving
 watch kubectl get pods -n knative-serving
 

@@ -1,0 +1,24 @@
+#!/bin/bash
+
+DIR="$(dirname "$0")"
+. "${DIR}/config"
+
+# serving crds
+kubectl apply -l knative.dev/crd-install=true \
+-f https://storage.googleapis.com/knative-nightly/serving/latest/serving.yaml \
+-f https://storage.googleapis.com/knative-nightly/serving/latest/monitoring.yaml
+
+# serving
+kubectl apply \
+-f https://storage.googleapis.com/knative-nightly/serving/latest/serving.yaml \
+-f https://storage.googleapis.com/knative-nightly/serving/latest/monitoring.yaml
+
+# istio
+kubectl apply \
+-f https://storage.googleapis.com/knative-nightly/serving/latest/serving-istio.yaml
+
+# watch until all good serving
+watch kubectl get pods -n knative-serving
+
+# watch until all good monitoring
+watch kubectl get pods -n knative-monitoring
