@@ -22,12 +22,12 @@ Follow these instructions to run the demos in the presentation:
   * [Java/Kotlin/Groovy/Scala build using Jib](tekton-jib-build/)
 * Configuring Knative application
   * [Automatic scaling](autoscaling/)
-  * [Limit RAM/CPU resources or require GPU](container-resource/)
+  * [Limit RAM/CPU resources or require GPU](service-config/)
 * Operations (Day 2)
   * [Traffic splitting, blue/green updates](traffic-splitting/)
 * Eventing
   * [Processing IoT core events](eventing-iot/)
-  * [Twitter processing pipelines](eventing-twitter/)
+  * [Twitter processing pipelines](eventing-pipeline/)
 
 ## Monitoring
 
