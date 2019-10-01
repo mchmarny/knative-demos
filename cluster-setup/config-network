@@ -17,7 +17,7 @@ export NET_SCOPE=$(gcloud container clusters describe ${CLUSTER_NAME} --zone=${C
 #     | sed -e "s/clusterIpv4Cidr://" -e "s/servicesIpv4Cidr://" \
 #     | xargs echo | sed -e "s/ /,/")
 
-
+echo "Scope: ${NET_SCOPE}"
 
 kubectl patch configmap config-network -n knative-serving -p \
     "{\"data\":{\"istio.sidecar.includeOutboundIPRanges\":\"${NET_SCOPE}\"}}"

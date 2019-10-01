@@ -10,14 +10,11 @@ spec:
         spec:
           containerConcurrency: 1
           container:
-            image: gcr.io/knative-samples/rester-tester:latest
+            image: gcr.io/cloudylabs-public/maxprime:0.2.1
             resources:
-              requests:
-                memory: "128Mi"
-                cpu: "0.5"
               limits:
                 memory: "256Mi"
                 cpu: "1"
             env:
-            - name: T_VERSION
-              value: "1.1.2"
+              - name: T_VERSION
+                value: "0.2.1"
