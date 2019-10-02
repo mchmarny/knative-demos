@@ -1,14 +1,4 @@
 apiVersion: tekton.dev/v1alpha1
-kind: PipelineResource
-metadata:
-  name: vision-image-build
-spec:
-  type: image
-  params:
-    - name: url
-      value: gcr.io/cloudylabs/vision:3.2.10
----
-apiVersion: tekton.dev/v1alpha1
 kind: TaskRun
 metadata:
   name: jib-maven-vision-image-build
@@ -39,5 +29,8 @@ spec:
   outputs:
     resources:
       - name: image
-        resourceRef:
-          name: vision-image-build
+        resourceSpec:
+          type: image
+          params:
+            - name: url
+              value: gcr.io/cloudylabs/vision:3.2.13
