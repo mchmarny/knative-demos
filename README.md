@@ -21,6 +21,7 @@ Follow these instructions to run the demos in the presentation:
   * [Csharp build using Kaniko](tekton-kaniko-build/)
   * [Java/Kotlin/Groovy/Scala build using Jib](tekton-jib-build/)
 * Configuring Knative application
+  * [Internal (cluster-local) services](service-internal/)
   * [Automatic scaling](autoscaling/)
   * [Limit RAM/CPU resources or require GPU](service-config/)
 * Operations (Day 2)
