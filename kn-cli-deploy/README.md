@@ -1,11 +1,11 @@
 # Demo: Knative Client (kn)
 
-In this simple demo we will use Knative Client CLI called `kn` to deploy a pre-built docker image. The source code for the image used in this demo is located in the [github.com/mchmarny/maxprime](https://github.com/mchmarny/maxprime) repo.
+In this simple demo we will use Knative Client CLI called `kn` to deploy a pre-built docker image. The source code for the image used in this demo is located in the [github.com/mchmarny/maxprime](https://github.com/mchmarny/maxprime) repo. The image itself is public ([gcr.io/cloudylabs-public/maxprime](https://gcr.io/cloudylabs-public/maxprime))
 
 ## Deploy Service
 
 ```shell
-kn service create prime \
+kn service create my-service \
     --image gcr.io/cloudylabs-public/maxprime \
     --namespace demo
 ```
@@ -15,17 +15,17 @@ kn service create prime \
 The domain will be different but when done, the `kn` utility will return:
 
 ```shell
-Service 'prime' successfully created in namespace 'demo'.
-Waiting for service 'prime' to become ready ... OK
+Service 'my-service' successfully created in namespace 'demo'.
+Waiting for service 'my-service' to become ready ... OK
 
 Service URL:
-http://prime.demo.knative.tech
+http://my-service.demo.knative.tech
 ```
 
 ## Cleanup
 
-To remove the `prime` app from your cluster
+To remove the `my-service` app from your cluster
 
 ```shell
-    kn service delete prime --namespace demo
+    kn service delete my-service --namespace demo
 ```
