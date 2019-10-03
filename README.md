@@ -1,14 +1,15 @@
 # Knative Demos
 
 <table border="0">
-<tr>
-    <td>
-        <img src ="images/logo.png"/>
-    </td>
-    <td>
-        This repository contains a collection of demos I use in different technical Knative  sessions (e.g. [Generating Events from Your Internal Systems with Knative](https://www.youtube.com/watch?v=riq0x5xdfNg)). For the complete list of official Knative samples see [docs](https://github.com/knative/docs/tree/master/eventing/samples) repository.
-    </td>
-</tr>
+    <tr>
+        <td>
+            <img src ="images/logo.png"/>
+        </td>
+        <td>
+            This repository contains a collection of demos I use in different technical Knative  sessions (e.g. [Generating Events from Your Internal Systems with Knative](https://www.youtube.com/watch?v=riq0x5xdfNg)). For the complete list of official Knative samples see [docs](https://github.com/knative/docs/tree/master/eventing/samples) repository.
+        </td>
+    </tr>
+</table>
 
 ## Setup
 
