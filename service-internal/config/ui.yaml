@@ -1,0 +1,29 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: logoui
+  namespace: demo
+spec:
+  template:
+    spec:
+      containers:
+        - image: gcr.io/cloudylabs-public/logoui:1.0.1
+          env:
+            - name: RELEASE
+              value: "v1.0.1-demo"
+            - name: LOGO_SERVICE_URL
+              value: "http://logo.demo.svc.cluster.local"
+            - name: USER_SERVICE_URL
+              value: "http://user.demo.svc.cluster.local"
+            - name: FORCE_HTTPS
+              value: "yes"
+            - name: OAUTH_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: logoui
+                  key: OAUTH_CLIENT_ID
+            - name: OAUTH_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: logoui
+                  key: OAUTH_CLIENT_SECRET

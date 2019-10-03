@@ -1,0 +1,15 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: logo
+  namespace: demo
+  labels:
+    # serving.knative.dev/visibility: cluster-local
+spec:
+  template:
+    spec:
+      containers:
+        - image: gcr.io/cloudylabs-public/logo:1.0.1
+          env:
+            - name: RELEASE
+              value: "v1.0.1"
