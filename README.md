@@ -1,14 +1,14 @@
 # Knative demos
 
-<img src ="./images/logo.png" align="left" />
+<img src ="images/logo.png" align="left" />
 
-This repository contains a collection of demos used in the different Knative technical sessions (e.g. [One platform for your functions, apps, and containers](https://www.youtube.com/watch?v=F4_2gxTtLaQ)). For list of official Knative samples see the [docs](https://github.com/knative/docs/tree/master/eventing/samples) repository.
-
-To run these samples you need to follow Knative [install](https://github.com/knative/docs/tree/master/install) steps and post-install cluster configuration instructions for both [assigning a static IP](https://github.com/knative/docs/blob/master/serving/gke-assigning-static-ip-address.md), [setting up a custom domain](https://github.com/knative/docs/blob/master/serving/using-a-custom-domain.md), and [configuring outbound network access](https://github.com/knative/docs/blob/master/docs/serving/outbound-network-access.md)
+This repository contains a collection of demos I use in different technical Knative  sessions (e.g. [Generating Events from Your Internal Systems with Knative](https://www.youtube.com/watch?v=riq0x5xdfNg)). For the complete list of official Knative samples see [docs](https://github.com/knative/docs/tree/master/eventing/samples) repository.
 
 ## Setup
 
-> Not fully documented yet but for quick Knative setup on GCP see the [cluster-setup](cluster-setup/)
+To run these samples you need to a Knative cluster. If you don't have one, you can use the quick [setup](setup/) steps for GKE including static IP, custom domain and a few other post install configurations.
+
+> For official documentation on how to install and configure Knative on variety of Kubernetes services see the [Knative install documentation](https://github.com/knative/docs/tree/master/docs/install)
 
 ## Demos
 
