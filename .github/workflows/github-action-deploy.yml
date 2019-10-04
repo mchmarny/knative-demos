@@ -38,4 +38,4 @@ jobs:
       - name: Install beta commands and deploy to Cloud Run
         uses: actions/gcloud/cli@master
         with:
-          args: "components install kubectl --quiet && gcloud container clusters get-credentials ${{ secrets.CLUSTER_NAME }} --zone ${{ secrets.CLUSTER_ZONE } && kubectl apply -f ./github-action-deploy/service.yaml"
+          args: "components install kubectl --quiet && gcloud container clusters get-credentials ${{ secrets.CLUSTER_NAME }} --zone ${{ secrets.CLUSTER_ZONE }} && kubectl apply -f ./github-action-deploy/service.yaml"
