@@ -1,0 +1,43 @@
+name: Knative service deplyment using GitHUb Actions
+
+on:
+  push:
+    branches:    
+      - master
+    tags:        
+      - 'deploy-v*'
+jobs:
+  deploy:
+    name: Build and deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@master
+
+      - name: Build image
+        uses: actions/docker/cli@master
+        with:
+          args: "cd github-action-deploy && build . --tag gcr.io/${{ secrets.GCP_PROJECT }}/greeter"
+
+      - name: Authenticate to GCP
+        uses: actions/gcloud/auth@master
+        env:
+          GCLOUD_AUTH: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Configure Docker for GCR
+        uses: actions/gcloud/cli@master
+        with:
+          args: "auth configure-docker --quiet"
+
+      - name: Push image to GCR
+        uses: actions/gcloud/cli@master
+        with:
+          entrypoint: sh
+          args: -c "docker push gcr.io/${{ secrets.GCP_PROJECT }}/greeter"
+
+      - name: Install beta commands and deploy to Cloud Run
+        uses: actions/gcloud/cli@master
+        with:
+          args: "components install beta --quiet && gcloud beta run deploy greeter --image gcr.io/${{ secrets.GCP_PROJECT }}/greeter --platform gke --cluster ${{ secrets.CLUSTER_NAME }} --namespace ${{ secrets.CLUSTER_NS }} --project ${{ secrets.GCP_PROJECT }} --cluster-location ${{ secrets.CLUSTER_ZONE }}"
+          
+          
