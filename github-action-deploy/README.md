@@ -20,11 +20,13 @@ Click on the Action tab at the top of your repository and create a new workflow 
 
 ```yaml
 name: Knative service deployment using GitHUb Actions
+
 on:
   release:
     types: [created]
     tags:
-      - action-demo-v*
+      - release-v*
+
 jobs:
   deploy:
     name: Build and deploy
@@ -32,28 +34,58 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@master
+
       - name: Build image
         uses: actions/docker/cli@master
         with:
-          args: "build --tag gcr.io/${{ secrets.GCP_PROJECT }}/greeter ./github-action-deploy"
+          args: "build --tag gcr.io/${{ secrets.GCP_PROJECT }}/greeter:${{ github.sha }} ./github-action-deploy"
+
       - name: Authenticate to GCP
         uses: actions/gcloud/auth@master
         env:
           GCLOUD_AUTH: ${{ secrets.GCP_SA_KEY }}
+
       - name: Configure Docker for GCR
         uses: actions/gcloud/cli@master
         with:
           args: "auth configure-docker --quiet"
+
       - name: Push image to GCR
         uses: actions/gcloud/cli@master
         with:
           entrypoint: sh
-          args: -c "docker push gcr.io/${{ secrets.GCP_PROJECT }}/greeter"
+          args: -c "docker push gcr.io/${{ secrets.GCP_PROJECT }}/greeter:${{ github.sha }}"
+
+      - name: Prepare service manifest
+        run: sed -e 's/PROJECT_ID/${{ secrets.GCP_PROJECT }}/g; s/APP_NAME/greeter/g; s/COMMIT_SHA/${{ github.sha }}/g' github-action-deploy/template.yaml > github-action-deploy/service.yaml
+
       - name: Install kubectl and deploy service
         uses: actions/gcloud/cli@master
         with:
           args: "components install kubectl --quiet && gcloud container clusters get-credentials ${{ secrets.CLUSTER_NAME }} --project ${{ secrets.GCP_PROJECT }} --zone ${{ secrets.CLUSTER_ZONE }} && kubectl apply -f ./github-action-deploy/service.yaml -n ${{ secrets.CLUSTER_NS }}"
 ```
+
+This build action makes substitutions in the included Knative service manifest
+
+```yaml
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: APP_NAME
+spec:
+  template:
+    spec:
+      containers:
+        - image: gcr.io/PROJECT_ID/APP_NAME:COMMIT_SHA
+          env:
+            - name: RELEASE
+              value: "COMMIT_SHA"
+```
+
+* `APP_NAME` is replaced with `greeter`
+* `PROJECT_ID` is replaced with secret `GCP_PROJECT`
+* `COMMIT_SHA` is replaced with action context `github.sha`
+
 
 ## Demo
 
