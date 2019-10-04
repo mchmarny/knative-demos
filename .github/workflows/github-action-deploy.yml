@@ -14,13 +14,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@master
 
-      - name: Change directory to github-action-deploy
-        run: cd github-action-deploy
-
       - name: Build image
         uses: actions/docker/cli@master
         with:
-          args: "build . --tag gcr.io/${{ secrets.GCP_PROJECT }}/greeter"
+          args: "build --tag gcr.io/${{ secrets.GCP_PROJECT }}/greeter ./github-action-deploy"
 
       - name: Authenticate to GCP
         uses: actions/gcloud/auth@master
