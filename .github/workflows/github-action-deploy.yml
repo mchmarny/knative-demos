@@ -1,11 +1,10 @@
-name: Knative service deplyment using GitHUb Actions
+name: Knative service deployment using GitHUb Actions
 
 on:
-  push:
-    branches:
-      - master
+  release:
     tags:
-      - "deploy-v*"
+      - action-*
+
 jobs:
   deploy:
     name: Build and deploy
@@ -38,4 +37,4 @@ jobs:
       - name: Install kubectl and deploy service
         uses: actions/gcloud/cli@master
         with:
-          args: "components install kubectl --quiet && gcloud container clusters get-credentials ${{ secrets.CLUSTER_NAME }} --project ${{ secrets.GCP_PROJECT }} --zone ${{ secrets.CLUSTER_ZONE }} && kubectl apply -f ./github-action-deploy/service.yaml"
+          args: "components install kubectl --quiet && gcloud container clusters get-credentials ${{ secrets.CLUSTER_NAME }} --project ${{ secrets.GCP_PROJECT }} --zone ${{ secrets.CLUSTER_ZONE }} && kubectl apply -f ./github-action-deploy/service.yaml -n ${{ secrets.CLUSTER_NS }}"
