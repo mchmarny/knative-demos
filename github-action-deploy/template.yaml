@@ -6,7 +6,7 @@ spec:
   template:
     spec:
       containers:
-        - image: gcr.io/PROJECT_ID/APP_NAME:TAG_REF
+        - image: gcr.io/PROJECT_ID/APP_NAME:COMMIT_SHA
           env:
             - name: RELEASE
               value: "TAG_REF"
