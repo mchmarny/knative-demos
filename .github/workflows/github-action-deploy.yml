@@ -35,7 +35,7 @@ jobs:
           entrypoint: sh
           args: -c "docker push gcr.io/${{ secrets.GCP_PROJECT }}/greeter"
 
-      - name: Install beta commands and deploy to Cloud Run
+      - name: Install kubectl and deploy service
         uses: actions/gcloud/cli@master
         with:
           args: "components install kubectl --quiet && gcloud container clusters get-credentials ${{ secrets.CLUSTER_NAME }} --project ${{ secrets.GCP_PROJECT }} --zone ${{ secrets.CLUSTER_ZONE }} && kubectl apply -f ./github-action-deploy/service.yaml"
