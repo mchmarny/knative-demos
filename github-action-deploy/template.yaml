@@ -9,4 +9,4 @@ spec:
         - image: gcr.io/PROJECT_ID/APP_NAME:COMMIT_SHA
           env:
             - name: RELEASE
-              value: "TAG_REF"
+              value: "COMMIT_SHA"
