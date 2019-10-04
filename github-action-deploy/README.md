@@ -98,3 +98,6 @@ When done, assuming everything worked as intended, the action screen will show a
 ![GitHub Action Starts](../images/gh-action-end.png)
 
 If there were any issues during execution of this action, the above screen will include the error that should help you in debugging.
+
+You can see the deployed REST service with the included release tag at
+https://greeter.demo.knative.tech/v1/greeting/hi
