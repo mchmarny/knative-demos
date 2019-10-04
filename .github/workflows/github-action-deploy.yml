@@ -17,7 +17,7 @@ jobs:
       - name: Build image
         uses: actions/docker/cli@master
         with:
-          args: "build --tag gcr.io/${{ secrets.GCP_PROJECT }}/greeter ./github-action-deploy"
+          args: "build --tag gcr.io/${{ secrets.GCP_PROJECT }}/greeter:${{ github.ref }} ./github-action-deploy"
 
       - name: Authenticate to GCP
         uses: actions/gcloud/auth@master
@@ -34,6 +34,9 @@ jobs:
         with:
           entrypoint: sh
           args: -c "docker push gcr.io/${{ secrets.GCP_PROJECT }}/greeter"
+
+      - name: Prepare service manifest
+        run: sed -e 's/PROJECT_ID/${{ secrets.GCP_PROJECT }}/g; s/APP_NAME/greeter/g; s/TAG_REF/${{ github.ref }}/g' github-action-deploy/template.yaml > github-action-deploy/service.yaml
 
       - name: Install kubectl and deploy service
         uses: actions/gcloud/cli@master

@@ -12,8 +12,9 @@ import (
 )
 
 const (
-	defaultPort      = "8080"
-	portVariableName = "PORT"
+	defaultPort         = "8080"
+	portVariableName    = "PORT"
+	releaseVariableName = "RELEASE"
 )
 
 var (
@@ -60,10 +61,16 @@ func statusHandler(c *gin.Context) {
 		return
 	}
 
+	releaseVersion := os.Getenv(releaseVariableName)
+	if releaseVersion == "" {
+		releaseVersion = "v0.0.0"
+	}
+
 	c.JSON(http.StatusOK, &Status{
 		ID:        id.String(),
 		Message:   c.Param("msg"),
 		RequestOn: time.Now(),
+		Release:   releaseVersion,
 	})
 }
 
@@ -72,4 +79,5 @@ type Status struct {
 	ID        string    `json:"id"`
 	Message   string    `json:"msg,omitempty"`
 	RequestOn time.Time `json:"on"`
+	Release   string    `json:"rel"`
 }
