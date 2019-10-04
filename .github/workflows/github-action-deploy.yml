@@ -3,7 +3,7 @@ name: Knative service deployment using GitHUb Actions
 on:
   release:
     tags:
-      - action-*
+      - action-demo-v*
 
 jobs:
   deploy:
