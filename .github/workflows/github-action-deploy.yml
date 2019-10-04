@@ -2,6 +2,7 @@ name: Knative service deployment using GitHUb Actions
 
 on:
   release:
+    types: [created]
     tags:
       - action-demo-v*
 
