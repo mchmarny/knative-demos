@@ -1,0 +1,20 @@
+apiVersion: serving.knative.dev/v1alpha1
+kind: Service
+metadata:
+  name: simple-api
+  namespace: demo
+spec:
+  runLatest:
+    configuration:
+      revisionTemplate:
+        metadata:
+          labels:
+            demo: simple-api
+        spec:
+          container:
+            image: gcr.io/knative-samples/simple-api:latest
+            imagePullPolicy: Always
+            env:
+            - name: RELEASE
+              value: "v0.1.1"
+
