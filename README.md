@@ -23,6 +23,9 @@ Follow these instructions to run the demos in the presentation:
 * On-cluster build using Tekton
   * [Csharp build using Kaniko](tekton-kaniko-build/)
   * [Java/Kotlin/Groovy/Scala build using Jib](tekton-jib-build/)
+* Cloud (serverless) builds
+  * [Build and deploy using GitHub Actions](github-action-deploy/)
+  * [Build and deploy using Cloud Build](github-action-deploy/)
 * Configuring Knative application
   * [Internal (cluster-local) services](service-internal/)
   * [Automatic scaling](autoscaling/)
