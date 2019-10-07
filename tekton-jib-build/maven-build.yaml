@@ -12,11 +12,6 @@ spec:
         persistentVolumeClaim:
           claimName: jib-build-cache
   inputs:
-    params:
-      - name: DIRECTORY
-        value: ./spring-cloud-gcp-samples/spring-cloud-gcp-vision-api-sample
-      - name: CACHE
-        value: jib-build-cache
     resources:
       - name: source
         resourceSpec:
@@ -26,6 +21,11 @@ spec:
               value: https://github.com/mchmarny/spring-cloud-gcp
             - name: revision
               value: s1p-demo
+    params:
+      - name: DIRECTORY
+        value: ./spring-cloud-gcp-samples/spring-cloud-gcp-vision-api-sample
+      - name: CACHE
+        value: jib-build-cache
   outputs:
     resources:
       - name: image
