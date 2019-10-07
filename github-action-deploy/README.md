@@ -1,6 +1,6 @@
 # GitHub Action to build/deploy to Knative on release tag
 
-This demo will illustrate how to use [GitHub action](https://github.com/actions) to build Docker Image from this repository and deploy it to Knative.
+This demo will illustrate how to use [GitHub Action](https://github.com/actions) to build Docker Image from this repository and deploy it to Knative.
 
 ## Setup
 
