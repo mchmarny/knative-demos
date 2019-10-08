@@ -18,8 +18,8 @@ To run these samples you need to a Knative cluster. If you don't have one, you c
 Follow these instructions to run the demos in the presentation:
 
 * Deploying a pre-build image
-  * [Using kubectl](simple-kubectl-deploy/)
-  * [Using kn CLI](kn-cli-deploy/)
+  * [Using kubectl](kubectl-deploy/)
+  * [Using kn CLI](kn-deploy/)
 * On-cluster build using Tekton
   * [Csharp build using Kaniko](tekton-kaniko-build/)
   * [Java/Kotlin/Groovy/Scala build using Jib](tekton-jib-build/)
