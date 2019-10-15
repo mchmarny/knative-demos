@@ -287,6 +287,35 @@ slack-tweet-notifier   True    default   http://slack-publisher.demo.svc.cluster
 
 Ask audience to tweet about `knative` (doesn't have to be a `#knative` tag). Also ask for non-English tweets to show the translation service.
 
+### Event Trace Setup
+
+> Tracing of events requires latest eventing (right now that's nightly after Oct 10th)
+
+To enable event tracing first edit the tracing config
+
+```shell
+kubectl edit cm config-tracing -n knative-eventing
+```
+
+In this case I'm using Stackdriver so just add the following two lines. You can also use `zipkin` in which case you will also have to define the back-end. See the config map's comments for details.
+
+```yaml
+  backend: stackdriver
+  sample-rate: "1.0"
+```
+
+Now, assuming you are using `--query=knative` in source there won't be too many events. If you however use something more frequently tweeted about... like `--query=google`, you could easily end up with 100s of events per sec. In that case you may want to adjust the `sample-rate` to something smaller like `0.1` (10%).
+
+### Viewing Traces
+
+To view traces, navigate to the [Trace UI](https://console.cloud.google.com/traces/traces) in GCP console
+
+![](image/trace1.png)
+
+Select individual "bar" in the trace timeline to drill down into details
+
+![](image/trace2.png)
+
 ## Reset
 
 Run this before each demo to set known state:
