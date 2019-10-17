@@ -47,3 +47,22 @@ kubectl port-forward -n knative-monitoring  \
     $(kubectl get pods -n knative-monitoring --selector=app=grafana \
     --output=jsonpath="{.items..metadata.name}") 3000
 ```
+
+## Tracing 
+
+To enable event tracing first edit the tracing config
+
+```shell
+kubectl edit cm config-tracing -n knative-eventing
+```
+
+In this case I'm using Stackdriver so just add the following two lines. You can also use `zipkin` in which case you will also have to define the back-end. See the config map's comments for details.
+
+```yaml
+  backend: stackdriver
+  sample-rate: "1.0"
+```
+
+> If you're tracing high volume events you may want to adjust the `sample-rate` to something smaller like `0.1` (10% of all events).
+
+To view traces, navigate to the [Trace UI](https://console.cloud.google.com/traces/traces) in GCP console
