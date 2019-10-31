@@ -22,10 +22,7 @@ export CLUSTER_NODE_MACHINE_TYPE="n1-standard-4"
 export CLUSTER_MASTER_VERSION="latest" # beta == 1.14.3-gke.11
 
 # knative
-export KN_VERSION="v0.9.0"
-
-# istio (needed in addition to addon for cluster local gateway)
-export ISTIO_SRC="https://raw.githubusercontent.com/knative/serving/master/third_party/istio-1.2.6/istio-knative-extras.yaml"
+export KN_VERSION="v0.10.0"
 
 # domain
 export CUSTOM_DOMAIN="knative.tech"

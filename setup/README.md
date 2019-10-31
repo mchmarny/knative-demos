@@ -1,6 +1,6 @@
 # Knative Up
 
-Series of scripts to make deploying Knative simpler
+Series of scripts to make deploying of latest Knative release simpler
 
 > I'm toying with the idea of wrapping this into a simple CLI that would walk you through the entire process. Let me know if this sounds interesting and what areas the individual scripts below do not cover.
 
@@ -47,16 +47,6 @@ Install the Knative serving components
 ```
 
 ## Knative Config
-
-### Outbound Network
-
-> With the recent version of Knative (v0.9 or better) this may no longer be required
-
-This captures your cluster IPv4 scope and tells Istio to ignore all outbound traffic except within that scope
-
-```shell
-./config-network
-```
 
 ### Static IP
 
