@@ -3,7 +3,7 @@ kind: TaskRun
 metadata:
   name: jib-maven-vision-image-build
 spec:
-  serviceAccount: build-bot
+  serviceAccountName: build-bot
   taskRef:
     name: jib-maven
   podTemplate:
