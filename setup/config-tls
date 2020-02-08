@@ -3,14 +3,15 @@
 DIR="$(dirname "$0")"
 . "${DIR}/config"
 
-# sudo certbot certonly --manual --preferred-challenges dns -d '*.demo.knative.tech'
-# sudo cp /etc/letsencrypt/live/demo.knative.tech/fullchain.pem ./ca.pem
-# sudo cp /etc/letsencrypt/live/demo.knative.tech/privkey.pem ./pk.pem
+# sudo certbot certonly --manual --preferred-challenges dns -d '*.demo.cloudylabs.dev'
+# sudo cp /etc/letsencrypt/live/demo.cloudylabs.dev/fullchain.pem ./ca.pem
+# sudo cp /etc/letsencrypt/live/demo.cloudylabs.dev/privkey.pem ./pk.pem
 # sudo chmod 644 *.pem
 
 # Custom domain TLS
-# kubectl delete -n istio-system secret istio-ingressgateway-certs
-kubectl create -n istio-system secret tls istio-ingressgateway-certs \
+# kubectl delete -n gke-system secret istio-ingress-certs
+
+kubectl create -n gke-system secret tls istio-ingress-certs \
   --key $TLS_KEY_PATH --cert $TLS_CERT_PATH
 
 # Gateway

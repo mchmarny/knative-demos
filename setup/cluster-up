@@ -11,7 +11,7 @@ gcloud services enable \
 
 # Cluster
 gcloud beta container clusters create $CLUSTER_NAME \
-  --addons HorizontalPodAutoscaling,HttpLoadBalancing,Istio \
+  --addons=HorizontalPodAutoscaling,HttpLoadBalancing,CloudRun \
   --zone $CLUSTER_ZONE \
   --cluster-version $CLUSTER_MASTER_VERSION \
   --machine-type $CLUSTER_NODE_MACHINE_TYPE \

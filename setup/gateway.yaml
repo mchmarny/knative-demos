@@ -5,21 +5,21 @@ metadata:
   namespace: knative-serving
 spec:
   selector:
-    istio: ingressgateway
+    istio: ingress-gke-system
   servers:
-    - hosts:
-        - "*"
-      port:
-        name: http
-        number: 80
-        protocol: HTTP
-    - hosts:
-        - "*"
-      port:
-        name: https
-        number: 443
-        protocol: HTTPS
-      tls:
-        mode: SIMPLE
-        privateKey: /etc/istio/ingressgateway-certs/tls.key
-        serverCertificate: /etc/istio/ingressgateway-certs/tls.crt
+  - hosts:
+    - '*'
+    port:
+      name: http
+      number: 80
+      protocol: HTTP
+  - hosts:
+    - '*'
+    port:
+      name: https
+      number: 443
+      protocol: HTTPS
+    tls:
+      mode: SIMPLE
+      privateKey: /etc/istio/ingressgateway-certs/tls.key
+      serverCertificate: /etc/istio/ingressgateway-certs/tls.crt
