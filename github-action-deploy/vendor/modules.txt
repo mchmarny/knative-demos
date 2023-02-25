@@ -25,7 +25,7 @@ github.com/pmezard/go-difflib/difflib
 github.com/stretchr/testify/assert
 # github.com/ugorji/go/codec v0.0.0-20190128213124-ee1426cffec0
 github.com/ugorji/go/codec
-# golang.org/x/sys v0.0.0-20191002091554-b397fe3ad8ed
+# golang.org/x/sys v0.1.0
 golang.org/x/sys/unix
 # gopkg.in/go-playground/validator.v8 v8.18.2
 gopkg.in/go-playground/validator.v8
